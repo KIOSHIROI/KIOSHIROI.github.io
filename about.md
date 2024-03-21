@@ -12,6 +12,8 @@ permalink: /about/
 ## 致谢
 感谢[程序员柠檬](https://www.zhihu.com/people/ning-meng-cheng-31-94)提供的web模板帮助。
 
+[教程链接](https://lemonchann.github.io/create_blog_with_github_pages/)
+
 
 ## 版权声明
 本博客文章均为作者原创，搬运请注明来处。
