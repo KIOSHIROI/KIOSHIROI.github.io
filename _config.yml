@@ -121,3 +121,4 @@ exclude:
   - README.md
   - CNAME
 
+markdown: kramdown
