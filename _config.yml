@@ -64,7 +64,7 @@ disqus: # fromendworld
 # Gitalk
 gitalk:
   clientID: d0adc883f57be162eb7a
-  clientSecret: 
+  clientSecret: 454838325c8a9e4728e156e161e076f819a74c8c
   repo: kioshiroi.github.io
   owner: KIOSHIROI
 
