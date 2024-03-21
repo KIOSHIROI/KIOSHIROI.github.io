@@ -14,7 +14,7 @@ description: "A BNUer's self-save road"
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://github.com/KIOSHIROI/KIOSHIROI.github.io/blob/master/images/blog.jpg
 # 你的favicon（出现在浏览器tab上）图片URL，建议使用较小(64px × 64px)的图片
-favicon: https://github.com/lemonchann/lemonchann.github.io/raw/master/images/favicon.ico
+favicon: https://github.com/KIOSHIROI/KIOSHIROI.github.io/blob/master/images/favorate.jpg
 
 # Tabs in header. There are 'Blog', 'About', 'Archive', 'Tags'
 # and URL Link(e.g. 'Theme' tab below) tabs. If you don't need one, just delete
@@ -39,11 +39,11 @@ footer-links:
   #weibo: frommidworld #请输入你的微博个性域名 https://www.weibo.com/<thispart>
   behance: # https://www.behance.net/<username>
   dribbble:
-  zhihu: ning-meng-cheng-31-94
-  email: llong87@163.com
+  zhihu: 
+  email: 202211079360@mail.bnu.edu.cn
   facebook:
   flickr:
-  github: lemonchann 
+  github: KIOSHIROI
   googleplus: # anything in your profile username that comes after plus.google.com/
   instagram:
   linkedin:
@@ -55,7 +55,7 @@ footer-links:
   youtube:
 
 # Text under the icons in footer
-footer-text: Copyright (c) 2019 lemon
+footer-text: Copyright (c) 2024 kioshiroi
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
@@ -63,17 +63,17 @@ disqus: # fromendworld
 
 # Gitalk
 gitalk:
-  clientID: bd65d5c0df878155b7fa
-  clientSecret: d0220762c05c2d6b6f6152a0f0e4b6b090de9729
-  repo: lemonchann.github.io
-  owner: lemonchann
+  clientID: d0adc883f57be162eb7a
+  clientSecret: 
+  repo: kioshiroi.github.io
+  owner: KIOSHIROI
 
 # Enter your Google Analytics web tracking code (e.g. UA-2110908-2) to activate tracking
-#google_analytics: 
+google_analytics: G-J4TR2R7BSM
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url: https://lemonchann.github.io
+url: https://kioshiroi.github.io
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
