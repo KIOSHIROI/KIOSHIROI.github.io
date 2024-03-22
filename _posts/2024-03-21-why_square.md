@@ -32,7 +32,7 @@ $$
 
 同时，我们朴素地认为训练集个各个特征之间遵循独立同分布(I.I.D.)
 
-> 尽管I.I.D"not a true assumptioin", 但是在机器学习中"无伤大雅"（是很普遍且很有用的假设）
+> 尽管I.I.D"not a true assumption", 但是在机器学习中"无伤大雅"（是很普遍且很有用的假设）
 
 $$
 P(y^{(i)}\mid x^{(i)};\theta) = \frac{1}{\sqrt{2\pi}\sigma}\exp\Big( -\frac{(y^{(i)}-\theta^Tx^{(i)})^2}{2\sigma^2} \Big)
@@ -70,7 +70,7 @@ $$
 
 我们可以发现最后的结果成为了常数+$f(y^{(i)}-\theta^Tx^{(i)})$
 
-因为我们要MLE(Maximuize likelyhood estimation\),即：
+因为我们要MLE(Maximize likelyhood estimation\),即：
 
 $$
 choose\ \theta \ to\quad \text {maximize} \quad\mathcal L(\theta)
