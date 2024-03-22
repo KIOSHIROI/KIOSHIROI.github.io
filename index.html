@@ -1,6 +1,7 @@
 ---
 layout: default
 ---
+<div></div>
 <div class="search-container">
   <input type="text" id="search-input" placeholder="search blog posts..." style="width: 90%;
     height: 35px;
@@ -63,7 +64,7 @@ layout: default
       </div>
 
       <div class="entry">
-        {{ post.excerpt | truncate: 200 }}
+        {{ post.excerpt | truncate: 225 }}
       </div>
 
       <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
