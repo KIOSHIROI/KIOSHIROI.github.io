@@ -10,7 +10,7 @@ author: kioshiroi
 
 对于训练集$X$，标签集$Y$,"error set"$E$, $x\in X, y\in Y, \epsilon \in E$:
 
-我们猜测(Assume):
+我们假定(Assume):
 
 $$
 y^{(i)}=\theta^Tx^{(i)}+\epsilon^{(i)}

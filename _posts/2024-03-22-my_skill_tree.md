@@ -10,7 +10,9 @@ author: kioshiroi
 - C 语言(★☆☆☆☆)
     - 《C Prime plus 第6版》
 - C++(☆☆☆☆☆)
-- Python(★☆☆☆☆)
+- Python(★★☆☆☆)
+    - 《利用Python进行数据分析 第二版》
+    - [LTP](https://ltp.ai/)
 - Java(★☆☆☆☆)
 - 微信小程序(☆☆☆☆☆)
 - html/css/javascript(☆☆☆☆☆)
@@ -20,4 +22,4 @@ author: kioshiroi
 - 唱歌
 - 绘画
 - 诗歌
-
+- 写字
