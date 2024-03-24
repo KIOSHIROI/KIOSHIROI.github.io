@@ -9,7 +9,7 @@ author: kioshiroi
 ### 阅读
 - [代码随想录](https://www.programmercarl.com/) - Carl
 - 《深入理解云计算 基本原理和应用程序编程技术》 - 机械工业出版社
-
+- 《AI治理大家谈 韧性治理与未来科技》 - 清华大学人工智能国际治理研究院
 
 
 ### 视频
