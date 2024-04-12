@@ -7,16 +7,9 @@ comments: true
 author: kioshiroi
 ---
 ### 阅读
-- [代码随想录](https://www.programmercarl.com/) - Carl
-- 人工智能：现代方法（第4版）
+- The Golang Programing Language
 
 
 ### 视频
 - [CS229 机器学习](https://www.bilibili.com/video/BV1JE411w7Ub/?vd_source=df4c297395886e972e6f37ffc786838e) - 吴恩达
-
-
-
-### 项目
-- “学术汉语领域下语言学语料库的构建与研究”
-- 人工智能背景下利用甲骨文进行识字教育的困境与策略
-- “甲骨文字进小学”——“识字汉教”软件的研发
+- [USB CS170](https://www.youtube.com/watch?v=a7qNN-OQ2zs&t=3118s)
