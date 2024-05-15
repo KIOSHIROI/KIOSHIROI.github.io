@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "2. python函数"
+title: "3. python函数"
 date:   2024-5-15
 tags: [python]
 comments: true
