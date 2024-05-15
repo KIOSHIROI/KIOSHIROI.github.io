@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "1. python字符串"
+title: "7. python字符串"
 date:   2024-5-15
 tags: [python]
 comments: true
