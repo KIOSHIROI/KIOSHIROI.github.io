@@ -14,6 +14,9 @@ permalink: /about/
 
 [教程链接](https://lemonchann.github.io/create_blog_with_github_pages/)
 
+# 赞赏
+如果您喜欢本人的创作，可以请我喝一杯下午茶吗ღ( ´･ᴗ･` )
+![award_code](./images/award_code.jpg)
 
 ## 版权声明
 本博客_post文件夹中文章均为作者原创，搬运请注明来处。
