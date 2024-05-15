@@ -82,3 +82,32 @@ from mypackage import module1, module2
 print(module1.add(5, 3))        # 输出 8
 print(module2.subtract(5, 3))   # 输出 2
 ```
+
+### 使用标准库
+
+Python 附带了一个丰富的标准库，提供了大量有用的模块，可以直接导入和使用。例如，使用 `math` 模块进行数学运算：
+
+```python
+import math
+
+print(math.sqrt(16))  # 输出 4.0
+```
+
+### 安装第三方包
+
+可以使用 `pip` 安装第三方包。例如，安装和使用 `requests` 包来发送 HTTP 请求：
+
+```bash
+pip install requests
+```
+
+安装后，可以在代码中导入并使用 `requests` 包：
+
+```python
+import requests
+
+response = requests.get("https://api.github.com")
+print(response.status_code)  # 输出 200
+```
+
+模块和包使得代码更加模块化和可重用，有助于组织和管理大型项目。
