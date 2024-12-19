@@ -85,6 +85,71 @@ except Exception as e:
     print(f"发生异常: {e}")
 ```
 
-* 在这个示例中，`except Exception` 捕获所有类型的异常，并输出异常信息。
+* 在这个示例中，`except Exception` 捕获所有类型的��常，并输出异常信息。
 
 通过异常处理机制，我们可以确保程序在遇到错误时能够优雅地处理，而不会导致崩溃。掌握异常处理是编写健壮和可靠代码的重要技能。
+
+## 抛出异常
+### assert
+
+* assert语句用于断言，如果断言失败，程序会抛出AssertionError异常。
+
+```python
+# 示例代码
+def divide_numbers(a, b):
+    assert b != 0, "除数不能为零"
+    return a / b
+
+# 使用示例
+try:
+    result = divide_numbers(10, 0)
+except AssertionError as e:
+    print(f"断言错误：{e}")
+```
+
+### raise
+
+* 使用raise语句可以主动抛出异常
+
+```python
+# 基本用法
+def check_age(age):
+    if age < 0:
+        raise ValueError("年龄不能为负数")
+    if age > 150:
+        raise ValueError("年龄不能超过150岁")
+    return True
+
+# 重新抛出异常
+def process_age():
+    try:
+        age = int(input("请输入年龄："))
+        check_age(age)
+    except ValueError as e:
+        print("处理异常...")
+        raise  # 重新抛出当前异常
+```
+
+### 异常链
+
+* 使用`raise from`可以在抛出新异常时保留原始异常信息
+
+```python
+def convert_to_int(text):
+    try:
+        return int(text)
+    except ValueError as e:
+        raise ValueError("输入必须是数字") from e
+
+# 使用示例
+try:
+    number = convert_to_int("abc")
+except ValueError as e:
+    print(f"错误：{e}")
+    print(f"原始错误：{e.__cause__}")
+```
+
+这些抛出异常的方法让我们能够：
+- 使用assert进行调试和验证
+- 使用raise主动抛出异常
+- 通过异常链追踪异常的来源和传播过程

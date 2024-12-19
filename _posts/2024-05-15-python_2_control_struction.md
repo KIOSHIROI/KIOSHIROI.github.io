@@ -87,3 +87,18 @@ author: kioshiroi
   # 7
   # 9
   ```
+
+3. pass
+
+* `pass`语句用于占位，表示什么都不做。
+* ```python
+  # 示例代码
+  for i in range(10):
+      pass
+  ```
+
+类似于C语言中的空语句
+```c
+if (condition)
+    ;
+```

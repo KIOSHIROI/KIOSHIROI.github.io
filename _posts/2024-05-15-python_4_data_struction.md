@@ -105,5 +105,7 @@ for fruit in fruits:
 
   ```
 
+
 > * 集合的声明类似C语言数组的声明，请不要混淆
-> * Python中数组的声明需要`import array`包，使用较少 通常在数值运算中使用类似的np.ndarray
+> * Python中数组的声明需要`import array`包，使用较少，通常在数值运算中使用类似的np.array
+> * c语言中没有集合的概念，c++中使用set和unordered_set来表示集合，c++11中引入了unordered_map和unordered_set，可以用来表示集合。c++中的集合运算。

@@ -111,3 +111,44 @@ print(response.status_code)  # 输出 200
 ```
 
 模块和包使得代码更加模块化和可重用，有助于组织和管理大型项目。
+
+### wheel
+尽管我们可以通过pip安装第三方包，但有些包并不在pypi上，这时候就需要使用wheel文件来安装。
+
+wheel文件是python的二进制包格式，通常用于分发和安装Python包。与源代码包不同，wheel包已经编译为二进制形式，可以直接在目标系统上安装，而无需编译源代码。
+
+wheel文件通常以.whl为扩展名，例如requests-2.28.2-py3-none-any.whl。
+
+使用wheel安装第三方包的方法如下:
+1. 从镜像平台其他途径获取wheel包
+2. 使用pip在自己环境中安装wheel包
+```bash
+pip install requests-2.28.2-py3-none-any.whl
+```
+
+### 镜像
+由于某些神秘力量，国内访问pypi的速度很慢，这时候就需要使用镜像来加速下载。
+常用的镜像源有：
+- 清华：https://pypi.tuna.tsinghua.edu.cn/simple
+- 阿里云：http://mirrors.aliyun.com/pypi/simple/
+- ustc: https://pypi.mirrors.ustc.edu.cn/simple/
+- hust：http://pypi.hustunique.com/
+- sdut：http://pypi.sdutlinux.org/
+- 豆瓣：http://pypi.douban.com/simple/
+
+*如何配置镜像源？*
+#### 1. 永久配置镜像源
+```bash
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn
+```
+
+#### 2. 临时使用镜像源
+使用`-i`
+```bash
+pip install pandas -i https://pypi.tuna.tsinghua.edu.cn/simple 
+```
+
+### 参考资料
+- [https://www.cnblogs.com/chenjo/p/14071864.html](https://www.cnblogs.com/chenjo/p/14071864.html)
+- [https://blog.csdn.net/qq_53141117/article/details/132744428](https://blog.csdn.net/qq_53141117/article/details/132744428)
