@@ -122,3 +122,5 @@ exclude:
   - CNAME
 
 markdown: kramdown
+
+future: true

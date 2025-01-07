@@ -12,7 +12,7 @@ author: kioshiroi
 - 双非就业经验分享：[我的人工智能专业之路（一）就业篇](https://zhuanlan.zhihu.com/p/664834747)
 
 ## 非人工智能就业
-- [干货！人工智能/计算机专业求职经验分享]https://zhuanlan.zhihu.com/p/681948580
+- [干货！人工智能/计算机专业求职经验分享](https://zhuanlan.zhihu.com/p/681948580)
 - [2025年计算机行业不同岗位的真实就业现状，准备入行的程序员请慎重！](https://www.bilibili.com/video/BV1HcrSYDEXX/?spm_id_from=333.337.search-card.all.click&vd_source=df4c297395886e972e6f37ffc786838e)
 
 ## 纠结帖
