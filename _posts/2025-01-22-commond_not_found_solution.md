@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "mac中 command not found 解决方案(go install 为例子)"
-date:   2025-01-10
+date:   2025-01-22
 tags: [golang]
 comments: true
 author: kioshiroi
