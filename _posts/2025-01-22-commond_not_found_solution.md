@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "mac中 commond not found 解决方案(go install 为例子)"
+title: "mac中 command not found 解决方案(go install 为例子)"
 date:   2025-01-10
 tags: [golang]
 comments: true
