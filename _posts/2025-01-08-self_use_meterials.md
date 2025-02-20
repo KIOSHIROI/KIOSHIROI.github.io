@@ -15,6 +15,9 @@ author: kioshiroi
 - [干货！人工智能/计算机专业求职经验分享](https://zhuanlan.zhihu.com/p/681948580)
 - [2025年计算机行业不同岗位的真实就业现状，准备入行的程序员请慎重！](https://www.bilibili.com/video/BV1HcrSYDEXX/?spm_id_from=333.337.search-card.all.click&vd_source=df4c297395886e972e6f37ffc786838e)
 
+#### 电网就业
+- https://zhuanlan.zhihu.com/p/10096115729?utm_psn=1872357455930990592
+
 ## 纠结帖
 - 全面分析帖：[读研or直接工作？研究生与就业的权衡与选择](https://www.nowcoder.com/discuss/580438502576340992)
 - 精干总结帖：[【读研or工作】一口气说清楚升学与就业如何选择？](https://www.nowcoder.com/discuss/613105437113638912)
