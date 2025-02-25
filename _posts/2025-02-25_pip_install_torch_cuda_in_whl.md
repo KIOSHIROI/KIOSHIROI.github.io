@@ -2,7 +2,7 @@
 layout: post
 title: "安装torch-cuda（通过whl安装）"
 date:   2025-2-25
-tags: [python, torch]
+tags: [torch]
 comments: true
 author: kioshiroi
 ---
