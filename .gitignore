@@ -2,4 +2,4 @@
 .jekyll*
 _site
 .DS_Store
-_draft/
+_drafts/
