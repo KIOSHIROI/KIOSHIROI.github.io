@@ -45,6 +45,9 @@ author: kioshiroi
         - at-least-once(至少一次)
         - exactly-once(精确一次)
         - end-to-end exactly-once(端到端精确一次)
+
+
+        
 ```markdown
 让我详细解释流处理中的四个一致性级别：
 
