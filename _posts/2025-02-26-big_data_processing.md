@@ -260,7 +260,7 @@ author: kioshiroi
     - 第三个副本：与第一个副本相同机架的其他节点上
     - 更多副本：随机节点
         - 每个DataNode不存放超过一个副本
-        - 每个机架的副本数量低于上限[$\frac{(副本数量-1)}{机架数量}+2$]
+        - 每个机架的副本数量低于上限[$\dfrac{(副本数量-1)}{机架数量}+2$]
     - ![](../images/20250305/09-17-16.png)
 - 数据读取
     - HDFS提供了一个API可以确定一个DataNode所属的机架ID，客户端也可以调用API获取自己所属的机架ID；
@@ -293,3 +293,119 @@ author: kioshiroi
         - 第3个DataNode写入完毕后向第2个DataNode发送确认消息，第2个DataNode随后向第1个发送确认消息。最后第1个DataNode向客户端发送确认消息，表明该文件块写入成功。
         - ![](../images/20250305/09-30-54.png)
 
+## 3. 批处理框架MapReduce
+### 3.1 概述
+- Map、Reduce可以多个同时并行
+- MapReduce采用“分治策略”
+- Map、Reduce输入都是<key, value>，按照一定的映射规则将其转换为另一个或一批<key, value>输出
+- ![](../images/20250312/08-11-47.png)
+- WordCount实例
+    - 统计大量文本中的每个单词出现的次数
+    - ![](../images/20250312/08-15-35.png)
+### 3.2 传统MapReduce架构
+- 采用“Master/Slave”架构
+    - JobTracer：主节点运行的后台进程，负责整个集群的**资源管理**和**作业管理**
+        - 资源管理：通过监控TaskTracer管理集群拥有的计算资源
+        - 作业管理：将作业Job分解为任务Task，并且进行任务调度以及跟踪任务的运行进度、资源使用情况
+    - TaskTracer：从节点运行的后台进程，负责管理本节点的资源、执行JobReducer命令并汇报情况
+- 在实际使用中，通常将MapReduce的输入和输出数据均存放在HDFS中
+- 容错机制
+    - JobTracer进程故障
+        - 单点故障，属于MapReduce架构设计的缺陷
+- 传统架构的缺点
+    - 资源管理和作业紧密耦合
+        - JobTracer既负责作业管理和资源调度，又负责管理集群的资源。
+    - 作业的控制高度集中
+
+### 3.3 资源管理器Yarn
+#### 概述
+- **Yarn**将资源管理功能独立出来
+    - 一个纯粹的资源管理调度框架
+    - ![](../images/20250312/08-36-17.png)
+
+- 采用“Master/Slave”架构
+- ![](../images/20250312/08-39-59.png)
+
+#### 体系结构
+- ResourceManager：
+- NodeManager
+    - 定期向ResouceManager汇报本节点的资源使用情况和Container运行情况
+    - 接受并处理来自ApplicationMaster
+- ApplicationMaster
+    - 通过与ResourceManager调度器协商获取资源（以Container表示）
+- Container
+    - 资源的抽象表示，包括CPU、内存等，是一个动态资源划分单位
+
+- 应用启动流程
+- ![](../images/20250312/08-46-01.png)
+
+- 容错机制
+    - ResourceManager故障
+    - ApplicationMaster以及Container故障
+        - 由于任务与具体框架有关，Yarn只会帮助其重新启动
+
+#### 工作原理
+- 单平台多框架
+- 平台资源分配
+    - ResourceManager
+
+- 常用调度器
+    - FIFO调度器
+        - 优点：实现简单
+        - 缺点：等待时间长
+    - Capacity调度器
+        - 维护层级式的队列
+        - 队列内部FIFO
+        - ![](../images/20250312/09-15-03.png)
+    - Fair调度器
+        - 维护层级式队列（共享队列）
+        - ![](../images/20250312/09-15-22.png)
+
+### 3.4 MapReduce工作原理
+- MapReduce工作过程可分为3个阶段：Map、Shuffle、Reduce
+#### 数据输入
+- MapReduce框架定义了输入格式(InputFormat)
+    - 输入格式将数据在逻辑上划分若干分片（split）
+    - 分片的数量往往决定了Map任务的数量
+- 常用InputFormat
+    - TextInputFormat <行在整个文件中的字节偏移量:`LongWritable`，行的数据内容:`Text`>
+        - 是默认的InputFormat
+
+#### Map阶段
+- 将输入的多个Split由Map任务以完全并行的方式处理
+- 每个Map任务对输入分片的记录按照一定的规则解析成<key, value>
+#### Shuffle阶段
+- Shuffle是指Map阶段数据输出到Reduce阶段数据输入这一整个中间过程
+- Shuffle过程是MapReduce工作流程的核心环节
+- Shuffle过程分为
+    - Map端的Shuffle
+    - Reduce端的Shuffle
+- ![](../images/20250312/09-24-57.png)
+##### Map端的Suffle
+- 写入缓存
+- 溢写
+- 文件归并
+###### （1）写入缓存
+- 每个Map任务都被分配一个缓存（默认100MB）
+- Map任务的输出结果首先写入缓存
+- 在写入缓存前，key和value都被**序列化成字节数组**
+
+###### （2）溢写（分区、排序、合并）
+- 当缓存空间达到溢写比例（譬如0.8）时，就会启动溢写(spill)操作
+- **分区(Partition)**
+    - 总的分区数量等于Reduce任务的数量
+    - 分区规则：取<key, value>中对key的hashCode值，然后对Reduce任务数量求余数，余数为分区编号，分区编号相一致的<key, value>则属于同一分区
+    - ```(key.hashCode() & Integer.MAX_VALUE) % numReduceTasks ```
+- **排序(Sort)**
+    - 对每个分区内的键值对，根据key对他们进行内存排序
+- **合并(Combine)**
+    - 合并是一个可选操作
+    - 将相同key的<key, value>的value累加起来
+- **文件归并(Merge)**
+    - 归并是指将那些相同key的键值对合并成一个新的键值对
+    - Map任务最终输出一个大文件存储在节点的本地磁盘中
+
+
+#### Reduce阶段
+
+#### 数据输出
