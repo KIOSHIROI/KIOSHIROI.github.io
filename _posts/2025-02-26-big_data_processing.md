@@ -391,7 +391,7 @@ author: kioshiroi
     - Reduce端的Shuffle
 - ![](../images/20250312/09-24-57.png)
 
-##### Map端的Suffle
+##### Map端的Shuffle
 - 写入缓存
 - 溢写
 - 文件归并
@@ -412,11 +412,93 @@ author: kioshiroi
 - **合并(Combine)**
     - 合并是一个可选操作
     - 将相同key的<key, value>的value累加起来
-- **文件归并(Merge)**
-    - 归并是指将那些相同key的键值对合并成一个新的键值对
-    - Map任务最终输出一个大文件存储在节点的本地磁盘中
 
+###### 文件归并(Merge)
+- 归并是指将那些相同key的键值对合并成一个新的键值对
+- Map任务最终输出一个大文件存储在节点的本地磁盘中
 
-#### Reduce阶段
+##### Reduce端的Shuffle
+- 领取数据
+- 归并数据
+
+###### 领取数据
+- Map任务完成后会通知ApplicationMaster，吼吼ApplicationMaster通知相关的Reduce任务进行数据的拉取
+- Reduce任务收到通知后，会到该Map任务所在节点把属于自己分区的数据领取到本地
+
+###### 归并数据
+- Reduce任务领取的数据先放入缓存，并对来自Map任务的数据先归并、再合并，然后溢写到磁盘，在磁盘生成一个溢写文件。
+
+##### Reduce阶段
+- 将归并后得到的若干大文件直接输入Reduce任务
 
 #### 数据输出
+- 输出格式（`OutoutFormat`）
+
+## 4. NoSQL数据库
+### 4.2 NoSQL三大基石
+- CAP
+- BASE
+- 最终一致性
+
+#### CAP
+- 一致性（Consistency）
+- 可用性（Availability）
+- 分区容忍性（Tolerance of Network Partition）
+    - 系统中的一部分节点无法和其他节点通信，分离的系统也能正常运行。
+- CAP理论告诉我们，一个分布式系统不可能同时满足一致性、可用性和分区容忍性这三个特性，最多只能同时满足其中两项。
+
+#### BASE
+- 基本可用（Basically Available）
+    - 是指一个分布式系统的一部分发生问题变得不可用时，其他部分仍然可以正常使用
+- 软状态（Soft State）
+    - “软状态”是指状态可以有一段时间不同步，具有一定的滞后性
+- 最终一致性（Eventually Consistent）
+    - 一致性的类型包括强一致性和弱一致性，二者主要区别在高并发的数据访问操作下，后续能否获取最新的数据。
+    - 最终一致性是弱一致性的一种特例，允许后续的访问操作可以暂时读不到更新后的数据，但经过一段时间之后，最终可以读取到更新后的数据。
+
+### 4.3 HBase概述
+- 高可靠、高性能、可伸缩的分布式数据库
+- HBase是一个**稀疏、多维、排序**的**映射表**
+
+#### 数据模型相关概念
+- 表
+- 行键
+- 列族
+- 列限定符
+- 单元格
+- 时间戳 
+
+- HBase是列式数据库
+
+### 4.4 HBase工作原理
+#### Region定位
+- Hbase使用三层结构来保存Region位置信息
+- ![](../images/20250326/09-27-28.png)
+- ![](../images/20250326/09-27-14.png)
+- 客户端访问数据时的“三级寻址”过程
+    - 访问ZooKeeper，获取-ROOT-表的位置信息
+    - 访问-ROOT-表，获取.META.表的位置信息
+    - 访问.META.表，找出所需Region具体位于哪个Region服务器
+    - 最后到Region服务器读取数据
+- 寻址过程客户端只需要询问Zookeeper服务器，不需要连接Master服务器
+
+#### HBase系统架构
+- Region服务器
+    - Region服务器是HBase中最核心的模块，负责维护分配给自己的Region，并响应用户的读写请求
+    - **Region的存储**
+    - Region服务器内部管理着一系列Region对象和一个HLog文件
+        - 每个Region对象由多个Store组成
+            - 每个Store对应表中的一个列族
+            - 每个Store又包含一个MemStore（放在内存当中）和若干StoreFile（文件）
+                - StoreFile通过HDFS的HFile实现， HFile的数据块通常采用压缩方式存储，可以大大减少网络I/O和磁盘I/O
+        - HLog是磁盘上的记录文件，记录着所有的更新操作
+
+- Region服务器工作原理
+    - 写数据
+        - 用户写入数据时，被分配到相应Region服务器去执行
+        - 数据被分别写到HLog和MemStore
+    - 读数据 
+        - 当用户读取数据时，Region服务器会首先访问MemStore缓存
+        - 如果找不到，再去磁盘上面的StoreFile中寻找
+
+
