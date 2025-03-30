@@ -334,8 +334,10 @@ author: kioshiroi
 - ![](../images/20250312/08-39-59.png)
 
 #### 体系结构
-- ResourceManager：
+- ResourceManager
+    - 在主节点运行，负责整个集群的资源管理和分配，主要由调度器和应用管理器两个组件构成
 - NodeManager
+    - 在从节点运行，负责节点的资源管理和任务管理
     - 定期向ResouceManager汇报本节点的资源使用情况和Container运行情况
     - 接受并处理来自ApplicationMaster
 - ApplicationMaster
@@ -422,7 +424,7 @@ author: kioshiroi
 - 归并数据
 
 ###### 领取数据
-- Map任务完成后会通知ApplicationMaster，吼吼ApplicationMaster通知相关的Reduce任务进行数据的拉取
+- Map任务完成后会通知ApplicationMaster，然后ApplicationMaster通知相关的Reduce任务进行数据的拉取
 - Reduce任务收到通知后，会到该Map任务所在节点把属于自己分区的数据领取到本地
 
 ###### 归并数据
