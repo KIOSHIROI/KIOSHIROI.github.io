@@ -11,3 +11,4 @@ author: kioshiroi
 3. 科研
 
 做完当前工作打算学习一下AI Infra以及系统安全的知识。
+想学一下网球，下学期蹭一下网球课？还有粤语课和fruitstudio课
