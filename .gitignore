@@ -3,3 +3,5 @@
 _site
 .DS_Store
 _drafts/
+.trae/
+_1worklog/
