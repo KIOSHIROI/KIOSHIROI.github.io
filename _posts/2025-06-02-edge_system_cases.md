@@ -60,13 +60,19 @@ deb-src http://mirrors.aliyun.com/ubuntu-ports/ focal-updates main restricted un
 deb http://mirrors.aliyun.com/ubuntu-ports/ focal-backports main restricted universe multiverse
 deb-src http://mirrors.aliyun.com/ubuntu-ports/ focal-backports main restricted universe multiverse
 ```
-```# 从 Ubuntu 密钥服务器获取并添加公钥
+[mac下安装k8s](https://blog.csdn.net/qq_20042935/article/details/124472626)
+- 记得有一步会有问题
+
+[最好用的ubuntu k8s集群搭建方法](https://blog.csdn.net/qq_31649693/article/details/137338828)
+
+[桥接模式](https://blog.csdn.net/weixin_39296283/article/details/104953668)
+[netplan使用](https://blog.csdn.net/bigbaojian/article/details/125396045)
+[finalshell下载](https://blog.csdn.net/muriyue6/article/details/117520456)
+- gpg那一步请使用以下指令：
+```
+# 从 Ubuntu 密钥服务器获取并添加公钥
 sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B53DC80D13EDEF05
 
 # 将公钥导出到专用密钥环（推荐）
 sudo gpg --export --armor B53DC80D13EDEF05 | sudo tee /usr/share/keyrings/kubernetes-archive-keyring.gpg
 ```
-[mac下安装k8s](https://blog.csdn.net/qq_20042935/article/details/124472626)
-- 记得有一步会有问题
-
-[最好用的ubuntu k8s集群搭建方法]()
