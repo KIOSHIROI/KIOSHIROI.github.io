@@ -121,7 +121,14 @@ layout: default
       <span class="date">
         {{ post.date | date: "%Y-%m-%d" }}
       </span>
-
+    
+      {% assign words = post.content | number_of_words %}
+      {% if words < 360 %}
+        <span class="reading-time">· 阅读约 1 分钟</span>
+      {% else %}
+        <span class="reading-time">· 阅读约 {{ words | divided_by:180 }} 分钟</span>
+      {% endif %}
+    
       <ul class="tag">
         {% for tag in post.tags %}
         <li>

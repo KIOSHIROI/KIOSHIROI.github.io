@@ -17,25 +17,32 @@ layout: default
     <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript">
     </script>
 </header>
-<article class="posts">
-  
-  <h1>{{ page.title }}</h1>
+<div clsss="meta">
+  <span class="date">
+    {{ page.date | date: "%Y-%m-%d" }}
+  </span>
 
-  <div clsss="meta">
-    <span class="date">
-      {{ page.date | date: "%Y-%m-%d" }}
-    </span>
+  {% assign words = page.content | number_of_words %}
+  {% if words < 360 %}
+    <span class="reading-time">· 阅读约 1 分钟</span>
+  {% else %}
+    <span class="reading-time">· 阅读约 {{ words | divided_by:180 }} 分钟</span>
+  {% endif %}
 
-    <ul class="tag">
-      {% for tag in page.tags %}
-      <li>
-        <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
-          {{ tag }}
-        </a>
-      </li>
-      {% endfor %}
-    </ul>
-  </div>
+  <span id="busuanzi_container_page_pv">
+    · 阅读 <span id="busuanzi_value_page_pv"></span> 次
+  </span>
+
+  <ul class="tag">
+    {% for tag in page.tags %}
+    <li>
+      <a href="{{ site.url }}{{ site.baseurl }}/tags#{{ tag }}">
+        {{ tag }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
 
   
 
