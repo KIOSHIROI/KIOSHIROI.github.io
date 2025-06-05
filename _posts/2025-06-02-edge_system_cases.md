@@ -76,3 +76,5 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys B53DC80D13EDEF05
 # 将公钥导出到专用密钥环（推荐）
 sudo gpg --export --armor B53DC80D13EDEF05 | sudo tee /usr/share/keyrings/kubernetes-archive-keyring.gpg
 ```
+- Q:为什么go使用k8s.io库会报错 unknown reversion?
+    - A: 因为k8s.io库要求其版本与k8s版本一致，所以需要在go.mod中指定版本。
