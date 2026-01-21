@@ -494,6 +494,38 @@ nav {
     margin-bottom: .1em;
   }
 
+  .meta {
+    margin-bottom: 1em;
+  }
+
+  .tag {
+    display: inline;
+    font-weight: 300;
+    font-size: $small-font-size;
+
+    li:before {
+      content: '';
+    }
+
+    li {
+      display: inline;
+      margin: 0;
+
+      > a {
+        margin: 3px 3px 3px 0;
+        padding: .5px 4px;
+        color: $base-color;
+        background-color: $tag-index-label-background-color;
+        border-radius: 3px;
+
+        &:hover {
+          color: $link-color;
+          background-color: $link-bghv-color;
+        }
+      }
+    }
+  }
+
 
   .comments {
     margin-top: 10px;
@@ -737,5 +769,4 @@ footer {
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
 @import "gitalk";
-
 
