@@ -25,6 +25,26 @@ body {
   line-height: 1.7em;
 }
 
+.sidebar-toggle {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 6;
+  padding: 6px 10px;
+  border: 1px solid $divider-color;
+  border-radius: 4px;
+  background-color: $background-color;
+  color: $base-color;
+  font-family: $base-font;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+
+  @include mobile {
+    display: none;
+  }
+}
+
 .container {
   margin: 0 auto;
   max-width: 1000px;
@@ -329,6 +349,7 @@ img {
 	position: fixed;
 	z-index: 4;
   border-right: 1px solid $divider-color;
+  transition: transform 0.2s ease;
 
   @include mobile {
     width: 100%;
@@ -430,10 +451,26 @@ nav {
 .wrapper-content {
   float: right;
   width: 70%;
+  transition: width 0.2s ease;
 
   @include mobile {
     float: none;
     width: 100%;
+  }
+}
+
+body.sidebar-collapsed {
+  .wrapper-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .wrapper-content {
+    float: none;
+    width: 100%;
+  }
+
+  .toc {
+    left: 0;
   }
 }
 
@@ -769,4 +806,3 @@ footer {
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
 @import "gitalk";
-

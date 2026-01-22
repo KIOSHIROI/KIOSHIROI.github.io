@@ -2,6 +2,9 @@
 <html>
   {% include head.html %}
   <body>
+    <button class="sidebar-toggle" id="sidebar-toggle" type="button" aria-controls="sidebar" aria-expanded="true">
+      Menu
+    </button>
     {% include nav.html %}
 
     {% if page.toc==true %}
@@ -23,6 +26,41 @@
       document.getElementById("main").classList.add("withtoc");
     </script>
     {% endif %}
+
+    <script>
+      (function () {
+        var body = document.body;
+        var button = document.getElementById("sidebar-toggle");
+        if (!button) {
+          return;
+        }
+        var storageKey = "sidebar-collapsed";
+        var isCollapsed = false;
+        try {
+          isCollapsed = localStorage.getItem(storageKey) === "1";
+        } catch (e) {
+          isCollapsed = false;
+        }
+
+        function applyState(collapsed) {
+          body.classList.toggle("sidebar-collapsed", collapsed);
+          button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+          button.setAttribute("title", collapsed ? "展开侧栏" : "收起侧栏");
+        }
+
+        applyState(isCollapsed);
+
+        button.addEventListener("click", function () {
+          var nextCollapsed = !body.classList.contains("sidebar-collapsed");
+          applyState(nextCollapsed);
+          try {
+            localStorage.setItem(storageKey, nextCollapsed ? "1" : "0");
+          } catch (e) {
+            return;
+          }
+        });
+      })();
+    </script>
 
     <div class="wrapper-footer-mobile">
       <footer class="footer">
