@@ -25,6 +25,37 @@ body {
   line-height: 1.7em;
 }
 
+.search-container {
+  margin: 24px 0 32px;
+  padding: 18px 20px;
+  background-color: $background-lighten-color;
+  border: 1px solid $divider-color;
+  border-radius: 12px;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  color: $base-color;
+  background-color: $background-color;
+  line-height: 40px;
+  padding: 0 16px;
+  border: 1px solid $divider-color;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 20px;
+  outline: none;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .35);
+}
+
+.search-results {
+  margin-top: 12px;
+}
+
+.search-results li {
+  margin: 0;
+}
+
 .sidebar-toggle {
   position: fixed;
   top: 16px;
@@ -139,6 +170,7 @@ hr {
 
 ol, ul {
   > li {
+    position: relative;
     &:before {
       position: absolute;
       width: $li-bullets-width;
@@ -477,6 +509,7 @@ body.sidebar-collapsed {
 // Posts
 
 .posts{
+  margin-top: 12px;
 
   .tag {
     display: inline;
@@ -510,6 +543,11 @@ body.sidebar-collapsed {
 .posts > .post {
   padding-bottom: 2em;
   border-bottom: 1px solid $divider-color;
+}
+
+.posts > .post.post-preview {
+  padding-bottom: 0;
+  border-bottom: none;
 }
 
 .posts > .post:last-child {
@@ -571,6 +609,44 @@ body.sidebar-collapsed {
   .read-more {
     font-size: 15px;
   }
+}
+
+.post-preview {
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border: 1px solid $divider-color;
+  border-radius: 10px;
+  background-color: $background-lighten-color;
+}
+
+.post-preview h1 {
+  margin-top: 0;
+  font-size: 24px;
+}
+
+.post-preview .meta {
+  margin-bottom: .6em;
+}
+
+.post-preview .post-excerpt {
+  margin: 0;
+  color: $base-lighten-color;
+}
+
+.post-preview .read-more {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 4px 10px;
+  border: 1px solid $divider-color;
+  border-radius: 4px;
+  background-color: $background-color;
+  position: relative;
+  z-index: 1;
+}
+
+.post-preview .read-more:hover {
+  color: $link-color;
+  background-color: $link-bghv-color;
 }
 
 .page {

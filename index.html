@@ -72,21 +72,8 @@ layout: default
 </style>
 </header>
 <div class="search-container">
-  <input type="text" id="search-input" placeholder="₍ᐢ⸝⸝ › ~ ‹⸝⸝ᐢ₎" style="width: 90%;
-    height: 35px;
-    color: #333;
-    background-color: rgba(227,231,236,.2);
-    line-height: 35px;
-    padding:0px 16px;
-    margin-top: 10px;
-    border: 1px solid #c0c0c0;
-    font-size: 16px;
-    font-weight: bold;
-    border-radius: 17px;
-    outline: none;
-    box-sizing: border-box;
-    box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);">
-  <ol class="rounded-list" id="results-container"></ol>
+  <input type="text" id="search-input" class="search-input" placeholder="₍ᐢ⸝⸝ › ~ ‹⸝⸝ᐢ₎">
+  <ol class="rounded-list search-results" id="results-container"></ol>
 </div>
 
 <!--script src="https://unpkg.com/simple-jekyll-search/dest/simple-jekyll-search.min.js"></script-->
@@ -112,7 +99,7 @@ layout: default
 <div class="posts">
   {% for post in paginator.posts %}
   {% unless post.draft %}
-  <article class="post">
+  <article class="post post-preview">
     <h1>
       <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
     </h1>
@@ -141,7 +128,9 @@ layout: default
     </div>
 
     <div class="entry">
-      {{ post.excerpt | truncate: 100 }}
+      <p class="post-excerpt">
+        {{ post.excerpt | strip_html | strip_newlines | truncatewords: 40 }}
+      </p>
     </div>
 
     <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">Read More</a>
