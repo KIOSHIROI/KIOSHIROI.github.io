@@ -49,46 +49,27 @@ layout: default
 </div>
 
   <div class="entry">
-    {{ content }}
     {% if page.notion_url %}
-    <div class="notion-embed">
-      <div class="notion-embed__actions">
-        <a class="notion-embed__link" href="{{ page.notion_url }}" target="_blank" rel="noopener noreferrer">
-          在 Notion 打开
-        </a>
-        {% if page.notion_redirect %}
-        <span class="notion-embed__hint">将自动跳转到 Notion</span>
-        {% endif %}
-      </div>
-      <div class="notion-embed__frame">
-        <iframe
-          title="{{ page.title | escape }}"
-          src="{% if page.notion_embed_url %}{{ page.notion_embed_url }}{% else %}{{ page.notion_url }}{% endif %}"
-          loading="lazy"
-          referrerpolicy="no-referrer"
-          allowfullscreen>
-        </iframe>
-      </div>
-      <p class="notion-embed__fallback">如果无法显示嵌入内容，请点击上方链接查看。</p>
+    <div class="notion-redirect">
+      <p>正在跳转到 Notion…</p>
+      <a href="{{ page.notion_url }}" target="_blank" rel="noopener noreferrer">如果未自动跳转，请点击这里</a>
     </div>
     {% endif %}
+    {{ content }}
   </div>
 
   {% include disqus.html %}
   {% include gitalk.html %}
 </article>
 
-{% if page.notion_url and page.notion_redirect %}
+{% if page.notion_url %}
 <script>
   (function () {
     var target = {{ page.notion_url | jsonify }};
     if (!target) {
       return;
     }
-    var delay = {{ page.notion_redirect_delay | default: 800 }};
-    setTimeout(function () {
-      window.location.href = target;
-    }, delay);
+    window.location.replace(target);
   })();
 </script>
 {% endif %}
