@@ -672,6 +672,45 @@ body.sidebar-collapsed {
   background-color: $link-bghv-color;
 }
 
+.edu-card {
+  margin: 16px 0 24px;
+  padding: 16px 18px;
+  border: 1px solid $divider-color;
+  border-radius: 12px;
+  background-color: $background-lighten-color;
+}
+
+.edu-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.edu-card__school {
+  font-weight: 700;
+}
+
+.edu-card__status {
+  font-size: $small-font-size;
+  color: $link-color;
+  border: 1px solid $divider-color;
+  border-radius: 999px;
+  padding: 2px 10px;
+  background-color: $background-color;
+}
+
+.edu-card__meta {
+  margin-top: 6px;
+  color: $base-lighten-color;
+  font-size: $small-font-size;
+}
+
+.edu-card__detail {
+  margin-top: 8px;
+}
+
 .page {
 //  margin: 40px;
 
