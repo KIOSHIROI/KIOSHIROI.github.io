@@ -1,0 +1,55 @@
+- name: 站长自己
+  eyebrow: Start Here
+  description: 当前博客本体，作为这张友链页的起点。
+  items:
+    - title: KIOSHIROI's CS-learning Road
+      url: https://kioshiroi.github.io
+      domain: kioshiroi.github.io
+      badge: K
+      label: Host
+      tone: sky
+      summary: 记录 CS 学习、科研积累和生活碎片，主题偏人工智能、工程实践与个人笔记。
+      tags:
+        - AI
+        - Notes
+        - Learning
+
+- name: 常逛朋友
+  eyebrow: Long-term Reads
+  description: 愿意长期回访，也值得慢慢读的独立站点。
+  items:
+    - title: Czj's Blog
+      url: https://caizejun.cn/
+      domain: caizejun.cn
+      badge: C
+      label: Tech
+      tone: amber
+      summary: 个人技术博客，偏向代码、问题记录和持续折腾中的经验沉淀。
+      tags:
+        - Coding
+        - Notes
+        - Record
+
+    - title: 群青广播II
+      url: https://gunjo-radio-ii.cc
+      domain: gunjo-radio-ii.cc
+      badge: 群
+      label: Independent
+      tone: coral
+      summary: 一个带有鲜明个人气质的独立小站，适合慢慢逛、慢慢读。
+      tags:
+        - Indie Web
+        - Writing
+        - Personal
+
+    - title: 伞菌の博客
+      url: https://umb.ink
+      domain: umb.ink
+      badge: 伞
+      label: Life
+      tone: mint
+      summary: 闲鱼的生活记录，轻松、真诚，也保留了很好的个人表达。
+      tags:
+        - Life
+        - Journal
+        - Personal
