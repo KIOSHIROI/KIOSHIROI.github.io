@@ -711,6 +711,369 @@ body.sidebar-collapsed {
   margin-top: 8px;
 }
 
+.friends-page {
+  --friends-sky-soft: #e7f3ff;
+  --friends-sky-strong: #1c7ed6;
+  --friends-amber-soft: #fff4e6;
+  --friends-amber-strong: #f08c00;
+  --friends-mint-soft: #ebfbee;
+  --friends-mint-strong: #2b8a3e;
+  --friends-coral-soft: #fff0eb;
+  --friends-coral-strong: #d9480f;
+  margin: 16px 0 32px;
+}
+
+.friends-hero {
+  position: relative;
+  overflow: hidden;
+  margin: 12px 0 32px;
+  padding: 28px;
+  border: 1px solid $divider-color;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at top right, rgba(28, 126, 214, 0.12), transparent 36%),
+    linear-gradient(135deg, rgba(248, 249, 250, 0.9), rgba(255, 244, 230, 0.9));
+
+  @include mobile {
+    padding: 22px 18px;
+    border-radius: 18px;
+  }
+}
+
+.friends-hero:after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  bottom: -60px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  filter: blur(6px);
+}
+
+.friends-hero__eyebrow,
+.friend-group__eyebrow,
+.friends-apply__eyebrow {
+  margin: 0 0 8px;
+  color: $base-lighten-color;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.friends-hero__body {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.7fr) minmax(240px, 0.9fr);
+  gap: 28px;
+  align-items: end;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
+
+.friends-hero__lead {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.9;
+
+  @include mobile {
+    font-size: 18px;
+  }
+}
+
+.friends-hero__text {
+  margin: 14px 0 0;
+  color: $base-lighten-color;
+}
+
+.friends-hero__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.friends-hero__stat {
+  padding: 16px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.friends-hero__stat-value {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.friends-hero__stat-label {
+  display: block;
+  color: $base-lighten-color;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.friend-group {
+  margin: 32px 0 0;
+}
+
+.friend-group__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  gap: 16px;
+  margin-bottom: 16px;
+
+  @include mobile {
+    display: block;
+  }
+}
+
+.friend-group__title,
+.friends-apply__title {
+  margin: 0;
+}
+
+.friend-group__description {
+  max-width: 360px;
+  margin: 0;
+  color: $base-lighten-color;
+  font-size: $small-font-size;
+  text-align: right;
+
+  @include mobile {
+    max-width: none;
+    margin-top: 6px;
+    text-align: left;
+  }
+}
+
+.friend-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.friend-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 22px 20px 20px;
+  border: 1px solid $divider-color;
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(248, 249, 250, 0.9));
+  overflow: hidden;
+  transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+.friend-card:before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 4px;
+  background: var(--friend-accent-strong);
+}
+
+.friend-card:after {
+  content: "";
+  position: absolute;
+  right: -24px;
+  top: -24px;
+  width: 120px;
+  height: 120px;
+  border-radius: 28px;
+  background: var(--friend-accent-soft);
+  opacity: 0.7;
+  transform: rotate(18deg);
+}
+
+.friend-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 18px 32px rgba(15, 23, 42, 0.08);
+}
+
+.friend-card--sky {
+  --friend-accent-soft: var(--friends-sky-soft);
+  --friend-accent-strong: var(--friends-sky-strong);
+}
+
+.friend-card--amber {
+  --friend-accent-soft: var(--friends-amber-soft);
+  --friend-accent-strong: var(--friends-amber-strong);
+}
+
+.friend-card--mint {
+  --friend-accent-soft: var(--friends-mint-soft);
+  --friend-accent-strong: var(--friends-mint-strong);
+}
+
+.friend-card--coral {
+  --friend-accent-soft: var(--friends-coral-soft);
+  --friend-accent-strong: var(--friends-coral-strong);
+}
+
+.friend-card__top,
+.friend-card__title,
+.friend-card__domain,
+.friend-card__summary,
+.friend-card__tags,
+.friend-card__action {
+  position: relative;
+  z-index: 1;
+}
+
+.friend-card__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.friend-card__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--friend-accent-soft);
+  color: var(--friend-accent-strong);
+  font-size: 22px;
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+
+.friend-card__label {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  color: $base-lighten-color;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.friend-card__title {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.45;
+}
+
+.friend-card__title a {
+  color: $base-color;
+}
+
+.friend-card__title a:hover {
+  color: var(--friend-accent-strong);
+}
+
+.friend-card__domain {
+  margin: 8px 0 0;
+  color: $base-lighten-color;
+  font-size: 13px;
+  letter-spacing: 0.08em;
+}
+
+.friend-card__summary {
+  margin: 12px 0 0;
+  color: $text-color;
+}
+
+.friend-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 0;
+}
+
+.friend-card__tag {
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: var(--friend-accent-soft);
+  color: var(--friend-accent-strong);
+  font-size: 12px;
+}
+
+.friend-card__action {
+  display: inline-block;
+  align-self: flex-start;
+  margin-top: auto;
+  padding: 8px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.88);
+  color: $base-color;
+}
+
+.friend-card__action:hover {
+  color: var(--friend-accent-strong);
+  border-color: var(--friend-accent-strong);
+}
+
+.friends-apply {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 32px;
+
+  @include mobile {
+    grid-template-columns: 1fr;
+  }
+}
+
+.friends-apply__main,
+.friends-apply__aside {
+  padding: 22px 20px;
+  border: 1px solid $divider-color;
+  border-radius: 18px;
+  background: $background-lighten-color;
+}
+
+.friends-apply__text {
+  margin: 10px 0 0;
+  color: $base-lighten-color;
+}
+
+.friends-apply__action {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 14px;
+  border: 1px solid $divider-color;
+  border-radius: 12px;
+  background: $background-color;
+}
+
+.friends-apply__aside {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.friends-apply__rule {
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: $background-color;
+  color: $text-color;
+}
+
 .page {
 //  margin: 40px;
 
