@@ -111,6 +111,19 @@ if (window.innerWidth >= minWidth && !window[LIVE2D_ACTIVE_KEY]) {
         switchType: 'order'
       })
 
+      // Trigger expression after model loads to apply watermark-off parameter
+      // All expressions now include ParamWatermarkOFF=1.0
+      function triggerStartupExpression(attempt) {
+        if (attempt <= 0) return
+        if (typeof window.live2d?.randomExpression === 'function') {
+          try { window.live2d.randomExpression() } catch (_) {}
+        }
+        if (attempt > 1) {
+          setTimeout(() => triggerStartupExpression(attempt - 1), 600)
+        }
+      }
+      setTimeout(() => triggerStartupExpression(4), 1500)
+
       window.addEventListener('pagehide', cleanupLive2DWidget, { once: true })
       window.addEventListener('beforeunload', cleanupLive2DWidget, { once: true })
     } catch (error) {

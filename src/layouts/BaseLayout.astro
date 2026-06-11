@@ -21,7 +21,7 @@ const {
 const currentLocale = Astro.currentLocale || 'zh'
 const langAttr = currentLocale === 'en' ? 'en' : 'zh'
 const baseUrl = import.meta.env.BASE_URL || '/'
-const live2dAutoloadVersion = '20260612-teto-cubism5'
+const live2dAutoloadVersion = '20260612-teto-fix3'
 const live2dAutoloadSrc = `${baseUrl}live2d-autoload.js?v=${live2dAutoloadVersion}`
 const live2dCdnPath = `${baseUrl}live2d-api/`
 ---
@@ -217,16 +217,15 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
         left: auto !important;
         right: 0 !important;
         bottom: 0 !important;
-        width: 300px !important;
-        height: 350px !important;
         z-index: 9998 !important;
-        overflow: hidden !important;
         pointer-events: auto !important;
       }
 
-      :global(#waifu canvas) {
-        width: 300px !important;
-        height: auto !important;
+      /* Clip canvas to show only upper body, keep text/tool elements visible */
+      :global(#waifu #live2d) {
+        display: block !important;
+        width: 320px !important;
+        clip-path: inset(0 0 45% 0) !important;
       }
 
       :global(#waifu-toggle) {
