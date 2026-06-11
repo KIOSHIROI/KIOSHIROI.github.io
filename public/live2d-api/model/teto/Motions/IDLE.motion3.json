@@ -5,9 +5,9 @@
 		"Fps": 60.0,
 		"Loop": true,
 		"AreBeziersRestricted": false,
-		"CurveCount": 6,
-		"TotalSegmentCount": 6,
-		"TotalPointCount": 14,
+		"CurveCount": 7,
+		"TotalSegmentCount": 7,
+		"TotalPointCount": 16,
 		"UserDataCount": 0,
 		"TotalUserDataSize": 0
 	},
@@ -80,6 +80,17 @@
 				0,
 				2.833,
 				33.2
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Id": "ParamWatermarkOFF",
+			"Segments": [
+				0,
+				1.0,
+				0,
+				2.833,
+				1.0
 			]
 		}
 	]
