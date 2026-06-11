@@ -213,11 +213,13 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
 
       /* Live2D widget position override: bottom-right */
       :global(#waifu) {
+        position: fixed !important;
         left: auto !important;
         right: 0 !important;
         bottom: 0 !important;
         z-index: 9998 !important;
-        will-change: transform, opacity;
+        overflow: visible !important;
+        pointer-events: auto !important;
       }
 
       :global(#waifu-toggle) {

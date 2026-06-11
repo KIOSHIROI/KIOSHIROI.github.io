@@ -105,9 +105,9 @@ if (window.innerWidth >= minWidth && !window[LIVE2D_ACTIVE_KEY]) {
         waifuPath: `${activeBase}waifu-tips.json`,
         cdnPath: localCdnPath,
         homePath: 'https://kioshiroi.github.io/',
-        tools: ['hitokoto', 'photo', 'info', 'quit'],
+        tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
         dragEnable: true,
-        dragDirection: 'both',
+        dragDirection: ['x', 'y'],
         switchType: 'order'
       })
 
