@@ -3,6 +3,7 @@ import { render, type CollectionEntry } from 'astro:content'
 
 import { getBlogCollection, sortMDByDate } from '@/server'
 import PostLayout from '@/layouts/BlogPost.astro'
+import NotionContent from '@/components/user/NotionContent.astro'
 
 export const prerender = true
 
@@ -24,5 +25,9 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
 ---
 
 <PostLayout {post} {posts} {headings} {remarkPluginFrontmatter}>
-  <Content />
+  {post.data.notion_url ? (
+    <NotionContent notion_url={post.data.notion_url} />
+  ) : (
+    <Content />
+  )}
 </PostLayout>

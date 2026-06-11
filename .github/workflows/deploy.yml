@@ -24,6 +24,8 @@ jobs:
       - run: pnpm install
 
       - run: pnpm run build
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
 
       - uses: peaceiris/actions-gh-pages@v4
         with:

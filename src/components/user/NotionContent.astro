@@ -1,0 +1,80 @@
+---
+import { fetchNotionMarkdown } from '@/libs/notion'
+import { marked } from 'marked'
+
+interface Props {
+  notion_url: string
+}
+
+const { notion_url } = Astro.props
+const md = notion_url ? await fetchNotionMarkdown(notion_url) : ''
+const html = md ? await marked.parse(md) : ''
+---
+
+{html ? (
+  <>
+    <!-- Notion content rendered inline -->
+    <div class='notion-content' set:html={html} />
+
+    <hr class='my-10' />
+
+    <!-- Discussion CTA -->
+    <div class='not-prose my-8 rounded-xl border border-border bg-card p-6 text-center'>
+      <div class='flex flex-col items-center gap-3'>
+        <div class='flex size-12 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950'>
+          <svg xmlns='http://www.w3.org/2000/svg' class='size-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='M12 20.25c4.97 0 9-3.694 9-8.25s-4.03-8.25-9-8.25S3 7.444 3 12c0 2.104.859 4.023 2.273 5.48.432.447.74 1.04.586 1.641a4.483 4.483 0 0 1-.923 1.785A5.969 5.969 0 0 0 6 21c1.282 0 2.47-.402 3.445-1.087.81.22 1.668.337 2.555.337Z' />
+          </svg>
+        </div>
+        <div>
+          <h3 class='text-lg font-semibold text-foreground'>在 Notion 参与讨论</h3>
+          <p class='mt-1 text-sm text-muted-foreground'>
+            本文托管在 Notion，欢迎到原文评论区留言交流
+          </p>
+        </div>
+        <a
+          href={notion_url}
+          target='_blank'
+          rel='noopener noreferrer'
+          class='mt-2 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 no-underline'
+        >
+          <svg xmlns='http://www.w3.org/2000/svg' class='size-4' viewBox='0 0 24 24' fill='currentColor'>
+            <path d='M4.459 4.208c.746.606 1.026.56 2.428.466l13.215-.793c.28 0 .047-.28-.046-.373l-10.82-7.84c-.747-.56-1.747-.327-1.827.42l-2.236 14.353c-.094.654.514 1.07 1.287.767z'/>
+          </svg>
+          在 Notion 打开
+          <svg xmlns='http://www.w3.org/2000/svg' class='size-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+            <path stroke-linecap='round' stroke-linejoin='round' d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' />
+          </svg>
+        </a>
+      </div>
+    </div>
+  </>
+) : (
+  <!-- Fallback: direct link when content can't be fetched -->
+  <div class='not-prose my-8 rounded-xl border border-border bg-card p-6 text-center'>
+    <div class='flex flex-col items-center gap-3'>
+      <div class='flex size-12 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950'>
+        <svg xmlns='http://www.w3.org/2000/svg' class='size-6 text-blue-600' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='1.5'>
+          <path stroke-linecap='round' stroke-linejoin='round' d='M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244' />
+        </svg>
+      </div>
+      <div>
+        <h3 class='text-lg font-semibold text-foreground'>本文托管在 Notion</h3>
+        <p class='mt-1 text-sm text-muted-foreground'>
+          点击下方按钮在 Notion 中查看全文并参与讨论
+        </p>
+      </div>
+      <a
+        href={notion_url}
+        target='_blank'
+        rel='noopener noreferrer'
+        class='mt-2 inline-flex items-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-medium text-white transition-colors hover:bg-blue-700 no-underline'
+      >
+        在 Notion 打开
+        <svg xmlns='http://www.w3.org/2000/svg' class='size-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' stroke-width='2'>
+          <path stroke-linecap='round' stroke-linejoin='round' d='m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25' />
+        </svg>
+      </a>
+    </div>
+  </div>
+)

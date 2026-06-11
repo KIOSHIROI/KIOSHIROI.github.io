@@ -1,5 +1,6 @@
 // Container
 export { default as Card } from './Card.astro'
+export { default as NotionContent } from './NotionContent.astro'
 export { default as RedirectCard } from './RedirectCard.astro'
 export { default as Collapse } from './Collapse.astro'
 export { default as Aside } from './Aside.astro'

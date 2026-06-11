@@ -32,6 +32,8 @@ const blogSchema = ({ image }: { image: () => any }) =>
     category: z.string().optional(),
     language: z.string().optional(),
     draft: z.boolean().default(false),
+    // Notion integration
+    notion_url: z.string().optional(),
     // Integrations
     comment: z.boolean().default(true),
     pixivLink: z.string().optional()
