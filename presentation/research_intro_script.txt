@@ -1,0 +1,7 @@
+Hello everyone. My name is Rose, and my Chinese name is Jibao Yuan. I am a first-year Master's student in Electronic Information at the National University of Defense Technology. I received my bachelor's degree in Artificial Intelligence from South China Normal University.
+
+My earlier research focused on Multi-Agent Reinforcement Learning, especially cooperative learning methods. Recently, I have shifted my main research direction to Embodied AI, because I want to study intelligent systems that can interact with the real physical world.
+
+At present, I am most interested in robotic manipulation, grasping, dexterous control, and Vision-Language-Action models. In particular, I hope to explore how to reduce the sim-to-real gap and make robot learning more practical and scalable.
+
+Thank you for listening.

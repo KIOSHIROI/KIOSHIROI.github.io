@@ -1,0 +1,140 @@
+---
+import { Image } from 'astro:assets'
+
+import { Icon } from '@/components/user'
+
+type CoverImage = {
+  src?: any
+  alt?: string
+  color?: string
+  width?: number
+  height?: number
+}
+
+type CollectionPreviewItem = {
+  title: string
+  description: string
+  href: string
+  count: number
+  coverImage?: CoverImage
+}
+
+type Props = {
+  collection: CollectionPreviewItem
+  locale: 'zh' | 'en'
+}
+
+const { collection, locale } = Astro.props
+const countLabel = locale === 'en' ? `${collection.count} posts` : `共 ${collection.count} 篇`
+const cardLabel = 'COLLECTION'
+---
+
+<li
+  class='post-preview group/card relative flex flex-col overflow-hidden rounded-2xl border border-border bg-background transition-colors ease-in-out hover:bg-muted'
+  style={collection.coverImage?.color && `--preview-highlight:color-mix(in srgb,${collection.coverImage.color} 40%,hsl(var(--foreground)/var(--tw-text-opacity,1)));--preview-highlight-bg:hsl(from ${collection.coverImage.color} h s l/20%)`}
+>
+  <a
+    href={collection.href}
+    class={`group/link relative flex w-full flex-col px-5 py-2.5 transition-all hover:text-primary max-sm:px-4 sm:py-5 ${collection.coverImage?.src ? 'max-md:pt-24' : ''}`}
+    data-astro-prefetch
+  >
+    {
+      collection.coverImage?.src && (
+        <Image
+          alt={collection.coverImage.alt || collection.title}
+          class='cover-image absolute end-0 top-0 z-0 h-2/3 w-full object-cover opacity-50 transition-opacity duration-300 group-hover/card:opacity-70 md:h-full md:w-3/5'
+          loading='eager'
+          src={collection.coverImage.src as any}
+          width={collection.coverImage.width || 1200}
+          height={collection.coverImage.height || 630}
+        />
+      )
+    }
+
+    <div class='min-w-[95px] py-1 text-xs text-muted-foreground'>{cardLabel}</div>
+
+    <div class='z-10 flex-grow'>
+      <div class='flex justify-between'>
+        <div class='font-medium'>{collection.title}</div>
+        <svg
+          xmlns='http://www.w3.org/2000/svg'
+          width='16'
+          height='16'
+          viewBox='0 0 24 24'
+          fill='none'
+          stroke-width='2.5'
+          stroke-linecap='round'
+          stroke-linejoin='round'
+          class='preview-redirect my-1 stroke-muted-foreground group-hover/link:stroke-primary'
+          ><line
+            x1='5'
+            y1='12'
+            x2='19'
+            y2='12'
+            class='translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover/link:translate-x-1 group-hover/link:scale-x-100'
+          ></line><polyline
+            points='12 5 19 12 12 19'
+            class='translate-x-0 transition-all duration-300 ease-in-out group-hover/link:translate-x-1'
+          ></polyline></svg
+        >
+      </div>
+
+      <p class={`line-clamp-2 pt-1 text-sm text-muted-foreground sm:line-clamp-3 ${collection.coverImage?.src ? 'sm:me-24' : ''}`}>
+        {collection.description}
+      </p>
+
+      <div class='flex items-center gap-1 py-1.5 text-sm italic leading-4 text-muted-foreground sm:py-3'>
+        <Icon name='package' class='size-4' />
+        {countLabel}
+      </div>
+    </div>
+  </a>
+</li>
+
+<style>
+  .post-preview {
+    --preview-highlight-final: var(
+      --preview-highlight,
+      hsl(var(--primary) / var(--tw-text-opacity, 1))
+    );
+  }
+
+  .post-preview:hover {
+    & {
+      background-color: var(
+        --preview-highlight-bg,
+        hsl(var(--muted) / var(--tw-bg-opacity, 1))
+      ) !important;
+    }
+
+    & > a {
+      color: var(--preview-highlight-final) !important;
+    }
+
+    & > a .preview-redirect {
+      stroke: var(--preview-highlight-final) !important;
+    }
+  }
+
+  .cover-image {
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    -ms-mask-image: -ms-linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    -webkit-mask-image: -webkit-linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 1) 100%
+    );
+  }
+
+  @media (max-width: 768px) {
+    .cover-image {
+      mask-image: linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+      -ms-mask-image: -ms-linear-gradient(to top, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+      -webkit-mask-image: -webkit-linear-gradient(
+        to top,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 1) 100%
+      );
+    }
+  }
+</style>

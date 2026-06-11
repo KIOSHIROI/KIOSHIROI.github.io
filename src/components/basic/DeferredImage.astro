@@ -1,0 +1,50 @@
+---
+import type { HTMLAttributes } from 'astro/types'
+
+interface Props extends HTMLAttributes<'img'> {
+  src: string
+  alt: string
+  defer?: boolean
+}
+
+const {
+  src,
+  alt,
+  class: className,
+  defer = true,
+  loading,
+  decoding = 'async',
+  fetchpriority,
+  ...props
+} = Astro.props
+
+const shouldDefer = defer && loading !== 'eager' && fetchpriority !== 'high'
+const placeholderSrc = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw=='
+---
+
+<img
+  src={shouldDefer ? placeholderSrc : src}
+  data-src={shouldDefer ? src : undefined}
+  data-deferred-image={shouldDefer ? 'true' : undefined}
+  alt={alt}
+  class={className}
+  loading={loading ?? 'lazy'}
+  decoding={decoding}
+  fetchpriority={fetchpriority}
+  {...props}
+/>
+{
+  shouldDefer && (
+    <noscript>
+      <img
+        src={src}
+        alt={alt}
+        class={className}
+        loading={loading ?? 'lazy'}
+        decoding={decoding}
+        fetchpriority={fetchpriority}
+        {...props}
+      />
+    </noscript>
+  )
+}

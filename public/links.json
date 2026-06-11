@@ -1,0 +1,38 @@
+{
+  "friends": [
+    {
+      "id_name": "cf-links",
+      "desc": "Common links included in circle friends",
+      "link_list": [
+        {
+          "name": "Czj's Blog",
+          "link": "https://caizejun.cn/",
+          "avatar": "https://caizejun.cn/avatar.png",
+          "intro": "一个热爱技术的博客"
+        },
+        {
+          "name": "群青广播II",
+          "link": "https://gunjo-radio-ii.cc",
+          "avatar": "https://gunjo-radio-ii.cc/avatar.png",
+          "intro": "群青广播"
+        },
+        {
+          "name": "伞菌の博客",
+          "link": "https://umb.ink",
+          "avatar": "https://umb.ink/avatar.png",
+          "intro": "伞菌的博客"
+        }
+      ]
+    },
+    {
+      "id_name": "inactive-links",
+      "desc": "Inactive or rule-breaking friends",
+      "link_list": []
+    },
+    {
+      "id_name": "special-links",
+      "desc": "Other special links",
+      "link_list": []
+    }
+  ]
+}

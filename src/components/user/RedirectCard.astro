@@ -1,0 +1,77 @@
+---
+import { cn } from '@/utils'
+
+interface Props {
+  /** The Notion URL to redirect to */
+  url: string
+  /** Optional title of the note */
+  title?: string
+}
+
+const { url, title } = Astro.props
+---
+
+<div id="redirect-card" class="not-prose my-8" data-redirect-url={url}>
+  <div
+    class={cn(
+      'relative overflow-hidden rounded-xl border border-border bg-card p-8',
+      'flex flex-col items-center gap-4 text-center'
+    )}
+  >
+    <!-- Icon -->
+    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-50 dark:bg-blue-950">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="32"
+        height="32"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        class="text-blue-500"
+      >
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+      </svg>
+    </div>
+
+    <!-- Text -->
+    <div class="flex flex-col gap-2">
+      <h2 class="text-lg font-semibold text-foreground">
+        This note is hosted on Notion
+      </h2>
+      {
+        title && (
+          <p class="text-sm text-muted-foreground">
+            正在跳转到：{title}
+          </p>
+        )
+      }
+      <p class="text-sm text-muted-foreground">
+        Auto-redirecting in 3 seconds...
+      </p>
+      <p class="text-sm">
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="font-medium text-primary underline underline-offset-4 hover:text-primary/80"
+        >
+          Click here if not redirected
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  const card = document.getElementById('redirect-card')
+  const redirectUrl = card?.dataset.redirectUrl
+  if (redirectUrl) {
+    setTimeout(() => {
+      window.location.replace(redirectUrl)
+    }, 3000)
+  }
+</script>

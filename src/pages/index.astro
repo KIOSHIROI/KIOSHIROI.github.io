@@ -1,0 +1,74 @@
+---
+import { Image } from 'astro:assets'
+import { Button, Card, Icon, Label, Spoiler } from '@/components/user'
+import PageLayout from '@/layouts/BaseLayout.astro'
+import Section from '@/components/home/Section.astro'
+import BlogStats from '@/components/home/BlogStats.astro'
+import avatar from '@/assets/avatar.png'
+import config from '@/site-config'
+---
+
+<PageLayout meta={{ title: 'Home' }} highlightColor='#659EB966'>
+  <main class='flex w-full flex-col items-center'>
+    <section class='animate mb-10 flex flex-col items-center gap-y-7' id='content-header'>
+      <div class='flex flex-row items-center gap-x-6'>
+        <Image
+          src={avatar}
+          alt='profile'
+          class='h-36 w-auto rounded-lg border p-1'
+          loading='eager'
+        />
+        <div class='flex flex-col gap-y-4'>
+          <h1 class='text-3xl font-bold'>{config.author}</h1>
+          <div class='flex flex-wrap gap-x-1 gap-y-1'>
+            <Label title='China'>
+              <Icon name='location' class='size-4' slot='icon' />
+            </Label>
+            <Label
+              title='Github'
+              as='a'
+              href='https://github.com/KIOSHIROI'
+              target='_blank'
+            >
+              <Icon name='github' class='size-4' slot='icon' />
+            </Label>
+            <Label title='Email' as='a' href='mailto:202211079360@mail.bnu.edu.cn'>
+              <Icon name='email' class='size-4' slot='icon' />
+            </Label>
+          </div>
+        </div>
+      </div>
+
+    <div id='content' class='animate flex flex-col gap-y-10 md:w-4/5 lg:w-5/6'>
+      <Section title='About'>
+        <p class='text-muted-foreground'>AI 研0 / <Spoiler>在BNU自救的路上</Spoiler></p>
+        <p class='text-muted-foreground'>
+          我是「KIOSHIROI」，也叫余秋白，是一名北京师范大学珠海校区人工智能专业的学生。
+          已推免至国科大杭州高等研究院。目前主要关注 AI Infra、CUDA 等方向。
+        </p>
+        <Button title='More about me' class='w-fit self-end' href='/about' style='ahead' />
+      </Section>
+      <Section title='Education'>
+        <Card
+          as='a'
+          heading='国科大杭州高等研究院'
+          subheading='电子信息，推免'
+          date='Sep 2026 - Present'
+          href='https://hias.ucas.ac.cn/'
+        >
+        </Card>
+        <Card
+          as='a'
+          heading='北京师范大学珠海'
+          subheading='人工智能专业，本科'
+          date='Sep 2022 - Jul 2026'
+          href='https://www.bnuzh.edu.cn/'
+        >
+        </Card>
+      </Section>
+      <Section title='Statistics'>
+        <BlogStats blogStartDate={new Date('2024-03-21')} />
+      </Section>
+    </div>
+  </main>
+</PageLayout>

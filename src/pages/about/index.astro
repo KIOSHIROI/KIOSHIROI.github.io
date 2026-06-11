@@ -1,0 +1,188 @@
+---
+import PageLayout from '@/layouts/CommonPage.astro'
+import { Comment } from '@/components/advanced'
+import { DeferredImage } from '@/components/basic'
+import { Icon, Label } from '@/components/user'
+
+const headings = [
+  { depth: 2, slug: 'profile', text: 'Profile' },
+  { depth: 2, slug: 'education', text: 'Education' },
+  { depth: 2, slug: 'research', text: 'Research' },
+  { depth: 2, slug: 'donation', text: 'Donation' },
+  { depth: 2, slug: 'copyright', text: 'Copyright' },
+  { depth: 2, slug: 'theme', text: 'Theme' }
+]
+---
+
+<PageLayout title='About' {headings} info='/about'>
+  <h2 id='profile'>Profile<a class='anchor' href='#profile'>#</a></h2>
+  <section class='not-prose mb-8 mt-5 rounded-xl border border-border bg-card p-4 sm:p-5'>
+    <div class='grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px] lg:items-start'>
+      <div class='flex h-full flex-col'>
+        <div class='flex flex-col gap-4 sm:flex-row sm:items-center'>
+          <DeferredImage
+            src='/avatar/avatar.png'
+            alt='Profile avatar'
+            class='h-24 w-24 rounded-lg border p-1 object-cover'
+            loading='eager'
+            fetchpriority='high'
+            defer={false}
+            />
+          <div class='flex-1'>
+            <p class='m-0 text-lg font-semibold text-foreground'>KIOSHIROI / 余秋白</p>
+            <p class='mt-1 text-sm text-muted-foreground'>AI Student @ BNU Zhuhai</p>
+            <div class='mt-3 flex flex-wrap gap-2'>
+              <Label title='China'>
+                <Icon name='location' class='size-4' slot='icon' />
+              </Label>
+              <Label
+                title='Github'
+                as='a'
+                href='https://github.com/KIOSHIROI'
+                target='_blank'
+                rel='noopener noreferrer'
+              >
+                <Icon name='github' class='size-4' slot='icon' />
+              </Label>
+              <Label title='Email' as='a' href='mailto:202211079360@mail.bnu.edu.cn'>
+                <Icon name='email' class='size-4' slot='icon' />
+              </Label>
+            </div>
+          </div>
+        </div>
+        <p class='mt-4 text-sm text-muted-foreground'>
+          一名在 BNU 自救的 AI 学生。喜欢学习底层技术，关注 AI Infra、CUDA 编程等方向。
+        </p>
+        <p class='mt-2 text-sm text-muted-foreground'>
+          希望记录自己的学习历程，分享踩过的坑和总结的经验。站在巨人的肩膀上看问题，做实验。
+        </p>
+      </div>
+      <aside class='rounded-lg bg-card p-3'>
+        <p class='m-0 text-xs uppercase tracking-wide text-muted-foreground'>Motto</p>
+        <p class='mt-1 text-base font-semibold text-foreground'>站在巨人的肩膀上看问题，做实验</p>
+      </aside>
+    </div>
+  </section>
+
+  <h2 id='education'>Education<a class='anchor' href='#education'>#</a></h2>
+  <section class='not-prose mb-8 mt-5 grid grid-cols-1 gap-4'>
+    <article class='rounded-xl border border-border bg-card transition-shadow hover:shadow-md'>
+      <a
+        href='https://hias.ucas.ac.cn/'
+        target='_blank'
+        rel='noopener noreferrer'
+        class='block rounded-xl p-4 no-underline sm:p-5'
+        aria-label='Open HIAS official website'
+      >
+        <div class='flex items-start gap-3'>
+          <div class='size-20 shrink-0 overflow-hidden rounded-md bg-transparent flex items-center justify-center'>
+            <span class='text-2xl font-bold text-muted-foreground'>HIAS</span>
+          </div>
+          <div>
+            <div class='mb-1 text-sm font-medium text-muted-foreground'>Postgraduate (推免)</div>
+            <h3 class='m-0 text-base font-semibold text-foreground'>国科大杭州高等研究院</h3>
+            <p class='mt-2 text-sm text-muted-foreground'>电子信息，专硕</p>
+            <p class='mt-1 text-xs text-muted-foreground'>Period: 2026 - Present</p>
+          </div>
+        </div>
+      </a>
+    </article>
+    <article class='rounded-xl border border-border bg-card transition-shadow hover:shadow-md'>
+      <a
+        href='https://www.bnuzh.edu.cn/'
+        target='_blank'
+        rel='noopener noreferrer'
+        class='block rounded-xl p-4 no-underline sm:p-5'
+        aria-label='Open BNU Zhuhai official website'
+      >
+        <div class='flex items-start gap-3'>
+          <div class='size-20 shrink-0 overflow-hidden rounded-md bg-transparent flex items-center justify-center'>
+            <span class='text-2xl font-bold text-muted-foreground'>BNU</span>
+          </div>
+          <div>
+            <div class='mb-1 text-sm font-medium text-muted-foreground'>Undergraduate</div>
+            <h3 class='m-0 text-base font-semibold text-foreground'>北京师范大学珠海</h3>
+            <p class='mt-2 text-sm text-muted-foreground'>人工智能，本科</p>
+            <p class='mt-1 text-xs text-muted-foreground'>Period: 2022 - 2026</p>
+          </div>
+        </div>
+      </a>
+    </article>
+  </section>
+
+  <h2 id='research'>Research<a class='anchor' href='#research'>#</a></h2>
+  <div class='not-prose mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+    {
+      [
+        {
+          title: 'AI Infra',
+          description: '深度学习系统、分布式训练、LLM 推理优化',
+          icon: 'pytorch'
+        },
+        {
+          title: 'CUDA',
+          description: 'GPU 编程、算子优化、并行计算',
+          icon: 'nvidia'
+        },
+        {
+          title: 'Distributed Systems',
+          description: '分布式存储、消息队列、RPC 框架',
+          icon: 'kubernetes'
+        }
+      ].map((interest) => (
+        <div class='group relative overflow-hidden rounded-xl border border-border bg-card p-4 transition-all hover:border-foreground/25 hover:shadow-md'>
+          <div class='flex items-start gap-4'>
+            <div class='flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20'>
+              <span class='text-xl'>{interest.icon === 'pytorch' ? '🔥' : interest.icon === 'nvidia' ? '⚡' : '☁️'}</span>
+            </div>
+            <div class='flex-1'>
+              <p class='text-xl font-medium leading-tight text-foreground transition-colors group-hover:text-primary'>
+                {interest.title}
+              </p>
+              <p class='text-sm leading-relaxed text-muted-foreground'>{interest.description}</p>
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <h2 id='donation'>Donation<a class='anchor' href='#donation'>#</a></h2>
+  <p>
+    如果我的博客内容对你有所帮助，欢迎请我喝杯咖啡 ☕
+  </p>
+  <section class='not-prose mb-8 mt-5 flex justify-center'>
+    <div class='rounded-xl border border-border bg-card p-6 text-center'>
+      <DeferredImage
+        src='/images/award_code.jpg'
+        alt='Donation QR Code'
+        class='mx-auto h-64 w-64 rounded-lg object-cover'
+        />
+      <p class='mt-3 text-sm text-muted-foreground'>微信赞赏码</p>
+    </div>
+  </section>
+
+  <h2 id='copyright'>Copyright<a class='anchor' href='#copyright'>#</a></h2>
+  <p>
+    如你所见，本站中的所有原创内容及设计整体，除非特别说明，均使用 <a
+      href='https://creativecommons.org/licenses/by-nc-sa/4.0/'>CC BY-NC-SA 4.0</a
+    > 协议进行授权。这意味着您可以在协议允许的范围内自由地分享、复制本作品的内容及基于本作品内容进行创作，但必须注明原作者和链接，并且不得用于任何商业目的。
+  </p>
+  <p>
+    本站中的绝大多数博客封面均选自 Pixiv 的公开作品，并已注明原作链接（Hero
+    Image）。包括封面在内，本站中使用了一些来自互联网的图片等素材或商标、标志及相关知识产权，无论是否标注有
+    &copy; 或 &trade;
+    及其他标识，均归属它们各自的权利持有人所有，并无意侵犯其作品、商标或版权。如果本站中存在侵犯您权益的内容，请您联系我，我将尽快予以删除。
+  </p>
+  <img src='/icons/cc-by-nc-sa.svg' alt='CC BY-NC-SA 4.0 license badge' width='160' height='56' loading='lazy' decoding='async' />
+
+  <h2 id='theme'>Theme<a class='anchor' href='#theme'>#</a></h2>
+  <p>
+    本博客基于 Astro 搭建，主题基于 <a href='https://github.com/Axi404/Axi-Blog'>Astro-Axi</a>。
+    该主题在 Astro 的 <a href='https://astro-pure.js.org/docs'>Pure</a>, <a
+      href='https://github.com/chrismwilliams/astro-theme-cactus'>Cactus</a
+    > 以及 <a href='https://astro-theme-resume.vercel.app/'>Resume</a> 主题的基础之上进行了大量修改。
+  </p>
+
+  <Comment slot='bottom' />
+</PageLayout>
