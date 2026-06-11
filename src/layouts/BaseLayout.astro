@@ -217,12 +217,14 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
         left: auto !important;
         right: 0 !important;
         bottom: 0 !important;
+        width: 300px !important;
+        height: 350px !important;
         z-index: 9998 !important;
+        overflow: hidden !important;
         pointer-events: auto !important;
       }
 
-      :global(#waifu #live2d) {
-        display: block !important;
+      :global(#waifu canvas) {
         width: 300px !important;
         height: auto !important;
       }
