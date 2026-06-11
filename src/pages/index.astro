@@ -4,7 +4,7 @@ import { Button, Card, Icon, Label, Spoiler } from '@/components/user'
 import PageLayout from '@/layouts/BaseLayout.astro'
 import Section from '@/components/home/Section.astro'
 import BlogStats from '@/components/home/BlogStats.astro'
-import avatar from '@/assets/avatar.png'
+import avatar from '@/assets/avatar.jpg'
 import config from '@/site-config'
 ---
 
@@ -56,6 +56,7 @@ import config from '@/site-config'
           date='Sep 2026 - Present'
           href='https://hias.ucas.ac.cn/'
         >
+          <img src='/images/education/ucas-badge.jpg' alt='HIAS' class='absolute right-4 top-4 size-10 rounded object-contain' loading='lazy' />
         </Card>
         <Card
           as='a'
@@ -64,6 +65,7 @@ import config from '@/site-config'
           date='Sep 2022 - Jul 2026'
           href='https://www.bnuzh.edu.cn/'
         >
+          <img src='/images/education/bnu-badge.jpg' alt='BNU' class='absolute right-4 top-4 size-10 rounded object-contain' loading='lazy' />
         </Card>
       </Section>
       <Section title='Statistics'>
