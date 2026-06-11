@@ -21,7 +21,7 @@ const {
 const currentLocale = Astro.currentLocale || 'zh'
 const langAttr = currentLocale === 'en' ? 'en' : 'zh'
 const baseUrl = import.meta.env.BASE_URL || '/'
-const live2dAutoloadVersion = '20260416-entrance-v2'
+const live2dAutoloadVersion = '20260612-teto-cubism5'
 const live2dAutoloadSrc = `${baseUrl}live2d-autoload.js?v=${live2dAutoloadVersion}`
 const live2dCdnPath = `${baseUrl}live2d-api/`
 ---
@@ -218,29 +218,6 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
         bottom: 0 !important;
         z-index: 9998 !important;
         will-change: transform, opacity;
-      }
-
-      :global(#waifu.live2d-enter-prep) {
-        opacity: 0;
-        transform: translate3d(0, 72px, 0) !important;
-      }
-
-      :global(#waifu.live2d-entered) {
-        opacity: 1;
-        transform: translate3d(0, 0, 0) !important;
-        transition:
-          transform 420ms cubic-bezier(0.2, 0.9, 0.22, 1),
-          opacity 320ms ease !important;
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        :global(#waifu),
-        :global(#waifu.live2d-enter-prep),
-        :global(#waifu.live2d-entered) {
-          opacity: 1 !important;
-          transform: none !important;
-          transition: none !important;
-        }
       }
 
       :global(#waifu-toggle) {
