@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v13 — Framebuffer Trace + Force Blit</title>
+  <title>Live2D Test v14 — Moc3 Precache Fix</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v13 — Framebuffer Trace + Force Blit</h2>
+  <h2>Live2D Test v14 — Moc3 Precache Fix</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -36,8 +36,8 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','STATUS','===','WINDOW','UNHANDLED','TEX_','GLHOOK',
-      'FB_','BLIT_','CANVAS_','READPIXEL_'];
+    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','HIT_','STATUS','===','WINDOW','UNHANDLED',
+      'PRECACHE','TEX_','GLHOOK','FB_'];
 
     console.log = function() {
       const msg = Array.from(arguments).join(' ');
@@ -52,30 +52,50 @@
     window.addEventListener('error', e => log('WINDOW_ERROR: ' + e.message + ' @ ' + (e.filename||'?').split('/').pop() + ':' + e.lineno, 'err'));
     window.addEventListener('unhandledrejection', e => log('UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason), 'err'));
 
-    // ===== Fetch interceptor =====
+    // ===== Precache store =====
+    const precacheStore = new Map(); // url path → { buffer, contentType }
+
+    // Precaches a file. The buffer is stored and used by fetch interceptor.
+    async function precache(url) {
+      const fname = url.split('/').pop();
+      log('PRECACHE: starting ' + fname + '...');
+      const start = Date.now();
+      const resp = await _origFetch(url);
+      const ct = resp.headers.get('content-type') || 'application/octet-stream';
+      const buf = await resp.arrayBuffer();
+      const dur = Date.now() - start;
+      precacheStore.set(url, { buffer: buf, contentType: ct });
+      log('PRECACHE: ' + fname + ' ' + buf.byteLength + 'B (' + dur + 'ms) ✓', 'ok');
+      return buf;
+    }
+
+    // ===== Fetch interceptor with cache-hit logic =====
     const _origFetch = window.fetch;
-    let rawMoc3Buffer = null;
     const fetchLog = [];
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
+
+      // Check if this URL is in our precache
+      const hit = precacheStore.get(urlStr);
+      if (hit) {
+        const fname = urlStr.split('?')[0].split('/').pop();
+        log('HIT_CACHE: ' + fname + ' ' + hit.buffer.byteLength + 'B (instant)', 'ok');
+        fetchLog.push({ file: fname, cached: true, size: hit.buffer.byteLength, dur: 0 });
+        // Return synthetic response from cached buffer
+        return Promise.resolve(new Response(hit.buffer, {
+          status: 200,
+          headers: { 'Content-Type': hit.contentType, 'Content-Length': String(hit.buffer.byteLength) }
+        }));
+      }
+
       if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('physics3') || urlStr.includes('cdi3') || urlStr.includes('texture_') || urlStr.includes('waifu-tips')) {
         let start = Date.now();
         const fname = decodeURIComponent(urlStr.split('?')[0].split('/').pop());
-        const isMoc3 = fname.includes('.moc3');
-
         return _origFetch.call(window, url, opts).then(resp => {
           const cl = resp.headers.get('content-length') || '?';
           const ce = resp.headers.get('content-encoding') || 'none';
           const dur = Date.now()-start;
-          fetchLog.push({ file: fname, status: resp.status, size: cl, dur, ce });
-
-          if (isMoc3 && resp.ok) {
-            return resp.clone().arrayBuffer().then(buf => {
-              rawMoc3Buffer = buf;
-              log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname + ' buf=' + buf.byteLength + 'B', 'ok');
-              return resp;
-            });
-          }
+          fetchLog.push({ file: fname, cached: false, size: cl, dur, ce });
           log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
           return resp;
         }).catch(err => { log('FETCH_ERR: ' + fname + ' ' + err.message, 'err'); throw err; });
@@ -86,6 +106,7 @@
     // ===== Image hook =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
+    const loadedTextures = [];
 
     const _origImage = window.Image;
     window.Image = function() {
@@ -97,11 +118,11 @@
       img.addEventListener = function(evt, fn, opts) {
         if (evt === 'load') {
           const origFn = fn;
-          fn = function(e) { if (fname && fname.includes('texture_')) textureLoadCount++; return origFn.call(this, e); };
+          fn = function(e) { if (fname && fname.includes('texture_')) { textureLoadCount++; loadedTextures.push(fname); } return origFn.call(this, e); };
         }
         if (evt === 'error') {
           const origFn = fn;
-          fn = function(e) { if (fname && fname.includes('texture_')) textureErrorCount++; return origFn.call(this, e); };
+          fn = function(e) { if (fname && fname.includes('texture_')) { textureErrorCount++; log('IMG_ERR: ' + fname, 'err'); } return origFn.call(this, e); };
         }
         return _addEL.call(this, evt, fn, opts);
       };
@@ -114,138 +135,36 @@
       return img;
     };
 
-    // ===== GL hooks — detailed framebuffer tracing =====
+    // ===== GL hooks =====
     let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindFb: 0 };
     let glRef = null;
     let glHooked = false;
-    let lastFramebuffer = null; // track current FB binding
-    const fbMap = new Map(); // track FBO objects → id
-    let fbIdCounter = 0;
-    let lastBlitTime = 0;
 
     const origGetContext = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, attrs) {
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
         attrs.preserveDrawingBuffer = true;
-        log('GLHOOK: WebGL context created, preserveDrawingBuffer=true');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true; glRef = ctx;
         const gl = ctx;
-
-        // Basic counters
-        ['texImage2D','drawElements','clear','useProgram','createTexture'].forEach(name => {
+        ['texImage2D','drawElements','clear','useProgram','createTexture','bindFramebuffer'].forEach(name => {
           const orig = gl[name].bind(gl);
           gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
         });
-
-        // === Framebuffer trace ===
-        const _origBindFramebuffer = gl.bindFramebuffer.bind(gl);
-        gl.bindFramebuffer = function(target, framebuffer) {
-          const targetName = target === gl.FRAMEBUFFER ? 'FRAMEBUFFER' :
-                             target === gl.DRAW_FRAMEBUFFER ? 'DRAW_FB' :
-                             target === gl.READ_FRAMEBUFFER ? 'READ_FB' : '0x'+target.toString(16);
-
-          if (framebuffer === null) {
-            if (lastFramebuffer !== null) {
-              log('FB_BIND: ' + targetName + ' → null (default) [was FBO]', target === gl.DRAW_FRAMEBUFFER ? 'warn' : 'ok');
-              lastBlitTime = Date.now();
-            } else {
-              // Too noisy: only log every 100th bindFb to null
-              if (glOps.bindFb % 100 === 0) {
-                // skip verbose logging
-              }
-            }
-            lastFramebuffer = null;
-          } else {
-            let fbId = fbMap.get(framebuffer);
-            if (!fbId) { fbId = 'FBO' + (++fbIdCounter); fbMap.set(framebuffer, fbId); }
-            if (lastFramebuffer !== framebuffer) {
-              log('FB_BIND: ' + targetName + ' → ' + fbId + (lastFramebuffer === null ? ' [was default]' : ''), 'info');
-            }
-            lastFramebuffer = framebuffer;
-          }
-
-          glOps.bindFb++;
-          return _origBindFramebuffer.call(gl, target, framebuffer);
-        };
-
-        // === Track active texture ===
-        const _origActiveTexture = gl.activeTexture.bind(gl);
-        gl.activeTexture = function(tex) {
-          // too verbose, skip
-          return _origActiveTexture.call(gl, tex);
-        };
-
-        // === Intercept framebuffer creation ===
-        const _origCreateFramebuffer = gl.createFramebuffer.bind(gl);
-        gl.createFramebuffer = function() {
-          const fb = _origCreateFramebuffer();
-          if (fb) {
-            const fbId = 'FBO' + (++fbIdCounter);
-            fbMap.set(fb, fbId);
-            log('FB_CREATE: ' + fbId, 'info');
-          }
-          return fb;
-        };
-
-        // === Intercept drawBuffers ===
-        if (gl.drawBuffers) {
-          const _origDrawBuffers = gl.drawBuffers.bind(gl);
-          const bufNames = { 36064: 'COLOR0', 0: 'NONE' };
-          gl.drawBuffers = function(buffers) {
-            const names = Array.from(buffers).map(b => bufNames[b] || '0x'+b.toString(16)).join(',');
-            log('DRAW_BUFS: [' + names + ']', 'info');
-            return _origDrawBuffers.call(gl, buffers);
-          };
-        }
       }
       return ctx;
     };
-
-    // ===== FBO content inspector =====
-    function inspectFBO(label) {
-      if (!glRef || glRef.isContextLost()) return;
-      const gl = glRef;
-      // Save current state
-      const savedFb = gl.getParameter(gl.FRAMEBUFFER_BINDING);
-
-      // Try to read pixels from whatever FB is currently bound
-      const px = new Uint8Array(4);
-      gl.readPixels(10, 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-      log('READPIXEL_default: (' + label + ') RGBA(' + px.join(',') + ') FB=' + (savedFb ? 'FBO' : 'null'), 'info');
-
-      // Also try binding null (default framebuffer) explicitly
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      const px2 = new Uint8Array(4);
-      gl.readPixels(10, 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px2);
-      log('READPIXEL_forced: (' + label + ') RGBA(' + px2.join(',') + ')', 'info');
-
-      // Check viewport
-      const vp = gl.getParameter(gl.VIEWPORT);
-      log('CANVAS_VIEWPORT: ' + vp[0] + ',' + vp[1] + ' ' + vp[2] + 'x' + vp[3]);
-
-      // Check scissor
-      const sc = gl.getParameter(gl.SCISSOR_BOX);
-      log('CANVAS_SCISSOR: ' + sc[0] + ',' + sc[1] + ' ' + sc[2] + 'x' + sc[3]);
-
-      // Restore
-      gl.bindFramebuffer(gl.FRAMEBUFFER, savedFb);
-    }
 
     function snapshotCanvas(label) {
       const canvas = document.getElementById('live2d');
       if (!canvas) return;
       try {
         if (glRef && !glRef.isContextLost()) {
-          // Save current framebuffer
           const curFb = glRef.getParameter(glRef.FRAMEBUFFER_BINDING);
-
-          // Bind default framebuffer
           glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
-
           const px = new Uint8Array(4);
           let found = false;
           for (let y = 0; y < canvas.height && !found; y += 7) {
@@ -257,9 +176,7 @@
               }
             }
           }
-          if (!found) log('SNAP: all pixels zero (curFb=' + (curFb ? 'FBO' : 'null') + ')', 'warn');
-
-          // Restore framebuffer
+          if (!found) log('SNAP: all pixels zero', 'warn');
           glRef.bindFramebuffer(glRef.FRAMEBUFFER, curFb);
         }
         const dataUrl = canvas.toDataURL('image/png');
@@ -271,7 +188,8 @@
 
     function periodicStatus() {
       log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
-        ' bindFb=' + glOps.bindFb + ' texLoad=' + textureLoadCount, 'info');
+        ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount, 'info');
+      if (loadedTextures.length) log('Loaded textures: ' + JSON.stringify(loadedTextures));
     }
 
     let startTime;
@@ -279,6 +197,7 @@
     // ===== MAIN =====
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
+    const MODEL_PATH = '/live2d-api/model/teto/';
 
     function loadExternalResource(url, type) {
       return new Promise((resolve, reject) => {
@@ -294,14 +213,24 @@
     async function main() {
       startTime = Date.now();
       try {
-        log('=== Loading CSS ===', 'section');
+        // ===== STEP 0: Precache the moc3 FIRST (while CSS loads) =====
+        log('=== Step 0: Precache moc3 (background) ===', 'section');
+        const moc3Promise = precache(MODEL_PATH + '重音テト.moc3').catch(e => log('PRECACHE moc3 failed: ' + e.message, 'err'));
+
+        log('=== Step 1: Loading CSS ===', 'section');
         await loadExternalResource(BASE + 'waifu.css', 'css');
 
-        log('=== Loading Cubism Core ===', 'section');
+        // By now, moc3 might already be downloaded
+        log('=== Step 2: Loading Cubism Core ===', 'section');
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
         await new Promise(r => setTimeout(r, 200));
 
-        log('=== Loading Live2D SDK ===', 'section');
+        // Wait for moc3 precache to finish
+        log('=== Waiting for moc3 precache... ===', 'section');
+        await moc3Promise;
+        log('=== Moc3 precache complete ===', 'section');
+
+        log('=== Step 3: Loading Live2D SDK ===', 'section');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
 
         let waited = 0;
@@ -311,7 +240,7 @@
         if (!window.live2d) { log('SDK TIMEOUT', 'err'); return; }
         log('=== SDK ready ===', 'section');
 
-        log('=== Loading waifu-tips.js ===', 'section');
+        log('=== Step 4: Loading waifu-tips.js ===', 'section');
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
 
         // ===== Init widget =====
@@ -326,35 +255,27 @@
           tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
           dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
         });
-        log('initWidget() called');
+        log('initWidget() called — moc3 preloaded in cache');
 
-        // ===== Wait for moc3 to be cached =====
-        let mocWait = 0;
-        while (!rawMoc3Buffer && mocWait < 10000) {
-          await new Promise(r => setTimeout(r, 200)); mocWait += 200;
+        // ===== Monitoring =====
+        for (let i = 2; i <= 30; i += 2) {
+          setTimeout(() => {
+            periodicStatus();
+            if (i % 8 === 0) snapshotCanvas('+' + i + 's');
+          }, i * 1000);
         }
-
-        if (rawMoc3Buffer) {
-          log('=== Moc3 captured: ' + rawMoc3Buffer.byteLength + ' bytes ===', 'section');
-        }
-
-        // ===== Periodic inspection =====
-        setTimeout(() => { periodicStatus(); inspectFBO('+3s'); }, 3000);
-        setTimeout(() => { periodicStatus(); inspectFBO('+6s'); snapshotCanvas('+6s'); }, 6000);
-        setTimeout(() => { periodicStatus(); inspectFBO('+12s'); snapshotCanvas('+12s'); }, 12000);
-        setTimeout(() => { periodicStatus(); inspectFBO('+20s'); snapshotCanvas('+20s'); }, 20000);
 
         // Final summary
         setTimeout(() => {
           periodicStatus();
-          inspectFBO('+35s');
           snapshotCanvas('+35s');
           log('=== Final Summary ===', 'section');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('FBO count: ' + fbIdCounter);
-          log('Last FB bind to null: ' + (lastBlitTime ? (lastBlitTime - startTime) + 'ms ago' : 'NEVER'), 'warn');
           log('Fetch log:');
-          fetchLog.forEach(e => log('  ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']'));
+          fetchLog.forEach(e => {
+            if (e.cached) log('  [CACHE] ' + e.file + ' ' + e.size + 'B', 'ok');
+            else log('  [NET] ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']');
+          });
         }, 35000);
 
       } catch(e) {
