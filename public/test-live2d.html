@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live2D Test Page</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: sans-serif;
+      background: #f5f5f5;
+      min-height: 100vh;
+    }
+    h1 { color: #333; }
+    #status {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      background: #fff;
+      border: 1px solid #ddd;
+      font-family: monospace;
+      white-space: pre-wrap;
+    }
+    .ok { color: green; }
+    .err { color: red; }
+  </style>
+</head>
+<body>
+  <h1>Live2D Widget Test</h1>
+  <div id="status">Initializing...</div>
+
+  <script>
+    const statusEl = document.getElementById('status');
+    function log(msg, isError) {
+      const cls = isError ? 'err' : 'ok';
+      statusEl.innerHTML += `<span class="${cls}">[${new Date().toISOString().slice(11,23)}] ${msg}</span>\n`;
+      console.log(msg);
+    }
+
+    log('Page loaded, window.innerWidth=' + window.innerWidth);
+
+    // Set up same config as the blog
+    window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
+
+    // Load widget from CDN
+    const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
+
+    function loadExternalResource(url, type) {
+      return new Promise((resolve, reject) => {
+        let tag;
+        if (type === 'css') {
+          tag = document.createElement('link');
+          tag.rel = 'stylesheet';
+          tag.href = url;
+        } else if (type === 'js') {
+          tag = document.createElement('script');
+          tag.src = url;
+        }
+        if (!tag) return reject(new Error(`Unsupported type: ${type}`));
+        tag.onload = () => resolve(url);
+        tag.onerror = () => reject(new Error(`Failed to load: ${url}`));
+        document.head.appendChild(tag);
+      });
+    }
+
+    async function main() {
+      try {
+        log('Loading waifu.css...');
+        await loadExternalResource(BASE + 'waifu.css', 'css');
+        log('waifu.css loaded');
+
+        log('Loading Core/live2dcubismcore.js...');
+        await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
+        log('Core loaded, typeof Live2DCubismCore=' + typeof Live2DCubismCore);
+
+        log('Loading live2d-sdk.js...');
+        await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
+        log('SDK loaded, typeof window.live2d=' + typeof window.live2d);
+
+        log('Loading waifu-tips.js...');
+        await loadExternalResource(BASE + 'waifu-tips.js', 'js');
+        log('Widget loaded, typeof window.initWidget=' + typeof window.initWidget);
+
+        if (typeof window.initWidget !== 'function') {
+          throw new Error('initWidget not available');
+        }
+
+        log('Calling initWidget...');
+
+        // Set model force
+        localStorage.setItem('modelId', '0');
+        localStorage.setItem('modelTexturesId', '0');
+
+        initWidget({
+          waifuPath: BASE + 'waifu-tips.json',
+          cdnPath: '/live2d-api/',
+          homePath: 'https://kioshiroi.github.io/',
+          tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
+          dragEnable: true,
+          dragDirection: ['x', 'y'],
+          switchType: 'order'
+        });
+
+        log('initWidget called - check for #waifu element');
+
+        // Check after a delay
+        setTimeout(() => {
+          const waifu = document.getElementById('waifu');
+          const toggle = document.getElementById('waifu-toggle');
+          const canvas = document.getElementById('live2d');
+          log('After 3s: waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
+          if (canvas) {
+            log('Canvas: ' + canvas.width + 'x' + canvas.height + ' style:' + canvas.style.width + 'x' + canvas.style.height);
+          }
+        }, 3000);
+
+        setTimeout(() => {
+          const waifu = document.getElementById('waifu');
+          const toggle = document.getElementById('waifu-toggle');
+          const canvas = document.getElementById('live2d');
+          log('After 8s: waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
+          if (waifu) {
+            log('waifu display=' + waifu.style.display + ' bottom=' + waifu.style.bottom + ' left=' + waifu.style.left);
+          }
+        }, 8000);
+
+      } catch (error) {
+        log('ERROR: ' + error.message, true);
+        console.error(error);
+      }
+    }
+
+    main();
+  </script>
+</body>
+</html>
