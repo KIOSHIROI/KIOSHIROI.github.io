@@ -3,250 +3,230 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test Page</title>
+  <title>Live2D Test v3 — GL Intercept</title>
   <style>
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: sans-serif;
-      background: #f5f5f5;
-      min-height: 100vh;
-    }
-    h1 { color: #333; }
-    /* Match blog's live2d positioning */
-    #waifu {
-      position: fixed !important;
-      left: auto !important;
-      right: 0 !important;
-      bottom: 0 !important;
-      z-index: 9998 !important;
-      overflow: visible !important;
-      pointer-events: auto !important;
-    }
-    #waifu canvas {
-      width: 300px !important;
-      height: auto !important;
-    }
-    #status {
-      padding: 10px;
-      margin: 10px 0;
-      border-radius: 4px;
-      background: #fff;
-      border: 1px solid #ddd;
-      font-family: monospace;
-      white-space: pre-wrap;
-    }
-    .ok { color: green; }
-    .err { color: red; }
+    body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
+    #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 65vh; overflow-y: auto; }
+    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; }
   </style>
 </head>
 <body>
-  <h1>Live2D Widget Test</h1>
-  <div id="status">Initializing...</div>
+  <h2>Live2D Test v3 — WebGL Interception</h2>
+  <div id="log">Loading...</div>
 
   <script>
-    const statusEl = document.getElementById('status');
-    function log(msg, isError) {
-      const cls = isError ? 'err' : 'ok';
-      statusEl.innerHTML += `<span class="${cls}">[${new Date().toISOString().slice(11,23)}] ${escapeHtml(msg)}</span>\n`;
+    const logEl = document.getElementById('log');
+    function log(msg, cls) {
+      const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      logEl.innerHTML += `<span class="${cls || 'ok'}">[${new Date().toISOString().slice(11,23)}] ${safe}</span>\n`;
       console.log(msg);
+      logEl.scrollTop = logEl.scrollHeight;
     }
-    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-    log('Page loaded, window.innerWidth=' + window.innerWidth);
+    // Intercept ALL console output
+    const _origError = console.error, _origWarn = console.warn;
+    console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError.apply(console, arguments); };
+    console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn.apply(console, arguments); };
 
-    // INTERCEPT fetch to log all model-related requests
+    // Intercept fetch for model files
     const _origFetch = window.fetch;
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
-      // Log ALL fetches to /live2d-api/ or model files
-      if (urlStr.includes('live2d-api') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('texture') || urlStr.includes('motion3') || urlStr.includes('exp3')) {
+      if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('motion3') || urlStr.includes('exp3') || urlStr.includes('texture_')) {
         let start = Date.now();
-        log('FETCH: ' + urlStr.substring(0, 100));
         return _origFetch.call(window, url, opts).then(resp => {
-          let dur = Date.now() - start;
-          if (!resp.ok) {
-            log('FETCH FAIL [' + resp.status + ' ' + resp.statusText + '] ' + urlStr.substring(0, 100), true);
-          } else {
-            log('FETCH OK [' + resp.status + ' ' + dur + 'ms] ' + urlStr.substring(0, 100));
-          }
+          log('FETCH [' + resp.status + ' ' + (Date.now()-start) + 'ms] ' + urlStr.split('/').pop(), resp.ok?'ok':'err');
           return resp;
-        }).catch(err => {
-          log('FETCH ERROR: ' + err.message + ' for ' + urlStr.substring(0, 100), true);
-          throw err;
-        });
+        }).catch(err => { log('FETCH ERR: ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // Also intercept console.error and console.warn
-    const _origError = console.error;
-    console.error = function() {
-      let msg = Array.from(arguments).join(' ');
-      if (msg.includes('live2d') || msg.includes('Cubism') || msg.includes('Failed') || msg.includes('model') || msg.includes('Moc') || msg.includes('moc')) {
-        log('CONSOLE.ERROR: ' + msg, true);
+    // ========== GL OPERATION COUNTING (on #live2d canvas) ==========
+    let glOps = { texImage2D: 0, drawElements: 0, drawArrays: 0, clear: 0, uniformMatrix4fv: 0, useProgram: 0, texParameteri: 0, createTexture: 0, bindFramebuffer: 0, bindTexture: 0 };
+    let glHooked = false;
+
+    function hookCanvasGL() {
+      const canvas = document.getElementById('live2d');
+      if (!canvas) return setTimeout(hookCanvasGL, 500);
+
+      // Intercept getContext to hook operations AFTER SDK creates GL context
+      const origGetContext = HTMLCanvasElement.prototype.getContext;
+      HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+        const ctx = origGetContext.call(this, type, attrs);
+        if (this.id === 'live2d' && ctx && !glHooked) {
+          glHooked = true;
+          log('=== Hooking GL operations on #live2d ===', 'section');
+          const gl = ctx;
+          // Wrap key GL functions
+          const origFns = {};
+          for (const name of ['texImage2D','drawElements','drawArrays','clear','useProgram','bindFramebuffer','uniformMatrix4fv']) {
+            origFns[name] = gl[name].bind(gl);
+            gl[name] = function() {
+              glOps[name] = (glOps[name] || 0) + 1;
+              return origFns[name].apply(gl, arguments);
+            };
+          }
+          // Also check for getError periodically
+          setInterval(() => {
+            if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
+            const err = gl.getError();
+            if (err !== gl.NO_ERROR && err !== 0) {
+              const names = { 1280: 'INVALID_ENUM', 1281: 'INVALID_VALUE', 1282: 'INVALID_OPERATION', 1285: 'OUT_OF_MEMORY', 1286: 'INVALID_FRAMEBUFFER_OPERATION' };
+              log(`GL Error: ${names[err]||err}`, 'err');
+            }
+          }, 2000);
+          log('GL hooks installed ✓');
+        }
+        return ctx;
+      };
+    }
+
+    // Run baseline WebGL rendering test on a SEPARATE canvas
+    function testGLRendering() {
+      const testCanvas = document.createElement('canvas');
+      testCanvas.width = 100; testCanvas.height = 100;
+      testCanvas.style.position = 'fixed'; testCanvas.style.top = '10px'; testCanvas.style.right = '10px';
+      testCanvas.style.border = '2px solid red'; testCanvas.style.zIndex = '99999';
+      document.body.appendChild(testCanvas);
+
+      const gl = testCanvas.getContext('webgl2') || testCanvas.getContext('webgl');
+      if (!gl) { log('BASELINE GL TEST: No context', 'err'); return; }
+
+      // Simple triangle shaders
+      const vs = gl.createShader(gl.VERTEX_SHADER);
+      gl.shaderSource(vs, 'attribute vec2 p; void main(){ gl_Position=vec4(p,0,1); }');
+      gl.compileShader(vs);
+      if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) { log('BASELINE: VS compile error: ' + gl.getShaderInfoLog(vs), 'err'); return; }
+
+      const fs = gl.createShader(gl.FRAGMENT_SHADER);
+      gl.shaderSource(fs, 'precision mediump float; void main(){ gl_FragColor=vec4(1,0,0,1); }');
+      gl.compileShader(fs);
+      if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) { log('BASELINE: FS compile error: ' + gl.getShaderInfoLog(fs), 'err'); return; }
+
+      const prog = gl.createProgram();
+      gl.attachShader(prog, vs); gl.attachShader(prog, fs);
+      gl.linkProgram(prog);
+      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { log('BASELINE: Program link error: ' + gl.getProgramInfoLog(prog), 'err'); return; }
+
+      const buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, 0,1]), gl.STATIC_DRAW);
+      const posLoc = gl.getAttribLocation(prog, 'p');
+      gl.enableVertexAttribArray(posLoc);
+      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+      gl.useProgram(prog);
+      gl.clearColor(0, 0, 1, 1); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+      const err = gl.getError();
+      const px = new Uint8Array(4);
+      gl.readPixels(50, 50, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      log('BASELINE GL TEST: err=' + err + ' centerPixel=RGBA(' + px.join(',') + ') [red triangle on blue bg]',
+          px[0] > 200 ? 'ok' : 'err');
+      gl.getExtension('WEBGL_lose_context')?.loseContext();
+      testCanvas.style.display = 'none';
+    }
+
+    // ========== Scan pixels and log GL ops ==========
+    window._pixelFound = false;
+    function fullCheck(label) {
+      if (window._pixelFound) return;
+      const canvas = document.getElementById('live2d');
+      if (!canvas) { log(label + ': no canvas', 'err'); return; }
+      try {
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl || gl.isContextLost()) { log(label + ': no GL / context lost', 'err'); return; }
+        const px = new Uint8Array(4);
+        for (let sy = 0; sy < canvas.height; sy += 40) {
+          for (let sx = 0; sx < canvas.width; sx += 40) {
+            gl.readPixels(sx, sy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            if (px[0] || px[1] || px[2] || px[3]) {
+              log(label + ': PIXEL at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') ✓', 'ok');
+              window._pixelFound = true;
+              return;
+            }
+          }
+        }
+        log(label + ': ALL pixels zero ❌ GL_ops: ' + JSON.stringify(glOps), 'err');
+      } catch(e) {
+        log(label + ': error=' + e.message, 'err');
       }
-      _origError.apply(console, arguments);
-    };
+    }
 
-    // Set up same config as the blog
+    function checkGL(label) {
+      const canvas = document.getElementById('live2d');
+      if (!canvas) { log(label + ': no canvas', 'err'); return; }
+      try {
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl) { log(label + ': no GL', 'err'); return; }
+        log(label + ': VP=' + gl.getParameter(gl.VIEWPORT).join('x') +
+          ' lost=' + gl.isContextLost() + ' texSize=' + gl.getParameter(gl.MAX_TEXTURE_SIZE) +
+          ' ops=' + JSON.stringify(glOps));
+      } catch(e) { log(label + ': err=' + e.message, 'err'); }
+    }
+
+    // ========== MAIN ==========
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
-
-    // NOTE: Image interceptor DISABLED to avoid interfering with SDK
-    // The SDK uses new Image() for texture loading, and intercepting
-    // the prototype could affect the SDK's event handling.
-
-    // Load widget from CDN
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
 
     function loadExternalResource(url, type) {
       return new Promise((resolve, reject) => {
         let tag;
-        if (type === 'css') {
-          tag = document.createElement('link');
-          tag.rel = 'stylesheet';
-          tag.href = url;
-        } else if (type === 'js') {
-          tag = document.createElement('script');
-          tag.src = url;
-        }
-        if (!tag) return reject(new Error(`Unsupported type: ${type}`));
+        if (type === 'css') { tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url; }
+        else { tag = document.createElement('script'); tag.src = url; }
         tag.onload = () => resolve(url);
-        tag.onerror = () => reject(new Error(`Failed to load: ${url}`));
+        tag.onerror = () => reject(new Error('Failed: ' + url));
         document.head.appendChild(tag);
       });
     }
 
     async function main() {
       try {
-        log('Loading waifu.css...');
+        log('=== Loading CDN ===', 'section');
         await loadExternalResource(BASE + 'waifu.css', 'css');
-        log('waifu.css loaded');
-
-        log('Loading Core/live2dcubismcore.js...');
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
-        log('Core loaded, typeof Live2DCubismCore=' + typeof Live2DCubismCore);
-
-        log('Loading live2d-sdk.js...');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
-        log('SDK loaded, typeof window.live2d=' + typeof window.live2d);
-
-        log('Loading waifu-tips.js...');
+        log('SDK loaded ✓ live2d=' + typeof window.live2d);
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
-        log('Widget loaded, typeof window.initWidget=' + typeof window.initWidget);
+        log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
 
-        if (typeof window.initWidget !== 'function') {
-          throw new Error('initWidget not available');
-        }
+        // Install canvas GL hooks before initWidget creates canvas
+        hookCanvasGL();
 
-        // Directly test SDK without widget
-        log('--- Direct SDK test ---');
+        log('=== Calling initWidget ===', 'section');
+        localStorage.setItem('modelId', '0');
+        localStorage.setItem('modelTexturesId', '0');
 
-        // Create canvas manually (mimics what widget does)
-        document.body.insertAdjacentHTML("beforeend", '<div id="waifu"><canvas id="live2d" width="800" height="800"></canvas></div>');
+        initWidget({
+          waifuPath: BASE + 'waifu-tips.json',
+          cdnPath: '/live2d-api/',
+          homePath: 'https://kioshiroi.github.io/',
+          tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
+          dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
+        });
+        log('initWidget() called ✓');
 
-        // Initialize SDK
-        window.live2d.init('');
-
-        // Load teto model directly
+        // Schedule checks
+        setTimeout(() => testGLRendering(), 3000);
+        setTimeout(() => checkGL('+4s'), 4000);
+        setTimeout(() => { checkGL('+6s'); fullCheck('+6s'); }, 6000);
+        setTimeout(() => { checkGL('+10s'); fullCheck('+10s'); }, 10000);
         setTimeout(() => {
-          log('Loading teto model directly via SDK...');
-          window.live2d.loadModel('/live2d-api/model/teto/');
-        }, 500);
-
-        // Continuous pixel monitoring - check every frame if something renders
-        let pixelChecks = 0;
-        let lastNonZero = false;
-        function monitorPixels() {
-          pixelChecks++;
-          const canvas = document.getElementById('live2d');
-          if (!canvas) return;
-          try {
-            const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-            if (gl && !gl.isContextLost()) {
-              var px = new Uint8Array(4);
-              // Sample center of canvas
-              gl.readPixels(canvas.width/2, canvas.height/2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-              if (px[0] !== 0 || px[1] !== 0 || px[2] !== 0 || px[3] !== 0) {
-                if (!lastNonZero) {
-                  log('PIXEL DETECTED! (check #' + pixelChecks + ') RGBA(' + px[0] + ',' + px[1] + ',' + px[2] + ',' + px[3] + ')');
-                  lastNonZero = true;
-                }
-              }
-              // Also sample several points
-              if (pixelChecks % 180 === 0) {
-                gl.readPixels(300, 300, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-                log('Monitor #' + pixelChecks + ' center:RGBA(' + px[0] + ',' + px[1] + ',' + px[2] + ',' + px[3] + ')');
-              }
-            }
-          } catch(e) {}
-          if (pixelChecks < 600) requestAnimationFrame(monitorPixels);
-        }
-        requestAnimationFrame(monitorPixels);
-
-        // Try randomExpression after delay
-        setTimeout(() => {
-          try {
-            log('Calling window.live2d.randomExpression()');
-            window.live2d.randomExpression();
-          } catch(e) {
-            log('randomExpression error: ' + e.message, true);
-          }
-        }, 5000);
-
-        // Check canvas and WebGL state after delays
-        function checkCanvasState(label) {
+          checkGL('+15s');
+          fullCheck('+15s');
+          log('=== Final GL ops: ' + JSON.stringify(glOps) + ' ===', 'section');
           const waifu = document.getElementById('waifu');
-          const toggle = document.getElementById('waifu-toggle');
-          const canvas = document.getElementById('live2d');
-          log(label + ': waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
-          if (canvas) {
-            log('  Canvas: ' + canvas.width + 'x' + canvas.height + ' CSS:' + canvas.style.width + 'x' + canvas.style.height);
-            log('  Canvas pos: left=' + canvas.offsetLeft + ' top=' + canvas.offsetTop + ' parentW=' + canvas.parentElement.offsetWidth + ' parentH=' + canvas.parentElement.offsetHeight);
-            log('  Canvas computed w/h: ' + getComputedStyle(canvas).width + 'x' + getComputedStyle(canvas).height);
-            try {
-              const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-              if (gl) {
-                log('  WebGL: context created, vendor=' + gl.getParameter(gl.VENDOR) + ' renderer=' + gl.getParameter(gl.RENDERER));
-                log('  WebGL: viewport=' + gl.getParameter(gl.VIEWPORT)[2] + 'x' + gl.getParameter(gl.VIEWPORT)[3]);
-                log('  WebGL: contextLost=' + gl.isContextLost());
-                log('  WebGL: MAX_TEXTURE_SIZE=' + gl.getParameter(gl.MAX_TEXTURE_SIZE) + ' MAX_VIEWPORT_DIMS=' + gl.getParameter(gl.MAX_VIEWPORT_DIMS));
-                // Sample a pixel from the middle of the canvas
-                try {
-                  var pixels = new Uint8Array(4);
-                  gl.readPixels(canvas.width/2, canvas.height/2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-                  log('  Canvas pixel at center: RGBA(' + pixels[0] + ',' + pixels[1] + ',' + pixels[2] + ',' + pixels[3] + ')');
-                  gl.readPixels(50, 50, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
-                  log('  Canvas pixel at (50,50): RGBA(' + pixels[0] + ',' + pixels[1] + ',' + pixels[2] + ',' + pixels[3] + ')');
-                } catch(e) {
-                  log('  Canvas readPixels error: ' + e.message, true);
-                }
-              } else {
-                log('  WebGL: FAILED to create context!', true);
-              }
-            } catch(e) {
-              log('  WebGL: ERROR - ' + e.message, true);
-            }
-          }
-          // Check if waifu element is in DOM and visible
           if (waifu) {
-            const style = getComputedStyle(waifu);
-            log('  #waifu: display=' + style.display + ' opacity=' + style.opacity + ' visibility=' + style.visibility + ' overflow=' + style.overflow);
-            log('  #waifu: bottom=' + style.bottom + ' left=' + style.left + ' right=' + style.right + ' position=' + style.position);
-            log('  #waifu: width=' + style.width + ' height=' + style.height);
-            log('  #waifu rect: ' + JSON.stringify(waifu.getBoundingClientRect()));
+            const s = getComputedStyle(waifu);
+            log('waifu: bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
           }
-        }
-        setTimeout(() => checkCanvasState('After 3s'), 3000);
-        setTimeout(() => checkCanvasState('After 8s'), 8000);
+          log('--- If ops show texImage2D=0, textures never uploaded. If drawElements=0, model never rendered. ---', 'section');
+        }, 15000);
 
-
-      } catch (error) {
-        log('ERROR: ' + error.message, true);
-        console.error(error);
+      } catch(e) {
+        log('FATAL: ' + e.message + '\n' + e.stack, 'err');
       }
     }
-
     main();
   </script>
 </body>
