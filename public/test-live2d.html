@@ -13,6 +13,20 @@
       min-height: 100vh;
     }
     h1 { color: #333; }
+    /* Match blog's live2d positioning */
+    #waifu {
+      position: fixed !important;
+      left: auto !important;
+      right: 0 !important;
+      bottom: 0 !important;
+      z-index: 9998 !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+    }
+    #waifu canvas {
+      width: 300px !important;
+      height: auto !important;
+    }
     #status {
       padding: 10px;
       margin: 10px 0;
@@ -78,26 +92,9 @@
     // Set up same config as the blog
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
 
-    // INTERCEPT Image loading (textures load via new Image(), not fetch)
-    (function() {
-      const desc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-      const origSet = desc.set;
-      Object.defineProperty(HTMLImageElement.prototype, 'src', {
-        get: desc.get,
-        set: function(url) {
-          if (typeof url === 'string' && (url.includes('live2d-api') || url.includes('texture') || url.includes('.png'))) {
-            log('IMAGE.src = ' + url.substring(0, 120));
-            this.addEventListener('load', function() {
-              log('IMAGE LOADED [' + this.naturalWidth + 'x' + this.naturalHeight + '] ' + url.substring(0, 120));
-            }, {once: true});
-            this.addEventListener('error', function() {
-              log('IMAGE ERROR loading: ' + url.substring(0, 120), true);
-            }, {once: true});
-          }
-          return origSet.call(this, url);
-        }
-      });
-    })();
+    // NOTE: Image interceptor DISABLED to avoid interfering with SDK
+    // The SDK uses new Image() for texture loading, and intercepting
+    // the prototype could affect the SDK's event handling.
 
     // Load widget from CDN
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
