@@ -3,24 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v7 — Error Catch + Direct SDK Call</title>
+  <title>Live2D Test v8 — Fixed Image Hook + Canvas Snapshot</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
-    #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; }
-    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; } .sdk { color: #2ECC40; } .debug { color: #7FDBFF; }
+    #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
+    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; } .sdk { color: #2ECC40; }
     #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
+    #snapshot { margin: 10px 0; }
+    #snapshot img { border: 2px solid #333; max-width: 300px; background: #fff; }
   </style>
 </head>
 <body>
-  <h2>Live2D Test v7 — Error Catch + Direct SDK Call + File Verify</h2>
+  <h2>Live2D Test v8 — Fixed Image Hook + Canvas Snapshot</h2>
   <div id="log">Loading...</div>
+  <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
   <script>
-    // ===== Save originals first =====
     const _origLog = console.log.bind(console);
     const _origError = console.error.bind(console);
     const _origWarn = console.warn.bind(console);
-    const _origDebug = console.debug.bind(console);
 
     const logEl = document.getElementById('log');
     let logLines = 0;
@@ -37,8 +38,8 @@
 
     const myLogPrefixes = ['SYNC-PIXEL','GL Error','STATE:','FETCH','XHR','TEX_IMG','STATUS','FORCING','GL hooks','Hooking',
       'SDK loaded','Widget loaded','initWidget','WAIFU','===','+','State:','GL ops:','FB history:','Texture loads:',
-      'Loaded textures:','waifu:','---','MODEL ','XHR_MODEL','Direct', 'TRYING', 'LIVE2D_INIT', 'LIVE2D_LOADMODEL',
-      'WASM','OVERRIDE', 'MEMO'];
+      'Loaded textures:','waifu:','---','MODEL ','XHR_MODEL','Direct','TRYING','LIVE2D','WASM','OVERRIDE',
+      'SNAPSHOT', 'SNAP_FBO', 'SNAP_DEF'];
 
     console.log = function() {
       const msg = Array.from(arguments).join(' ');
@@ -49,43 +50,15 @@
     };
     console.error = function(){ log('SDK_ERR: ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
     console.warn  = function(){ log('SDK_WARN: ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
-    console.debug = function(){ log('SDK_DEBUG: ' + Array.from(arguments).join(' '), 'debug'); _origDebug(...arguments); };
 
-    // ===== ERROR CATCHERS =====
     window.addEventListener('error', function(e) {
-      log('WINDOW_ERROR: ' + e.message + ' at ' + e.filename + ':' + e.lineno + ':' + e.colno, 'err');
-      if (e.error && e.error.stack) log('  Stack: ' + e.error.stack.substring(0, 200), 'err');
+      log('WINDOW_ERROR: ' + e.message + ' @' + e.filename + ':' + e.lineno, 'err');
     });
-
     window.addEventListener('unhandledrejection', function(e) {
       log('UNHANDLED_REJECTION: ' + (e.reason?.message || e.reason), 'err');
-      if (e.reason?.stack) log('  Stack: ' + e.reason.stack.substring(0, 200), 'err');
     });
 
-    // ===== WASM hooks =====
-    if (typeof WebAssembly !== 'undefined') {
-      const _origInstantiate = WebAssembly.instantiate;
-      WebAssembly.instantiate = function() {
-        log('WASM.instantiate called (binary: ' + (arguments[0]?.byteLength || '?') + ' bytes)', 'info');
-        return _origInstantiate.apply(WebAssembly, arguments).then(
-          r => { log('WASM.instantiate SUCCESS', 'ok'); return r; },
-          err => { log('WASM.instantiate FAILED: ' + err.message, 'err'); throw err; }
-        );
-      };
-      if (WebAssembly.instantiateStreaming) {
-        const _origStreaming = WebAssembly.instantiateStreaming;
-        WebAssembly.instantiateStreaming = function() {
-          log('WASM.instantiateStreaming called: ' + String(arguments[0]), 'info');
-          return _origStreaming.apply(WebAssembly, arguments).then(
-            r => { log('WASM.instantiateStreaming SUCCESS', 'ok'); return r; },
-            err => { log('WASM.instantiateStreaming FAILED: ' + err.message, 'err'); throw err; }
-          );
-        };
-      }
-      log('WASM hooks installed ✓');
-    }
-
-    // ===== Fetch interceptor — UNCONDITIONALLY log all Live2D fetches =====
+    // ===== Fetch interceptor =====
     const _origFetch = window.fetch;
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
@@ -93,54 +66,15 @@
         let start = Date.now();
         return _origFetch.call(window, url, opts).then(resp => {
           const cl = resp.headers.get('content-length') || '?';
-          const contentType = resp.headers.get('content-type') || '?';
           const fname = urlStr.split('/').pop();
-          log('FETCH [' + resp.status + ' ' + cl + 'B ' + contentType + ' ' + (Date.now()-start) + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
-          if ((fname.includes('model3.json') || fname.includes('physics3') || fname.includes('cdi3')) && resp.ok) {
-            return resp.clone().text().then(txt => {
-              try {
-                const parsed = JSON.parse(txt);
-                const info = fname.includes('model3') ? ('textures='+parsed?.FileReferences?.Textures?.length) :
-                             fname.includes('physics3') ? ('version='+parsed?.Version) : ('OK');
-                log('FILE_CONTENT: ' + fname + ' → ' + info, 'ok');
-              } catch(e) {
-                log('FILE_PARSE: ' + fname + ' → ERR: ' + e.message.substring(0,80), 'err');
-              }
-              return resp;
-            });
-          }
+          log('FETCH [' + resp.status + ' ' + cl + 'B ' + (Date.now()-start) + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
           return resp;
         }).catch(err => { log('FETCH_ERR: ' + fname + ' → ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== XHR interceptor =====
-    const _origXHR = window.XMLHttpRequest;
-    window.XMLHttpRequest = function() {
-      const xhr = new _origXHR();
-      const _origOpen = xhr.open;
-      let _url = '';
-      xhr.open = function(method, url, ...rest) {
-        _url = String(url);
-        return _origOpen.call(xhr, method, url, ...rest);
-      };
-      const _origSend = xhr.send;
-      xhr.send = function(body) {
-        if (_url && (_url.includes('live2d') || _url.includes('.moc3') || _url.includes('model3') || _url.includes('motion3') || _url.includes('exp3') || _url.includes('texture_') || _url.includes('physics3') || _url.includes('cdi3'))) {
-          const start = Date.now();
-          const fname = _url.split('/').pop();
-          xhr.addEventListener('load', () => {
-            log('XHR [' + xhr.status + ' ~' + (xhr.responseText?.length||xhr.response?.byteLength||'?') + 'B ' + (Date.now()-start) + 'ms] ' + fname, xhr.status < 400 ? 'ok' : 'err');
-          });
-          xhr.addEventListener('error', () => log('XHR_ERR: ' + fname, 'err'));
-        }
-        return _origSend.call(xhr, body);
-      };
-      return xhr;
-    };
-
-    // ===== Image loading interceptor =====
+    // ===== Image loading interceptor — FIXED: hook addEventListener at CONSTRUCTION time =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
     const textureFiles = [];
@@ -152,38 +86,43 @@
       const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
       let srcValue = '';
 
+      // Hook addEventListener at construction time (BEFORE src is set)
+      const _addEL = img.addEventListener.bind(img);
+      img.addEventListener = function(evt, fn, opts) {
+        if (evt === 'load') {
+          const origFn = fn;
+          fn = function(e) {
+            const s = srcValue;
+            const fname = s.split('/').pop();
+            if (s && (s.includes('texture_') || s.includes('.png'))) {
+              textureLoadCount++;
+              const dims = img.naturalWidth + 'x' + img.naturalHeight;
+              textureFiles.push(fname + ' ' + dims);
+            }
+            log('IMG_LOAD #' + textureLoadCount + ': ' + fname + (s.includes('texture_')||s.includes('.png')?' ★':''));
+            return origFn.call(this, e);
+          };
+        }
+        if (evt === 'error') {
+          const origFn = fn;
+          fn = function(e) {
+            const s = srcValue;
+            if (s && (s.includes('texture_') || s.includes('.png'))) {
+              textureErrorCount++;
+              log('!!! IMG_ERROR: ' + s.split('/').pop(), 'err');
+            }
+            return origFn.call(this, e);
+          };
+        }
+        return _addEL.call(this, evt, fn, opts);
+      };
+
+      // Hook src setter
       Object.defineProperty(img, 'src', {
         get: function() { return srcValue; },
         set: function(val) {
           srcValue = val;
-          if (val) {
-            allImgSrcs.push(val.split('/').pop());
-            if (val.includes('texture_') || val.includes('.png')) {
-              const fname = val.split('/').pop();
-              const _addEL = img.addEventListener.bind(img);
-              img.addEventListener = function(evt, fn, opts) {
-                if (evt === 'load') {
-                  const origFn = fn;
-                  fn = function(e) {
-                    textureLoadCount++;
-                    const dims = img.naturalWidth + 'x' + img.naturalHeight;
-                    textureFiles.push(fname + ' ' + dims);
-                    log('TEX_IMG loaded #' + textureLoadCount + ': ' + fname + ' (' + dims + ')');
-                    return origFn.call(this, e);
-                  };
-                }
-                if (evt === 'error') {
-                  const origFn = fn;
-                  fn = function(e) {
-                    textureErrorCount++;
-                    log('!!! TEX_IMG ERROR #' + textureErrorCount + ': ' + fname, 'err');
-                    return origFn.call(this, e);
-                  };
-                }
-                return _addEL.call(this, evt, fn, opts);
-              };
-            }
-          }
+          if (val) allImgSrcs.push(val.split('/').pop());
           _origSetSrc.set.call(this, val);
         },
         configurable: true, enumerable: true
@@ -203,27 +142,23 @@
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
         attrs.preserveDrawingBuffer = true;
-        log('FORCING preserveDrawingBuffer=true on #live2d');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true;
         glRef = ctx;
-        log('=== Hooking GL on #live2d ===', 'section');
+        log('=== GL hooks installed ===', 'section');
         const gl = ctx;
         const origFns = {};
         for (const name of ['texImage2D','drawElements','drawArrays','clear','useProgram','uniformMatrix4fv','bufferData','enableVertexAttribArray']) {
           origFns[name] = gl[name].bind(gl);
-          gl[name] = function() {
-            glOps[name] = (glOps[name] || 0) + 1;
-            return origFns[name].apply(gl, arguments);
-          };
+          gl[name] = function() { glOps[name] = (glOps[name] || 0) + 1; return origFns[name].apply(gl, arguments); };
         }
         origFns.bindFramebuffer = gl.bindFramebuffer.bind(gl);
         gl.bindFramebuffer = function(target, fb) {
           glOps.bindFramebuffer++;
           lastFB = fb === null ? 'null(default)' : 'FBO';
-          if (fbHistory.length < 30) fbHistory.push(lastFB);
+          if (fbHistory.length < 40) fbHistory.push(lastFB);
           return origFns.bindFramebuffer.call(gl, target, fb);
         };
         origFns.createTexture = gl.createTexture.bind(gl);
@@ -232,85 +167,55 @@
         gl.bindTexture = function() { glOps.bindTexture++; return origFns.bindTexture.apply(gl, arguments); };
         origFns.viewport = gl.viewport.bind(gl);
         gl.viewport = function(x,y,w,h) { glOps.viewport++; return origFns.viewport.call(gl, x,y,w,h); };
-        setInterval(() => {
-          if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
-          const err = gl.getError();
-          if (err !== gl.NO_ERROR && err !== 0) {
-            const names = { 1280: 'INVALID_ENUM', 1281: 'INVALID_VALUE', 1282: 'INVALID_OPERATION', 1285: 'OUT_OF_MEMORY', 1286: 'INVALID_FRAMEBUFFER_OPERATION' };
-            log('GL Error: ' + (names[err] || err), 'warn');
-          }
-        }, 2000);
-        log('GL hooks installed ✓');
       }
       return ctx;
     };
 
-    // ===== rAF pixel reader =====
-    let syncPixelChecked = false;
-    const origRAF = window.requestAnimationFrame;
-    let rafCount = 0;
-    window.requestAnimationFrame = function(cb) {
-      const wrappedCb = function(ts) {
-        cb(ts);
-        rafCount++;
-        if (!syncPixelChecked && rafCount > 10 && lastFB === 'null(default)' && glRef) {
-          const canvas = document.getElementById('live2d');
-          if (canvas && !glRef.isContextLost()) {
-            try {
-              glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
-              const px = new Uint8Array(4);
-              let found = false;
-              for (let sy = 0; sy < canvas.height && !found; sy += 30) {
-                for (let sx = 0; sx < canvas.width && !found; sx += 30) {
-                  glRef.readPixels(sx, sy, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
-                  if (px[0] || px[1] || px[2] || px[3]) {
-                    log('SYNC-PIXEL ✓ at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') [frame#' + rafCount + ']', 'ok');
-                    syncPixelChecked = true;
-                    found = true;
-                  }
-                }
-              }
-              if (!found && rafCount % 60 === 0)
-                log('SYNC-PIXEL ❌ frame#' + rafCount + ' texLoad=' + textureLoadCount + ' drawE=' + glOps.drawElements, 'warn');
-            } catch(e) { log('SYNC-PIXEL err: ' + e.message, 'err'); }
-          }
-        }
-      };
-      return origRAF.call(window, wrappedCb);
-    };
+    // ===== Canvas Snapshot =====
+    function snapshotCanvas(label) {
+      const canvas = document.getElementById('live2d');
+      if (!canvas) { log('SNAPSHOT: no canvas', 'err'); return; }
+      try {
+        // Also try reading from FBO
+        if (glRef) {
+          const px = new Uint8Array(4);
+          let foundDefault = false, foundFBO = false;
 
-    // ===== DIRECT FILE ACCESS VERIFICATION =====
-    async function verifyModelFiles() {
-      log('=== Direct File Verification ===', 'section');
-      const cdnPath = '/live2d-api/model/teto/';
-      const files = [
-        cdnPath + '重音テト.physics3.json',
-        cdnPath + '重音テト.cdi3.json',
-        cdnPath + '重音テト.4096/texture_00.png',
-        cdnPath + '重音テト.4096/texture_01.png',
-        cdnPath + '重音テト.4096/texture_02.png',
-        cdnPath + '重音テト.4096/texture_03.png',
-        cdnPath + '重音テト.4096/texture_04.png',
-      ];
-      for (const file of files) {
-        try {
-          const resp = await fetch(file, { method: 'HEAD' });
-          const cl = resp.headers.get('content-length') || '?';
-          log(`Direct VERIFY: ${file.split('/').pop()} → HTTP ${resp.status} ${cl}B`, resp.ok ? 'ok' : 'err');
-        } catch(e) {
-          log(`Direct VERIFY: ${file.split('/').pop()} → ERR: ${e.message}`, 'err');
+          // Check default framebuffer
+          glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
+          for (let sy = 0; sy < canvas.height; sy += 10) {
+            for (let sx = 0; sx < canvas.width; sx += 10) {
+              glRef.readPixels(sx, sy, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
+              if (px[0] || px[1] || px[2] || px[3]) {
+                log('SNAP_DEF: pixel(' + sx + ',' + sy + ') = RGBA(' + px.join(',') + ')', 'ok');
+                foundDefault = true;
+                break;
+              }
+            }
+            if (foundDefault) break;
+          }
+          if (!foundDefault) log('SNAP_DEF: all zero on default FB ❌', 'err');
         }
+
+        // toDataURL (works with preserveDrawingBuffer: true)
+        const dataUrl = canvas.toDataURL('image/png');
+        const size = Math.round(dataUrl.length / 1024);
+        const snapshotEl = document.getElementById('snapshot');
+        snapshotEl.innerHTML = '<strong>' + label + ' (' + size + 'KB): </strong><br><img src="' + dataUrl + '" style="max-width:300px">';
+        log('SNAPSHOT: ' + label + ' (' + size + 'KB)', 'info');
+      } catch(e) {
+        log('SNAPSHOT err: ' + e.message, 'err');
       }
     }
 
     function periodicStatus() {
       log('STATUS @ +' + Math.round((Date.now() - startTime) / 1000) + 's: ' +
         'drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
-        ' clear=' + glOps.clear + ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount +
-        ' allImgs=' + allImgSrcs.length, 'info');
+        ' clear=' + glOps.clear + ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount, 'info');
     }
 
     let startTime;
+
     function checkGLQuick(label) {
       const canvas = document.getElementById('live2d');
       if (!canvas) { log(label + ': no canvas', 'err'); return; }
@@ -319,29 +224,6 @@
         if (!gl) { log(label + ': no GL', 'err'); return; }
         log(label + ': canvas=' + canvas.width + 'x' + canvas.height + ' lost=' + gl.isContextLost() +
           ' ops=' + JSON.stringify({createT:glOps.createTexture,texImg:glOps.texImage2D,drawE:glOps.drawElements,clear:glOps.clear}));
-      } catch(e) { log(label + ': err=' + e.message, 'err'); }
-    }
-
-    function fullCheckAsync(label) {
-      if (window._pixelFound) return;
-      const canvas = document.getElementById('live2d');
-      if (!canvas) return;
-      try {
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-        if (!gl || gl.isContextLost()) return;
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        const px = new Uint8Array(4);
-        for (let sy = 0; sy < canvas.height; sy += 40) {
-          for (let sx = 0; sx < canvas.width; sx += 40) {
-            gl.readPixels(sx, sy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-            if (px[0] || px[1] || px[2] || px[3]) {
-              log(label + ': PIXEL at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') ✓', 'ok');
-              window._pixelFound = true;
-              return;
-            }
-          }
-        }
-        log(label + ': ALL pixels zero ❌', 'err');
       } catch(e) { log(label + ': err=' + e.message, 'err'); }
     }
 
@@ -367,25 +249,10 @@
         await loadExternalResource(BASE + 'waifu.css', 'css');
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
-        log('SDK loaded ✓ live2d=' + typeof window.live2d);
-
-        // ===== OVERRIDE live2d.loadModel to trace parameters =====
-        if (window.live2d && window.live2d.loadModel) {
-          const _origLive2dLoadModel = window.live2d.loadModel.bind(window.live2d);
-          window.live2d.loadModel = function(path) {
-            log('OVERRIDE: live2d.loadModel called with: ' + path, 'debug');
-            try {
-              _origLive2dLoadModel(path);
-              log('OVERRIDE: live2d.loadModel returned for: ' + path, 'debug');
-            } catch(e) {
-              log('OVERRIDE: live2d.loadModel ERROR: ' + e.message + '\n' + (e.stack||'').substring(0,200), 'err');
-            }
-          };
-          log('live2d.loadModel override installed ✓');
-        }
+        log('SDK loaded ✓');
 
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
-        log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
+        log('Widget loaded ✓');
 
         log('=== Calling initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
@@ -400,52 +267,28 @@
         });
         log('initWidget() called ✓');
 
-        // Verify files are accessible
-        setTimeout(() => verifyModelFiles(), 2000);
-
-        // ===== DIRECT SDK CALL — retry after widget init =====
+        // Take snapshots at intervals
+        setTimeout(() => { checkGLQuick('+3s'); snapshotCanvas('+3s'); }, 3000);
+        setTimeout(() => { checkGLQuick('+5s'); snapshotCanvas('+5s'); }, 5000);
+        setTimeout(() => { checkGLQuick('+8s'); snapshotCanvas('+8s'); }, 8000);
+        setTimeout(() => periodicStatus(), 10000);
         setTimeout(() => {
-          log('=== TRYING direct SDK call ===', 'section');
-          if (window.live2d && window.live2d.loadModel) {
-            log('Calling live2d.loadModel("/live2d-api/model/teto/") directly...', 'info');
-            try {
-              window.live2d.loadModel('/live2d-api/model/teto/');
-              log('Direct loadModel call completed', 'ok');
-            } catch(e) {
-              log('Direct loadModel ERROR: ' + e.message + '\n' + (e.stack||'').substring(0,200), 'err');
-            }
-          }
-        }, 5000);
-
-        // Periodic checks
-        setTimeout(() => checkGLQuick('+4s'), 4000);
-        setTimeout(() => checkGLQuick('+6s'), 6000);
-        setTimeout(() => { checkGLQuick('+10s'); fullCheckAsync('+10s'); }, 10000);
-        setTimeout(() => periodicStatus(), 12000);
-        setTimeout(() => {
-          checkGLQuick('+15s');
-          fullCheckAsync('+15s');
+          checkGLQuick('+12s');
+          snapshotCanvas('+12s');
           periodicStatus();
-          log('=== Final diagnostics ===', 'section');
+          log('=== Final ===', 'section');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('FB history: ' + fbHistory.join(' → '), 'info');
+          log('FB history last 20: ' + fbHistory.slice(-20).join(' → '), 'info');
           log('Texture loads: ' + textureLoadCount + ' errors: ' + textureErrorCount);
           log('Loaded textures: ' + JSON.stringify(textureFiles), 'info');
           log('All image srcs: ' + JSON.stringify(allImgSrcs), 'info');
-          const waifu = document.getElementById('waifu');
-          if (waifu) {
-            const s = getComputedStyle(waifu);
-            log('waifu: bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
-          } else {
-            log('waifu NOT FOUND', 'err');
-          }
-        }, 15000);
+        }, 12000);
 
         setTimeout(() => {
           periodicStatus();
-          checkGLQuick('+30s');
-          fullCheckAsync('+30s');
-        }, 30000);
+          checkGLQuick('+20s');
+          snapshotCanvas('+20s');
+        }, 20000);
 
       } catch(e) {
         log('FATAL: ' + e.message + '\n' + e.stack, 'err');
