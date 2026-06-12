@@ -176,6 +176,17 @@
                 log('  WebGL: context created, vendor=' + gl.getParameter(gl.VENDOR) + ' renderer=' + gl.getParameter(gl.RENDERER));
                 log('  WebGL: viewport=' + gl.getParameter(gl.VIEWPORT)[2] + 'x' + gl.getParameter(gl.VIEWPORT)[3]);
                 log('  WebGL: contextLost=' + gl.isContextLost());
+                log('  WebGL: MAX_TEXTURE_SIZE=' + gl.getParameter(gl.MAX_TEXTURE_SIZE) + ' MAX_VIEWPORT_DIMS=' + gl.getParameter(gl.MAX_VIEWPORT_DIMS));
+                // Sample a pixel from the middle of the canvas
+                try {
+                  var pixels = new Uint8Array(4);
+                  gl.readPixels(canvas.width/2, canvas.height/2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                  log('  Canvas pixel at center: RGBA(' + pixels[0] + ',' + pixels[1] + ',' + pixels[2] + ',' + pixels[3] + ')');
+                  gl.readPixels(50, 50, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, pixels);
+                  log('  Canvas pixel at (50,50): RGBA(' + pixels[0] + ',' + pixels[1] + ',' + pixels[2] + ',' + pixels[3] + ')');
+                } catch(e) {
+                  log('  Canvas readPixels error: ' + e.message, true);
+                }
               } else {
                 log('  WebGL: FAILED to create context!', true);
               }
