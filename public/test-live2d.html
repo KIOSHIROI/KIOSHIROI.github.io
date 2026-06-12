@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v9 — Moc3 Integrity Check + Force Reload</title>
+  <title>Live2D Test v10 — Sequential Load + Texture Deep Dive</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v9 — Moc3 Integrity Check + Force Reload</h2>
+  <h2>Live2D Test v10 — Sequential Load + Texture Deep Dive</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -36,72 +36,84 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','STATUS','SDK loaded','Widget loaded','initWidget',
-      '===','WAIFU','WINDOW','UNHANDLED','MOC3_','FORCE','Direct','snapshot'];
+    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','IMG_ABORT','FETCH','XHR_','STATUS','SDK loaded','Widget loaded','initWidget',
+      '===','WAIFU','WINDOW','UNHANDLED','MOC3_','FORCE','Direct','snapshot','PREVERIFY','TEX_','GL_TEX'];
 
     console.log = function() {
       const msg = Array.from(arguments).join(' ');
       if (msg && !myPrefixes.some(p => msg.startsWith(p))) {
-        log('🏷 SDK: ' + msg, 'sdk');
+        log('SDK: ' + msg, 'sdk');
       }
       return _origLog.apply(console, arguments);
     };
-    console.error = function(){ log('🔴 SDK_ERR: ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
-    console.warn  = function(){ log('🟡 SDK_WARN: ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
+    console.error = function(){ log('SDK_ERR: ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
+    console.warn  = function(){ log('SDK_WARN: ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
 
-    window.addEventListener('error', e => log('⚠ WINDOW_ERROR: ' + e.message, 'err'));
-    window.addEventListener('unhandledrejection', e => log('⚠ UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason), 'err'));
+    window.addEventListener('error', e => log('WINDOW_ERROR: ' + e.message + ' @ ' + (e.filename||'?').split('/').pop() + ':' + e.lineno, 'err'));
+    window.addEventListener('unhandledrejection', e => log('UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason), 'err'));
 
-    // ===== Fetch interceptor — checks moc3 integrity =====
+    // ===== XHR interceptor — catches non-fetch resource loads =====
+    const _origXHROpen = XMLHttpRequest.prototype.open;
+    const _origXHRSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.open = function(method, url) {
+      this.__l2d_url = url; this.__l2d_method = method;
+      return _origXHROpen.apply(this, arguments);
+    };
+    XMLHttpRequest.prototype.send = function() {
+      const url = this.__l2d_url;
+      if (url && (url.includes('live2d') || url.includes('.moc3') || url.includes('.png') || url.includes('.json'))) {
+        const fname = url.toString().split('/').pop();
+        const start = Date.now();
+        this.addEventListener('load', () => {
+          const rt = this.responseType;
+          let size = rt === 'arraybuffer' ? this.response.byteLength : (this.responseText?.length || '?');
+          log('XHR_LOAD [' + this.status + ' ' + size + 'B ' + (Date.now()-start) + 'ms] ' + fname + ' rt=' + rt);
+        });
+        this.addEventListener('error', () => log('XHR_ERR: ' + fname + ' status=' + this.status, 'err'));
+        this.addEventListener('abort', () => log('XHR_ABORT: ' + fname));
+      }
+      return _origXHRSend.apply(this, arguments);
+    };
+
+    // ===== Fetch interceptor =====
     const _origFetch = window.fetch;
-    const moc3Files = []; // track moc3 fetches for analysis
-
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
       if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('motion3') || urlStr.includes('exp3') || urlStr.includes('texture_') || urlStr.includes('physics3') || urlStr.includes('cdi3')) {
         let start = Date.now();
-        const fname = urlStr.split('/').pop();
-
-        // For moc3: clone and check integrity
-        const isMoc3 = fname.includes('.moc3');
-
+        const fname = urlStr.split('?')[0].split('/').pop();
         return _origFetch.call(window, url, opts).then(resp => {
           const cl = resp.headers.get('content-length') || '?';
           const ce = resp.headers.get('content-encoding') || 'none';
-          const ct = resp.headers.get('content-type') || '?';
           log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + (Date.now()-start) + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
-
-          if (isMoc3 && resp.ok) {
-            return resp.clone().arrayBuffer().then(buf => {
-              log('MOC3_INTEGRITY: ' + fname + ' buf=' + buf.byteLength + 'B headerCL=' + cl + 'B ce=' + ce, buf.byteLength > 0 ? 'ok' : 'err');
-              if (buf.byteLength < 1000000) log('⚠ MOC3 TOO SMALL! Expected >16MB, got ' + buf.byteLength, 'err');
-              return resp;
-            });
-          }
           return resp;
-        }).catch(err => { log('FETCH_ERR: ' + fname + ' → ' + err.message, 'err'); throw err; });
+        }).catch(err => { log('FETCH_ERR: ' + fname + ' ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== Image hook =====
+    // ===== Image hook — tracks every image, captures abort too =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
+    let textureAbortCount = 0;
     const allImgSrcs = [];
+    const textureTimings = {}; // fname → { start, end }
 
     const _origImage = window.Image;
     window.Image = function() {
       const img = new _origImage();
       const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
       let srcValue = '';
+      let fname = '';
 
       const _addEL = img.addEventListener.bind(img);
       img.addEventListener = function(evt, fn, opts) {
         if (evt === 'load') {
           const origFn = fn;
           fn = function(e) {
+            if (fname) textureTimings[fname].end = Date.now();
             if (srcValue && (srcValue.includes('texture_') || srcValue.includes('.png'))) textureLoadCount++;
-            log('IMG_LOAD: ' + srcValue.split('/').pop() + (srcValue.includes('texture_')?' ★':''));
+            log('IMG_LOAD: ' + fname + (srcValue.includes('texture_')?' ★':'') + ' size=' + (this.naturalWidth||'?') + 'x' + (this.naturalHeight||'?'));
             return origFn.call(this, e);
           };
         }
@@ -109,7 +121,15 @@
           const origFn = fn;
           fn = function(e) {
             if (srcValue && (srcValue.includes('texture_') || srcValue.includes('.png'))) textureErrorCount++;
-            log('IMG_ERR: ' + srcValue.split('/').pop(), 'err');
+            log('IMG_ERR: ' + fname + ' complete=' + this.complete + ' nw=' + this.naturalWidth, 'err');
+            return origFn.call(this, e);
+          };
+        }
+        if (evt === 'abort') {
+          const origFn = fn;
+          fn = function(e) {
+            textureAbortCount++;
+            log('IMG_ABORT: ' + fname, 'warn');
             return origFn.call(this, e);
           };
         }
@@ -118,32 +138,73 @@
 
       Object.defineProperty(img, 'src', {
         get: function() { return srcValue; },
-        set: function(val) { srcValue = val; if (val) allImgSrcs.push(val.split('/').pop()); _origSetSrc.set.call(this, val); },
+        set: function(val) {
+          srcValue = val;
+          if (val) {
+            fname = val.split('?')[0].split('/').pop();
+            allImgSrcs.push(fname);
+            textureTimings[fname] = { start: Date.now(), end: 0 };
+          }
+          _origSetSrc.set.call(this, val);
+        },
         configurable: true, enumerable: true
       });
       return img;
     };
 
-    // ===== GL counters =====
-    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindFramebuffer: 0, bindTexture: 0 };
-    let lastFB = '(none)';
+    // ===== GL counters with detailed texImage2D logging =====
+    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindTexture: 0, useProgram: 0 };
     let glRef = null;
     let glHooked = false;
+    let texUploadSeq = 0;
 
     const origGetContext = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, attrs) {
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
         attrs.preserveDrawingBuffer = true;
-        log('preserveDrawingBuffer=true forced');
+        log('WebGL context: preserveDrawingBuffer=true');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true; glRef = ctx;
         const gl = ctx;
-        ['texImage2D','drawElements','clear','useProgram','createTexture','bindTexture','bindFramebuffer'].forEach(name => {
-          const orig = gl[name].bind(gl);
-          gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
+
+        // Hook texImage2D with detail logging
+        const _origTexImage2D = gl.texImage2D.bind(gl);
+        gl.texImage2D = function() {
+          glOps.texImage2D++; texUploadSeq++;
+          let detail = '#' + texUploadSeq + ' target=0x' + arguments[0].toString(16);
+          if (arguments.length >= 6) {
+            detail += ' w=' + arguments[3] + ' h=' + arguments[4] + ' fmt=0x' + arguments[2].toString(16);
+          } else if (arguments.length >= 2 && arguments[1] instanceof HTMLImageElement) {
+            detail += ' IMG ' + arguments[1].naturalWidth + 'x' + arguments[1].naturalHeight;
+            const src = arguments[1].src || arguments[1].getAttribute?.('src') || '?';
+            detail += ' src=' + src.split('/').pop();
+          } else if (arguments.length >= 2 && arguments[1] instanceof ImageBitmap) {
+            detail += ' ImageBitmap ' + arguments[1].width + 'x' + arguments[1].height;
+          }
+          log('TEX_UPLOAD ' + detail, 'info');
+          return _origTexImage2D.apply(gl, arguments);
+        };
+
+        const _origCreateTexture = gl.createTexture.bind(gl);
+        gl.createTexture = function() {
+          glOps.createTexture++;
+          const tex = _origCreateTexture();
+          log('GL_TEX created #' + glOps.createTexture + ' id=' + (tex ? 'ok' : 'NULL'), 'info');
+          return tex;
+        };
+
+        // Other hooks
+        ['drawElements','clear','useProgram','bindTexture','bindFramebuffer'].forEach(name => {
+          if (name === 'bindTexture') {
+            const orig = gl[name].bind(gl);
+            gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
+          } else {
+            const orig = gl[name].bind(gl);
+            gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
+          }
         });
       }
       return ctx;
@@ -153,19 +214,20 @@
       const canvas = document.getElementById('live2d');
       if (!canvas) return;
       try {
-        // Dense pixel scan
         if (glRef && !glRef.isContextLost()) {
           glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
           const px = new Uint8Array(4);
-          for (let y = 0; y < canvas.height; y += 5) {
-            for (let x = 0; x < canvas.width; x += 5) {
+          let found = false;
+          for (let y = 0; y < canvas.height && !found; y += 5) {
+            for (let x = 0; x < canvas.width && !found; x += 5) {
               glRef.readPixels(x, y, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
               if (px[0] || px[1] || px[2] || px[3]) {
                 log('SNAP_PIXEL at (' + x + ',' + y + ') RGBA(' + px.join(',') + ') ✓', 'ok');
-                break;
+                found = true;
               }
             }
           }
+          if (!found) log('SNAP: all pixels zero (empty canvas)', 'warn');
         }
         const dataUrl = canvas.toDataURL('image/png');
         const snapshotEl = document.getElementById('snapshot');
@@ -176,12 +238,12 @@
 
     function periodicStatus() {
       log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
-        ' clear=' + glOps.clear + ' texLoad=' + textureLoadCount + ' allImgs=' + allImgSrcs.length, 'info');
+        ' clear=' + glOps.clear + ' useP=' + glOps.useProgram + ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount + ' texAbort=' + textureAbortCount, 'info');
     }
 
     let startTime;
 
-    // ===== MAIN =====
+    // ===== MAIN — SEQUENTIAL LOADING (fix for V7→V9 regression) =====
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
 
@@ -190,73 +252,127 @@
         let tag;
         if (type === 'css') { tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url; }
         else { tag = document.createElement('script'); tag.src = url; }
-        tag.onload = () => resolve(url);
+        tag.onload = () => { log(type.toUpperCase() + ' loaded: ' + url.split('/').pop()); resolve(url); };
         tag.onerror = () => reject(new Error('Failed: ' + url));
         document.head.appendChild(tag);
       });
     }
 
-    loadExternalResource(BASE + 'waifu.css', 'css');
-    loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
-    loadExternalResource(BASE + 'live2d-sdk.js', 'js');
-
     async function main() {
       startTime = Date.now();
       try {
-        // Wait for SDK to be ready
+        // ===== STEP 1: Load external resources SEQUENTIALLY =====
+        log('=== Loading CSS ===', 'section');
+        await loadExternalResource(BASE + 'waifu.css', 'css');
+
+        log('=== Loading Cubism Core (WASM) ===', 'section');
+        await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
+        // Give WASM time to initialize
+        await new Promise(r => setTimeout(r, 200));
+        log('Core JS loaded, waiting for WASM init...');
+
+        log('=== Loading Live2D SDK ===', 'section');
+        await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
+
+        // Wait for SDK to expose window.live2d
         let waited = 0;
-        while (!window.live2d && waited < 10000) {
+        while (!window.live2d && waited < 15000) {
           await new Promise(r => setTimeout(r, 100));
           waited += 100;
         }
         if (!window.live2d) { log('SDK failed to load', 'err'); return; }
-        log('=== SDK ready ===', 'section');
+        log('=== SDK ready (window.live2d available) ===', 'section');
 
+        log('=== Loading waifu-tips.js ===', 'section');
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
         log('Widget ready');
 
-        // ** FIRST: directly fetch the moc3 to check integrity **
-        log('=== Checking moc3 integrity ===', 'section');
-        try {
-          const resp = await fetch('/live2d-api/model/teto/重音テト.moc3');
-          log('DIRECT_FETCH: status=' + resp.status + ' cl=' + resp.headers.get('content-length') + ' ce=' + (resp.headers.get('content-encoding')||'none'));
-          const buf = await resp.arrayBuffer();
-          log('DIRECT_MOC3: arrayBuffer = ' + buf.byteLength + ' bytes', buf.byteLength > 15000000 ? 'ok' : 'err');
-          // Look for 3rd moc3 header: it should have "MOC3" at the beginning
-          if (buf.byteLength >= 4) {
-            const dv = new DataView(buf);
-            log('DIRECT_MOC3: magic bytes = 0x' + dv.getUint32(0, false).toString(16) + ' (expected MOC3=0x4D4F4333)', 'info');
-          }
-        } catch(e) {
-          log('DIRECT_MOC3 fetch failed: ' + e.message, 'err');
-        }
+        // ===== STEP 2: Pre-verify all texture files =====
+        log('=== Pre-verifying texture files ===', 'section');
+        const TEXTURE_BASE = '/live2d-api/model/teto/重音テト.4096/';
+        const textureFiles = ['texture_00.png', 'texture_01.png', 'texture_02.png', 'texture_03.png', 'texture_04.png'];
 
+        for (const tf of textureFiles) {
+          try {
+            const resp = await fetch(TEXTURE_BASE + tf);
+            log('PREVERIFY: ' + tf + ' status=' + resp.status + ' cl=' + (resp.headers.get('content-length')||'?') + ' ct=' + (resp.headers.get('content-type')||'?'));
+            if (resp.ok) {
+              // Load via Image to test actual browser loading
+              await new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => {
+                  log('PREVERIFY_IMG: ' + tf + ' OK ' + img.naturalWidth + 'x' + img.naturalHeight);
+                  resolve();
+                };
+                img.onerror = () => {
+                  log('PREVERIFY_IMG: ' + tf + ' FAILED!', 'err');
+                  reject(new Error(tf + ' failed to load'));
+                };
+                img.src = TEXTURE_BASE + tf;
+              });
+            }
+          } catch(e) {
+            log('PREVERIFY_ERR: ' + tf + ' ' + e.message, 'err');
+          }
+        }
+        log('Texture pre-verification complete');
+
+        // ===== STEP 3: Init widget =====
         log('=== Calling initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
         localStorage.setItem('modelTexturesId', '0');
 
-        initWidget({
-          waifuPath: BASE + 'waifu-tips.json',
-          cdnPath: '/live2d-api/',
-          homePath: 'https://kioshiroi.github.io/',
-          tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
-          dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
-        });
-        log('initWidget() called ✓');
+        try {
+          initWidget({
+            waifuPath: BASE + 'waifu-tips.json',
+            cdnPath: '/live2d-api/',
+            homePath: 'https://kioshiroi.github.io/',
+            tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
+            dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
+          });
+          log('initWidget() called');
+        } catch(e) {
+          log('initWidget ERROR: ' + e.message, 'err');
+        }
 
-        // ===== FORCE RELOAD at +3s (widget's first attempt might fail) =====
-        setTimeout(() => {
-          log('=== FORCE reload at +3s ===', 'section');
-          if (window.live2d && window.live2d.loadModel) {
-            window.live2d.loadModel('/live2d-api/model/teto/');
-            log('FORCE loadModel called');
-          } else {
-            log('FORCE: live2d.loadModel not available', 'err');
+        // ===== STEP 4: Monitor model loading =====
+        // Periodic deep status check
+        const checkInterval = setInterval(() => {
+          periodicStatus();
+          // Check if model is in window.live2d
+          if (window.live2d) {
+            const live2dModule = window.live2d;
+            log('SDK_API: methods=' + Object.keys(live2dModule).join(','));
+            // Try to access internal state
+            try {
+              for (const key of Object.keys(live2dModule)) {
+                const val = live2dModule[key];
+                if (val && typeof val === 'object' && !Array.isArray(val)) {
+                  const subKeys = Object.keys(val).slice(0, 5);
+                  if (subKeys.length) log('SDK_API.' + key + ' = {' + subKeys.join(',') + '...}', 'info');
+                }
+              }
+            } catch(e) {}
+            clearInterval(checkInterval);
           }
-        }, 3000);
+        }, 2000);
+        setTimeout(() => clearInterval(checkInterval), 15000);
+
+        // Force reload at +5s if nothing rendered
+        setTimeout(() => {
+          if (glOps.drawElements === 0) {
+            log('=== FORCE reload — no drawElements yet ===', 'section');
+            if (window.live2d && window.live2d.loadModel) {
+              window.live2d.loadModel('/live2d-api/model/teto/');
+              log('FORCE loadModel called');
+            } else {
+              log('FORCE: live2d.loadModel not available', 'err');
+            }
+          }
+        }, 5000);
 
         // Snapshots
-        setTimeout(() => { periodicStatus(); snapshotCanvas('+4s'); }, 4000);
+        setTimeout(() => { snapshotCanvas('+4s'); }, 4000);
         setTimeout(() => { periodicStatus(); snapshotCanvas('+8s'); }, 8000);
         setTimeout(() => { periodicStatus(); snapshotCanvas('+12s'); }, 12000);
         setTimeout(() => {
@@ -264,8 +380,10 @@
           snapshotCanvas('+20s');
           log('=== Final ===', 'section');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('Texture loads: ' + textureLoadCount);
-          log('All image srcs (' + allImgSrcs.length + '): ' + JSON.stringify(allImgSrcs), 'info');
+          log('Texture events: load=' + textureLoadCount + ' err=' + textureErrorCount + ' abort=' + textureAbortCount);
+          log('Texture timings: ' + JSON.stringify(textureTimings), 'info');
+          log('All image srcs (' + allImgSrcs.length + '): ' + JSON.stringify([...new Set(allImgSrcs)]), 'info');
+          log('Canvas size: ' + (document.getElementById('live2d')?.width||'?') + 'x' + (document.getElementById('live2d')?.height||'?'));
         }, 20000);
 
       } catch(e) {
