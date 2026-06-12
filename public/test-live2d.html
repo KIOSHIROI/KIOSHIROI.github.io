@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v4 — Sync Pixel + State Track</title>
+  <title>Live2D Test v5 — Image Hook Fix + State Trace</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; }
     .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; }
-    /* Ensure waifu is visible */
     #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
   </style>
 </head>
 <body>
-  <h2>Live2D Test v4 — Sync Frame Pixel + State Tracking</h2>
+  <h2>Live2D Test v5 — Image Hook Fix + State Trace + GL Error Skip</h2>
   <div id="log">Loading...</div>
 
   <script>
-    // ===== Save originals =====
     const _origLog = console.log.bind(console);
     const _origError = console.error.bind(console);
     const _origWarn = console.warn.bind(console);
@@ -25,9 +23,9 @@
     const logEl = document.getElementById('log');
     let logLines = 0;
     function log(msg, cls) {
-      if (++logLines > 500) { // limit log size
+      if (++logLines > 800) {
         const lines = logEl.innerHTML.split('\n');
-        logEl.innerHTML = lines.slice(-200).join('\n');
+        logEl.innerHTML = lines.slice(-300).join('\n');
       }
       const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       logEl.innerHTML += `<span class="${cls || 'ok'}">[${new Date().toISOString().slice(11,23)}] ${safe}</span>\n`;
@@ -45,35 +43,61 @@
       if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('motion3') || urlStr.includes('exp3') || urlStr.includes('texture_') || urlStr.includes('physics3')) {
         let start = Date.now();
         return _origFetch.call(window, url, opts).then(resp => {
-          log('FETCH [' + resp.status + ' ' + resp.headers.get('content-length') + 'B ' + (Date.now()-start) + 'ms] ' + urlStr.split('/').pop(), resp.ok?'ok':'err');
+          const cl = resp.headers.get('content-length') || '?';
+          log('FETCH [' + resp.status + ' ' + cl + 'B ' + (Date.now()-start) + 'ms] ' + urlStr.split('/').pop(), resp.ok ? 'ok' : 'err');
           return resp;
         }).catch(err => { log('FETCH ERR: ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== Image load interceptor (captures texture loading) =====
-    const origImageProto = HTMLImageElement.prototype;
-    const origAddEventListener = origImageProto.addEventListener;
+    // ===== Image loading interceptor — FIXED: hook Image constructor instead of addEventListener =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
     const textureFiles = [];
-    origImageProto.addEventListener = function(evt, fn, opts) {
-      if (evt === 'load' && this.src && (this.src.includes('texture_') || this.src.includes('.png'))) {
-        const src = this.src.split('/').pop();
-        const origFn = fn;
-        fn = function(e) {
-          textureLoadCount++;
-          textureFiles.push('✓ ' + src + ' ' + this.naturalWidth + 'x' + this.naturalHeight);
-          if (textureFiles.length <= 8) log('TEX_IMG loaded: ' + src + ' (' + this.naturalWidth + 'x' + this.naturalHeight + ')');
-          return origFn.call(this, e);
-        };
-      }
-      if (evt === 'error' && this.src && (this.src.includes('texture_') || this.src.includes('.png'))) {
-        log('!!! TEX_IMG ERROR: ' + this.src.split('/').pop(), 'err');
-        textureErrorCount++;
-      }
-      return origAddEventListener.call(this, evt, fn, opts);
+
+    const _origImage = window.Image;
+    window.Image = function() {
+      const img = new _origImage();
+      const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+      let srcValue = '';
+
+      // Override src property setter
+      Object.defineProperty(img, 'src', {
+        get: function() { return srcValue; },
+        set: function(val) {
+          srcValue = val;
+          if (val && (val.includes('texture_') || val.includes('.png'))) {
+            const fname = val.split('/').pop();
+            const _addEL = img.addEventListener.bind(img);
+            img.addEventListener = function(evt, fn, opts) {
+              if (evt === 'load') {
+                const origFn = fn;
+                fn = function(e) {
+                  textureLoadCount++;
+                  const dims = img.naturalWidth + 'x' + img.naturalHeight;
+                  textureFiles.push(fname + ' ' + dims);
+                  log('TEX_IMG loaded #' + textureLoadCount + ': ' + fname + ' (' + dims + ')');
+                  return origFn.call(this, e);
+                };
+              }
+              if (evt === 'error') {
+                const origFn = fn;
+                fn = function(e) {
+                  textureErrorCount++;
+                  log('!!! TEX_IMG ERROR #' + textureErrorCount + ': ' + fname, 'err');
+                  return origFn.call(this, e);
+                };
+              }
+              return _addEL.call(this, evt, fn, opts);
+            };
+          }
+          _origSetSrc.set.call(this, val);
+        },
+        configurable: true,
+        enumerable: true
+      });
+      return img;
     };
 
     // ===== GL OP COUNTERS =====
@@ -82,26 +106,21 @@
     let fbHistory = [];
     let lastViewport = [0,0,0,0];
     let glHooked = false;
-    let glRef = null; // store ref to the GL context
+    let glRef = null;
 
-    // ===== State tracking =====
-    let modelStates = [];
-    let stateCheckRunning = false;
-
-    // ===== getContext interceptor (BEFORE canvas creation) =====
+    // ===== getContext interceptor =====
     const origGetContext = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, attrs) {
-      // FORCE preserveDrawingBuffer: true for #live2d canvas
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
-        attrs.preserveDrawingBuffer = true; // CRITICAL: preserve buffer for readPixels
+        attrs.preserveDrawingBuffer = true;
         log('FORCING preserveDrawingBuffer=true on #live2d');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true;
         glRef = ctx;
-        log('=== Hooking GL on #live2d (preserveDrawingBuffer=' + ctx.getParameter(ctx.PRESERVE_DRAWING_BUFFER) + ') ===', 'section');
+        log('=== Hooking GL on #live2d ===', 'section');
         const gl = ctx;
 
         const origFns = {};
@@ -136,13 +155,13 @@
           return origFns.viewport.call(gl, x,y,w,h);
         };
 
-        // GL error polling
+        // GL error polling — with filter
         setInterval(() => {
           if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
           const err = gl.getError();
           if (err !== gl.NO_ERROR && err !== 0) {
             const names = { 1280: 'INVALID_ENUM', 1281: 'INVALID_VALUE', 1282: 'INVALID_OPERATION', 1285: 'OUT_OF_MEMORY', 1286: 'INVALID_FRAMEBUFFER_OPERATION' };
-            log(`GL Error: ${names[err]||err}`, 'err');
+            log('GL Error: ' + (names[err] || err), 'warn');
           }
         }, 2000);
 
@@ -152,22 +171,18 @@
     };
 
     // ===== rAF sync pixel reader =====
-    // Hook requestAnimationFrame to read pixels right after each render frame
     let syncPixelChecked = false;
     const origRAF = window.requestAnimationFrame;
-    const rAFcallbacks = new Set();
     let rafCount = 0;
 
     window.requestAnimationFrame = function(cb) {
       const wrappedCb = function(ts) {
         cb(ts);
-        // After the render callback runs, try sync pixel read
         rafCount++;
-        if (!syncPixelChecked && rafCount > 10 && lastFB === 'null(default)') {
+        if (!syncPixelChecked && rafCount > 10 && lastFB === 'null(default)' && glRef) {
           const canvas = document.getElementById('live2d');
-          if (canvas && glRef && !glRef.isContextLost()) {
+          if (canvas && !glRef.isContextLost()) {
             try {
-              // Ensure we're reading from default FB
               glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
               const px = new Uint8Array(4);
               let found = false;
@@ -176,14 +191,13 @@
                   glRef.readPixels(sx, sy, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
                   if (px[0] || px[1] || px[2] || px[3]) {
                     log('SYNC-PIXEL ✓ at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') [frame#' + rafCount + ']', 'ok');
-                    log('  texCount=' + textureLoadCount + ' texErr=' + textureErrorCount + ' createTex=' + glOps.createTexture + ' texImg=' + glOps.texImage2D, 'info');
                     syncPixelChecked = true;
                     found = true;
                   }
                 }
               }
               if (!found && rafCount % 60 === 0) {
-                log('SYNC-PIXEL ❌ all zero at frame#' + rafCount + ' texLoad=' + textureLoadCount + ' createTex=' + glOps.createTexture, 'warn');
+                log('SYNC-PIXEL ❌ frame#' + rafCount + ' texLoad=' + textureLoadCount + ' drawE=' + glOps.drawElements, 'warn');
               }
             } catch(e) {
               log('SYNC-PIXEL err: ' + e.message, 'err');
@@ -194,60 +208,74 @@
       return origRAF.call(window, wrappedCb);
     };
 
-    // ===== Baseline GL test =====
-    function testGLRendering() {
-      const testCanvas = document.createElement('canvas');
-      testCanvas.width = 100; testCanvas.height = 100;
-      testCanvas.style.position = 'fixed'; testCanvas.style.top = '10px'; testCanvas.style.right = '10px';
-      testCanvas.style.border = '2px solid red'; testCanvas.style.zIndex = '99999';
-      document.body.appendChild(testCanvas);
+    // ===== State tracking — poll model internals =====
+    let lastReportedState = -1;
+    function pollModelState() {
+      const interval = setInterval(() => {
+        try {
+          const l2d = window.live2d;
+          if (l2d && l2d._modelManager && l2d._modelManager._models) {
+            const mm = l2d._modelManager;
+            for (let i = 0; i < mm._models.getSize(); i++) {
+              const model = mm._models.at(i);
+              if (model && model._state !== undefined) {
+                const st = model._state;
+                if (st !== lastReportedState) {
+                  const tCount = model._textureCount;
+                  const modelT = model._modelSetting?.getTextureCount?.();
+                  log(`STATE: ${lastReportedState}→${st} [t=${tCount}/${modelT??'?'}]`, st === 22 ? 'ok' : (st >= 20 ? 'info' : ''));
+                  lastReportedState = st;
+                }
+              }
+            }
+          }
+        } catch(e) {
+          // Cannot access — expected if fields are truly private
+        }
+      }, 500);
 
-      const gl = testCanvas.getContext('webgl2', {preserveDrawingBuffer: true}) || testCanvas.getContext('webgl', {preserveDrawingBuffer: true});
-      if (!gl) { log('BASELINE GL TEST: No context', 'err'); return; }
-
-      const vs = gl.createShader(gl.VERTEX_SHADER);
-      gl.shaderSource(vs, 'attribute vec2 p; void main(){ gl_Position=vec4(p,0,1); }');
-      gl.compileShader(vs);
-      if (!gl.getShaderParameter(vs, gl.COMPILE_STATUS)) { log('BASELINE: VS compile error: ' + gl.getShaderInfoLog(vs), 'err'); return; }
-
-      const fs = gl.createShader(gl.FRAGMENT_SHADER);
-      gl.shaderSource(fs, 'precision mediump float; void main(){ gl_FragColor=vec4(1,0,0,1); }');
-      gl.compileShader(fs);
-      if (!gl.getShaderParameter(fs, gl.COMPILE_STATUS)) { log('BASELINE: FS compile error: ' + gl.getShaderInfoLog(fs), 'err'); return; }
-
-      const prog = gl.createProgram();
-      gl.attachShader(prog, vs); gl.attachShader(prog, fs);
-      gl.linkProgram(prog);
-      if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { log('BASELINE: Program link error: ' + gl.getProgramInfoLog(prog), 'err'); return; }
-
-      const buf = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, 0,1]), gl.STATIC_DRAW);
-      const posLoc = gl.getAttribLocation(prog, 'p');
-      gl.enableVertexAttribArray(posLoc);
-      gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
-      gl.useProgram(prog);
-      gl.clearColor(0, 0, 1, 1); gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLES, 0, 3);
-      const err = gl.getError();
-      const px = new Uint8Array(4);
-      gl.readPixels(50, 50, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-      log('BASELINE GL TEST: err=' + err + ' centerPixel=RGBA(' + px.join(',') + ') [red triangle on blue bg]',
-          px[0] > 200 ? 'ok' : 'err');
-      gl.getExtension('WEBGL_lose_context')?.loseContext();
-      testCanvas.style.display = 'none';
+      setTimeout(() => {
+        clearInterval(interval);
+        if (lastReportedState !== 22) {
+          log('STATE STUCK at ' + lastReportedState + ' after 25s', 'err');
+        }
+      }, 25000);
     }
 
-    // ===== Async pixel check (for comparison) =====
-    window._pixelFound = false;
-    function fullCheck(label) {
-      if (window._pixelFound) return;
+    // ===== Periodic status log =====
+    function periodicStatus() {
+      log('STATUS @ +' + Math.round((Date.now() - startTime) / 1000) + 's: ' +
+        'state=' + lastReportedState +
+        ' drawE=' + glOps.drawElements +
+        ' createT=' + glOps.createTexture +
+        ' texImg=' + glOps.texImage2D +
+        ' clear=' + glOps.clear +
+        ' texLoad=' + textureLoadCount +
+        ' texErr=' + textureErrorCount, 'info');
+    }
+
+    let startTime;
+    function checkGLNoPreserveDB(label) {
       const canvas = document.getElementById('live2d');
       if (!canvas) { log(label + ': no canvas', 'err'); return; }
       try {
         const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-        if (!gl || gl.isContextLost()) { log(label + ': no GL / context lost', 'err'); return; }
-        // Force bind default FB
+        if (!gl) { log(label + ': no GL', 'err'); return; }
+        log(label + ': VP=' + gl.getParameter(gl.VIEWPORT).join('x') +
+          ' canvas=' + canvas.width + 'x' + canvas.height +
+          ' css=' + canvas.clientWidth + 'x' + canvas.clientHeight +
+          ' lost=' + gl.isContextLost() +
+          ' ops=' + JSON.stringify({texImg:glOps.texImage2D,drawE:glOps.drawElements,createT:glOps.createTexture,clear:glOps.clear}));
+      } catch(e) { log(label + ': err=' + e.message, 'err'); }
+    }
+
+    function fullCheckAsync(label) {
+      if (window._pixelFound) return;
+      const canvas = document.getElementById('live2d');
+      if (!canvas) return;
+      try {
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl || gl.isContextLost()) return;
         gl.bindFramebuffer(gl.FRAMEBUFFER, null);
         const px = new Uint8Array(4);
         for (let sy = 0; sy < canvas.height; sy += 40) {
@@ -262,82 +290,8 @@
         }
         log(label + ': ALL pixels zero ❌', 'err');
       } catch(e) {
-        log(label + ': error=' + e.message, 'err');
+        log(label + ': err=' + e.message, 'err');
       }
-    }
-
-    function checkGL(label) {
-      const canvas = document.getElementById('live2d');
-      if (!canvas) { log(label + ': no canvas', 'err'); return; }
-      try {
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-        if (!gl) { log(label + ': no GL', 'err'); return; }
-        log(label + ': VP=' + gl.getParameter(gl.VIEWPORT).join('x') +
-          ' canvas=' + canvas.width + 'x' + canvas.height +
-          ' css=' + canvas.clientWidth + 'x' + canvas.clientHeight +
-          ' lost=' + gl.isContextLost() +
-          ' preserveDB=' + gl.getParameter(gl.PRESERVE_DRAWING_BUFFER) +
-          ' ops=' + JSON.stringify({texImg:glOps.texImage2D,drawE:glOps.drawElements,createT:glOps.createTexture,clear:glOps.clear}));
-      } catch(e) { log(label + ': err=' + e.message, 'err'); }
-    }
-
-    // ===== State polling =====
-    function pollModelState() {
-      if (stateCheckRunning) return;
-      stateCheckRunning = true;
-      const canvas = document.getElementById('live2d');
-      let lastReportedState = -1;
-
-      const interval = setInterval(() => {
-        if (!glRef || glRef.isContextLost()) return;
-
-        // Try to peek at model state via prototype inspection
-        try {
-          // The model's _state is on the Et class instance stored in _models
-          // We can access it through the live2d global
-          const l2d = window.live2d;
-          if (l2d && l2d._modelManager) {
-            const mm = l2d._modelManager;
-            if (mm._models) {
-              for (let i = 0; i < mm._models.getSize(); i++) {
-                const model = mm._models.at(i);
-                if (model && model._state !== undefined) {
-                  const st = model._state;
-                  if (st !== lastReportedState) {
-                    log('MODEL STATE: ' + lastReportedState + ' → ' + st + ' (tex=' + model._textureCount + '/' + (model._modelSetting?.getTextureCount?.() || '?') + ')', st === 22 ? 'ok' : 'info');
-                    lastReportedState = st;
-                    if (st === 22) {
-                      log('STATE 22 REACHED! Model should be rendering.', 'ok');
-                      clearInterval(interval);
-                    }
-                    if (st >= 20) {
-                      log('  renderer=' + (model._renderer ? 'yes' : 'NO'), 'info');
-                      log('  initialized=' + model._initialized, 'info');
-                    }
-                  }
-                }
-              }
-            }
-          }
-        } catch(e) {
-          // Private fields may not be accessible
-          if (rafCount > 200 && !syncPixelChecked && !window._pixelFound) {
-            log('STATUS: rAF frames=' + rafCount + ' texLoad=' + textureLoadCount + ' createTex=' + glOps.createTexture +
-              ' texImg=' + glOps.texImage2D + ' drawE=' + glOps.drawElements, 'info');
-          }
-        }
-      }, 500);
-
-      setTimeout(() => {
-        if (lastReportedState < 22 && lastReportedState >= 0) {
-          log('STATE STUCK at ' + lastReportedState + ' after 25s — investigating...', 'err');
-          log('  textureLoadCount=' + textureLoadCount + ' textureErrorCount=' + textureErrorCount, 'err');
-          log('  textureFiles: ' + JSON.stringify(textureFiles), 'info');
-          log('  GL ops: ' + JSON.stringify(glOps), 'info');
-          log('  GL context lost=' + (glRef?.isContextLost?.() || '?'), 'info');
-        }
-        clearInterval(interval);
-      }, 25000);
     }
 
     // ===== MAIN =====
@@ -356,6 +310,7 @@
     }
 
     async function main() {
+      startTime = Date.now();
       try {
         log('=== Loading CDN ===', 'section');
         await loadExternalResource(BASE + 'waifu.css', 'css');
@@ -365,7 +320,6 @@
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
         log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
 
-        // Start state polling BEFORE initWidget (to catch early states)
         log('=== Calling initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
         localStorage.setItem('modelTexturesId', '0');
@@ -379,35 +333,39 @@
         });
         log('initWidget() called ✓');
 
-        // Start state polling after a short delay (model starts loading)
+        // Start state polling
         setTimeout(() => pollModelState(), 2000);
 
-        // Schedule checks
-        setTimeout(() => testGLRendering(), 3000);
-        setTimeout(() => checkGL('+4s'), 4000);
-        setTimeout(() => { checkGL('+6s'); fullCheck('+6s'); }, 6000);
-        setTimeout(() => { checkGL('+10s'); fullCheck('+10s'); }, 10000);
+        // Periodic checks
+        setTimeout(() => checkGLNoPreserveDB('+4s'), 4000);
+        setTimeout(() => checkGLNoPreserveDB('+6s'), 6000);
+        setTimeout(() => { checkGLNoPreserveDB('+10s'); fullCheckAsync('+10s'); }, 10000);
+        setTimeout(() => periodicStatus(), 12000);
         setTimeout(() => {
-          checkGL('+15s');
-          fullCheck('+15s');
+          checkGLNoPreserveDB('+15s');
+          fullCheckAsync('+15s');
+          periodicStatus();
           log('=== Final diagnostics ===', 'section');
+          log('State: ' + lastReportedState, lastReportedState === 22 ? 'ok' : 'err');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
           log('FB history: ' + fbHistory.join(' → '), 'info');
-          log('Last FB: ' + lastFB + ' | Last VP: [' + lastViewport.join(',') + ']', 'info');
-          log('Texture loads: ' + textureLoadCount + ' errors: ' + textureErrorCount, textureLoadCount > 0 ? 'ok' : 'err');
-          log('SyncPixelFound=' + syncPixelChecked + ' AsyncPixelFound=' + window._pixelFound, 'info');
-          log('Files loaded: ' + JSON.stringify(textureFiles), 'info');
+          log('Texture loads: ' + textureLoadCount + ' errors: ' + textureErrorCount, textureLoadCount === 5 ? 'ok' : 'err');
+          log('Loaded textures: ' + JSON.stringify(textureFiles), 'info');
           const waifu = document.getElementById('waifu');
           if (waifu) {
             const s = getComputedStyle(waifu);
-            const canvas = document.getElementById('live2d');
-            log('waifu: pos=' + s.position + ' bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
-            if (canvas) log('canvas: ' + canvas.width + 'x' + canvas.height + ' css=' + canvas.clientWidth + 'x' + canvas.clientHeight);
+            log('waifu: bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
           }
-          log('--- KEY: syncPixelFound=yes → model renders but readPixels timing issue ---', 'section');
-          log('--- KEY: texLoad<5 → texture loading problem ---', 'section');
-          log('--- KEY: state<22 → model init incomplete ---', 'section');
+          log('--- If state<22: check why model loading stalled ---', 'section');
+          log('--- If state=22 but drawE=0: view.render() issue ---', 'section');
         }, 15000);
+
+        // Extended check
+        setTimeout(() => {
+          periodicStatus();
+          checkGLNoPreserveDB('+30s');
+          fullCheckAsync('+30s');
+        }, 30000);
 
       } catch(e) {
         log('FATAL: ' + e.message + '\n' + e.stack, 'err');
