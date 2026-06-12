@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v11 — Sequential Load, No Preload, SDK Trace</title>
+  <title>Live2D Test v12 — Direct Moc3 Parse Test</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v11 — Sequential Load, No Preload, SDK Trace</h2>
+  <h2>Live2D Test v12 — Direct Moc3 Parse Test</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -36,8 +36,8 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','FETCH_ERR','XHR','STATUS','initWidget',
-      '===','WINDOW','UNHANDLED','TEX_','GLTEX','GLHOOK','HEAD','POOL'];
+    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','STATUS','===','WINDOW','UNHANDLED','TEX_','GLHOOK',
+      'CORE_','MOC_PARSE','MODEL_PARSE','DIRECT_'];
 
     console.log = function() {
       const msg = Array.from(arguments).join(' ');
@@ -50,62 +50,40 @@
     console.warn  = function(){ log('SDK_WARN: ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
 
     window.addEventListener('error', e => log('WINDOW_ERROR: ' + e.message + ' @ ' + (e.filename||'?').split('/').pop() + ':' + e.lineno, 'err'));
-    window.addEventListener('unhandledrejection', e => log('UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason) + (e.reason?.stack ? '\n' + e.reason.stack.split('\n').slice(0,3).join('\n') : ''), 'err'));
+    window.addEventListener('unhandledrejection', e => log('UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason), 'err'));
 
-    // ===== Connection pool tracking =====
-    let pendingFetches = 0;
-    const MAX_CONCURRENT = 6;
-    function poolStatus() {
-      log('POOL: pending=' + pendingFetches + '/' + MAX_CONCURRENT);
-    }
-
-    // ===== Fetch interceptor with connection tracking =====
+    // ===== Fetch interceptor =====
     const _origFetch = window.fetch;
-    const fetchLog = []; // full log of all fetches
+    let rawMoc3Buffer = null; // capture moc3 buffer for direct parsing
+    const fetchLog = [];
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
-      if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('motion3') || urlStr.includes('exp3') || urlStr.includes('texture_') || urlStr.includes('physics3') || urlStr.includes('cdi3') || urlStr.includes('waifu-tips')) {
+      if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('physics3') || urlStr.includes('cdi3') || urlStr.includes('texture_') || urlStr.includes('waifu-tips')) {
         let start = Date.now();
         const fname = decodeURIComponent(urlStr.split('?')[0].split('/').pop());
-        pendingFetches++;
-        poolStatus();
-
-        // Special: if this is teto.model3.json, do a parallel direct check too
-        const isTetoModel3 = fname.includes('teto.model3.json');
+        const isMoc3 = fname.includes('.moc3');
 
         return _origFetch.call(window, url, opts).then(resp => {
-          pendingFetches--;
           const cl = resp.headers.get('content-length') || '?';
           const ce = resp.headers.get('content-encoding') || 'none';
           const dur = Date.now()-start;
-          fetchLog.push({ file: fname, status: resp.status, size: cl, dur });
+          fetchLog.push({ file: fname, status: resp.status, size: cl, dur, ce });
 
-          if (resp.ok && isTetoModel3) {
-            // Clone and peek at model3.json content to verify texture count
-            return resp.clone().text().then(text => {
-              try {
-                const j = JSON.parse(text);
-                const texCount = j.FileReferences?.Textures?.length || 0;
-                log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname + ' textures=' + texCount, 'ok');
-              } catch(e) {
-                log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname, 'ok');
-              }
+          if (isMoc3 && resp.ok) {
+            return resp.clone().arrayBuffer().then(buf => {
+              rawMoc3Buffer = buf;
+              log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname + ' buf=' + buf.byteLength + 'B', 'ok');
               return resp;
-            }).catch(() => { log('FETCH [' + resp.status + ' ' + cl + 'B ' + dur + 'ms] ' + fname, 'ok'); return resp; });
+            });
           }
-
           log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
           return resp;
-        }).catch(err => {
-          pendingFetches--;
-          log('FETCH_ERR: ' + fname + ' ' + err.message, 'err');
-          throw err;
-        });
+        }).catch(err => { log('FETCH_ERR: ' + fname + ' ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== Image hook (simplified — just track counts) =====
+    // ===== Image hook =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
     const loadedTextures = [];
@@ -123,22 +101,14 @@
         if (evt === 'load') {
           const origFn = fn;
           fn = function(e) {
-            if (fname && fname.includes('texture_')) {
-              textureLoadCount++;
-              loadedTextures.push(fname);
-              log('IMG_LOAD: ' + fname + ' ' + this.naturalWidth + 'x' + this.naturalHeight + ' (' + (loadedTextures.length) + '/' + (loadedTextures.length+failedTextures.length+pendingTextures()) + ')');
-            }
+            if (fname && fname.includes('texture_')) { textureLoadCount++; loadedTextures.push(fname); }
             return origFn.call(this, e);
           };
         }
         if (evt === 'error') {
           const origFn = fn;
           fn = function(e) {
-            if (fname && fname.includes('texture_')) {
-              textureErrorCount++;
-              failedTextures.push(fname);
-              log('IMG_ERR: ' + fname + ' complete=' + this.complete, 'err');
-            }
+            if (fname && fname.includes('texture_')) { textureErrorCount++; failedTextures.push(fname); }
             return origFn.call(this, e);
           };
         }
@@ -157,13 +127,8 @@
       return img;
     };
 
-    // Helper: how many Image objects exist with src set but not yet loaded/errored
-    function pendingTextures() {
-      return document.querySelectorAll ? 0 : 0; // can't easily track this
-    }
-
     // ===== GL hooks =====
-    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindTexture: 0, useProgram: 0 };
+    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0 };
     let glRef = null;
     let glHooked = false;
 
@@ -172,34 +137,15 @@
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
         attrs.preserveDrawingBuffer = true;
-        log('GLHOOK: preserveDrawingBuffer=true set');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true; glRef = ctx;
         const gl = ctx;
-        ['texImage2D','drawElements','clear','useProgram','createTexture','bindTexture','bindFramebuffer'].forEach(name => {
+        ['texImage2D','drawElements','clear','useProgram','createTexture'].forEach(name => {
           const orig = gl[name].bind(gl);
           gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
         });
-
-        // Log texImage2D source info
-        const _origTexImage2D = gl.texImage2D.bind(gl);
-        gl.texImage2D = function() {
-          let srcDesc = '?';
-          if (arguments.length >= 2) {
-            const arg1 = arguments[1];
-            if (arg1 instanceof HTMLImageElement) {
-              srcDesc = 'IMG ' + arg1.naturalWidth + 'x' + arg1.naturalHeight + ' ' + (arg1.src||'').split('/').pop();
-            } else if (arg1 instanceof ImageBitmap) {
-              srcDesc = 'Bitmap ' + arg1.width + 'x' + arg1.height;
-            } else if (arguments.length >= 6) {
-              srcDesc = 'buf ' + arguments[3] + 'x' + arguments[4];
-            }
-          }
-          log('TEX_UPLOAD #' + (glOps.texImage2D+1) + ': ' + srcDesc, 'info');
-          return _origTexImage2D.apply(gl, arguments);
-        };
       }
       return ctx;
     };
@@ -231,11 +177,90 @@
     }
 
     function periodicStatus() {
-      log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D + ' useP=' + glOps.useProgram +
+      log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
         ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount, 'info');
-      log('Loaded textures: ' + JSON.stringify(loadedTextures));
-      log('Failed textures: ' + JSON.stringify(failedTextures));
-      poolStatus();
+    }
+
+    // ===== DIRECT MOC3 PARSE TEST =====
+    function testMocParsing(buf, label) {
+      log('=== Direct moc3 parse test (' + label + ') ===', 'section');
+
+      // Check if Live2DCubismCore exists
+      if (typeof Live2DCubismCore === 'undefined') {
+        log('CORE_MISSING: Live2DCubismCore is not defined', 'err');
+        return;
+      }
+      log('CORE_AVAILABLE: Live2DCubismCore keys=' + Object.keys(Live2DCubismCore).join(', '));
+
+      // Check Moc
+      if (!Live2DCubismCore.Moc) {
+        log('CORE_MISSING: Live2DCubismCore.Moc not found', 'err');
+        return;
+      }
+
+      // Try different API signatures
+      log('CORE_Moc methods: ' + Object.keys(Live2DCubismCore.Moc).join(', '));
+      log('CORE_Moc prototype: ' + (Live2DCubismCore.Moc.prototype ? Object.getOwnPropertyNames(Live2DCubismCore.Moc.prototype).join(', ') : 'none'));
+
+      // Try fromArrayBuffer
+      if (typeof Live2DCubismCore.Moc.fromArrayBuffer === 'function') {
+        try {
+          log('MOC_PARSE: calling fromArrayBuffer(' + buf.byteLength + ' bytes)...');
+          const moc = Live2DCubismCore.Moc.fromArrayBuffer(buf);
+          if (moc) {
+            log('MOC_PARSE: SUCCESS! moc object created ✓', 'ok');
+            // Check model count
+            if (Live2DCubismCore.Moc.prototype) {
+              log('MOC_PARSE: moc keys=' + Object.keys(moc).join(', '));
+            }
+            return moc;
+          } else {
+            log('MOC_PARSE: returned null/falsy', 'err');
+          }
+        } catch(e) {
+          log('MOC_PARSE: fromArrayBuffer threw: ' + e.message, 'err');
+        }
+      }
+
+      // Try constructor
+      if (typeof Live2DCubismCore.Moc === 'function') {
+        try {
+          log('MOC_PARSE: calling new Moc(arrayBuffer)...');
+          const moc = new Live2DCubismCore.Moc(buf);
+          if (moc) {
+            log('MOC_PARSE: constructor SUCCESS! ✓', 'ok');
+            return moc;
+          }
+        } catch(e) {
+          log('MOC_PARSE: constructor threw: ' + e.message, 'err');
+        }
+      }
+
+      // Try create
+      if (Live2DCubismCore.Moc.create) {
+        try {
+          log('MOC_PARSE: calling Moc.create(buf)...');
+          const moc = Live2DCubismCore.Moc.create(buf);
+          if (moc) {
+            log('MOC_PARSE: create() SUCCESS! ✓', 'ok');
+            return moc;
+          }
+        } catch(e) {
+          log('MOC_PARSE: create() threw: ' + e.message, 'err');
+        }
+      }
+
+      log('MOC_PARSE: all attempts failed', 'err');
+      return null;
+    }
+
+    // Verify moc3 buffer magic bytes
+    function verifyMocBytes(buf) {
+      if (buf.byteLength < 4) return false;
+      const dv = new DataView(buf);
+      const magic = dv.getUint32(0, false);
+      log('MOC_BYTES: size=' + buf.byteLength + 'B magic=0x' + magic.toString(16).toUpperCase(), magic === 0x4D4F4333 ? 'ok' : 'err');
+      return magic === 0x4D4F4333;
     }
 
     let startTime;
@@ -249,7 +274,7 @@
         let tag;
         if (type === 'css') { tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url; }
         else { tag = document.createElement('script'); tag.src = url; }
-        tag.onload = () => { log(type.toUpperCase() + ' loaded: ' + url.split('/').pop()); resolve(url); };
+        tag.onload = () => resolve(url);
         tag.onerror = () => reject(new Error('Failed: ' + url));
         document.head.appendChild(tag);
       });
@@ -259,14 +284,29 @@
       startTime = Date.now();
       try {
         // ===== SEQUENTIAL LOADING =====
-        log('=== Step 1/4: CSS ===', 'section');
+        log('=== Loading CSS ===', 'section');
         await loadExternalResource(BASE + 'waifu.css', 'css');
 
-        log('=== Step 2/4: Cubism Core ===', 'section');
+        log('=== Loading Cubism Core ===', 'section');
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
         await new Promise(r => setTimeout(r, 200));
 
-        log('=== Step 3/4: Live2D SDK ===', 'section');
+        // Core should be available now
+        log('=== Checking Live2DCubismCore ===', 'section');
+        if (typeof Live2DCubismCore !== 'undefined') {
+          log('CORE_LOADED: version=' + Live2DCubismCore.Version);
+          log('CORE_KEYS: ' + JSON.stringify(Object.keys(Live2DCubismCore)));
+          if (Live2DCubismCore.Moc) {
+            log('CORE_Moc: ' + JSON.stringify(Object.keys(Live2DCubismCore.Moc)));
+            // Check if fromArrayBuffer is defined
+            const mSig = typeof Live2DCubismCore.Moc.fromArrayBuffer;
+            log('CORE_Moc.fromArrayBuffer type=' + mSig);
+          }
+        } else {
+          log('CORE_MISSING: Live2DCubismCore undefined', 'err');
+        }
+
+        log('=== Loading Live2D SDK ===', 'section');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
 
         let waited = 0;
@@ -276,19 +316,8 @@
         if (!window.live2d) { log('SDK TIMEOUT', 'err'); return; }
         log('=== SDK ready ===', 'section');
 
-        log('=== Step 4/4: waifu-tips.js ===', 'section');
+        log('=== Loading waifu-tips.js ===', 'section');
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
-
-        // ===== Quick: verify model3.json is fetchable =====
-        log('=== Quick model3.json check ===', 'section');
-        try {
-          const resp = await fetch('/live2d-api/model/teto/teto.model3.json');
-          const text = await resp.text();
-          const j = JSON.parse(text);
-          log('HEAD: model3.json status=' + resp.status + ' textures=' + j.FileReferences.Textures.length + ' moc=' + j.FileReferences.Moc);
-        } catch(e) {
-          log('HEAD: model3.json failed: ' + e.message, 'err');
-        }
 
         // ===== Init widget =====
         log('=== Calling initWidget ===', 'section');
@@ -302,27 +331,53 @@
           tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
           dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
         });
-        log('initWidget() called — waiting for SDK to load model...');
+        log('initWidget() called');
+
+        // ===== Wait for moc3 to be downloaded, then test parsing =====
+        // The SDK will fetch moc3 internally. We capture it via fetch interceptor.
+        // Wait up to 5s for rawMoc3Buffer to be populated
+        let mocWait = 0;
+        while (!rawMoc3Buffer && mocWait < 10000) {
+          await new Promise(r => setTimeout(r, 200)); mocWait += 200;
+        }
+
+        if (rawMoc3Buffer) {
+          log('=== Moc3 buffer captured (' + rawMoc3Buffer.byteLength + ' bytes) ===', 'section');
+          verifyMocBytes(rawMoc3Buffer);
+          testMocParsing(rawMoc3Buffer, 'SDK-fetched');
+
+          // Also try fetching moc3 directly ourselves
+          log('=== Direct moc3 fetch (bypass SDK) ===', 'section');
+          try {
+            const resp = await fetch('/live2d-api/model/teto/重音テト.moc3');
+            const dirBuf = await resp.arrayBuffer();
+            log('DIRECT_FETCH: ' + dirBuf.byteLength + ' bytes, status=' + resp.status);
+            verifyMocBytes(dirBuf);
+            testMocParsing(dirBuf, 'direct-fetch');
+          } catch(e) {
+            log('DIRECT_FETCH failed: ' + e.message, 'err');
+          }
+        } else {
+          log('MOC3_TIMEOUT: rawMoc3Buffer never populated after 10s', 'err');
+        }
 
         // ===== Monitoring =====
-        // Periodic status every 2s for 30s
         for (let i = 2; i <= 30; i += 2) {
           setTimeout(() => {
             periodicStatus();
-            if (i % 6 === 0) snapshotCanvas('+' + i + 's');
+            if (i % 8 === 0) snapshotCanvas('+' + i + 's');
           }, i * 1000);
         }
 
-        // Final summary at +35s
+        // Final summary
         setTimeout(() => {
           periodicStatus();
           snapshotCanvas('+35s');
           log('=== Final Summary ===', 'section');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('Textures loaded: ' + loadedTextures.length + ' ' + JSON.stringify(loadedTextures));
-          log('Textures failed: ' + failedTextures.length + ' ' + JSON.stringify(failedTextures));
-          log('Fetch log (' + fetchLog.length + ' entries):');
-          fetchLog.forEach(e => log('  ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms]', e.status >= 400 ? 'err' : 'sdk'));
+          log('Loaded textures: ' + JSON.stringify(loadedTextures));
+          log('Fetch log:');
+          fetchLog.forEach(e => log('  ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']', e.status >= 400 ? 'err' : 'sdk'));
         }, 35000);
 
       } catch(e) {
