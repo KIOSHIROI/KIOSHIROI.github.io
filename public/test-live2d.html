@@ -8,6 +8,8 @@
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 65vh; overflow-y: auto; }
     .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; }
+    /* Ensure waifu is visible - waifu.css sets bottom:-1000px */
+    #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
   </style>
 </head>
 <body>
@@ -24,9 +26,10 @@
     }
 
     // Intercept ALL console output
-    const _origError = console.error, _origWarn = console.warn;
+    const _origError = console.error, _origWarn = console.warn, _origLog = console.log;
     console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError.apply(console, arguments); };
     console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn.apply(console, arguments); };
+    console.log   = function(){ log('   ' + Array.from(arguments).join(' ').substring(0,200), 'info'); _origLog.apply(console, arguments); };
 
     // Intercept fetch for model files
     const _origFetch = window.fetch;
