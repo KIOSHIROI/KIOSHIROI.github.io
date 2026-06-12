@@ -1,0 +1,30 @@
+{
+	"Version": 3,
+	"FileReferences": {
+		"Moc": "重音テト.moc3",
+		"Textures": [
+			"重音テト.4096/texture_00.png",
+			"重音テト.4096/texture_01.png",
+			"重音テト.4096/texture_02.png",
+			"重音テト.4096/texture_03.png",
+			"重音テト.4096/texture_04.png"
+		],
+		"Physics": "重音テト.physics3.json",
+		"DisplayInfo": "重音テト.cdi3.json"
+	},
+	"Groups": [
+		{
+			"Target": "Parameter",
+			"Name": "EyeBlink",
+			"Ids": [
+				"ParamEyeLOpen",
+				"ParamEyeROpen"
+			]
+		},
+		{
+			"Target": "Parameter",
+			"Name": "LipSync",
+			"Ids": []
+		}
+	]
+}

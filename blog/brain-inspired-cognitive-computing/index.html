@@ -1,0 +1,1371 @@
+<!DOCTYPE html><html lang="zh" class="astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"><meta content="IE=edge" http-equiv="X-UA-Compatible"><title>笔记：类脑与认知计算 • KIOSHIROI&#39;s CS-learning Road</title><link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon.ico"><link rel="manifest" href="/favicon/site.webmanifest"><link rel="preload" href="/fonts/Satoshi-Variable.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="/fonts/Satoshi-VariableItalic.ttf" as="font" type="font/ttf" crossorigin><link rel="canonical" href="https://kioshiroi.github.io/blog/brain-inspired-cognitive-computing"><meta content="笔记：类脑与认知计算 • KIOSHIROI's CS-learning Road" name="title"><meta content="类脑与认知计算课程笔记，涵盖绪论、感知觉、记忆、符号主义认知计算、概率推理、神经元特性、SNN等。" name="description"><meta content="KIOSHIROI" name="author"><meta content="" name="theme-color"><meta content="article" property="og:type"><meta content="笔记：类脑与认知计算" property="og:title"><meta content="类脑与认知计算课程笔记，涵盖绪论、感知觉、记忆、符号主义认知计算、概率推理、神经元特性、SNN等。" property="og:description"><meta content="https://kioshiroi.github.io/blog/brain-inspired-cognitive-computing" property="og:url"><meta content="KIOSHIROI's CS-learning Road" property="og:site_name"><meta content="zh_CN" property="og:locale"><meta content="https://kioshiroi.github.io/images/social-card.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="KIOSHIROI" property="article:author"><meta content="2025-02-24T00:00:00.000Z" property="article:published_time"><meta content="summary_large_image" property="twitter:card"><meta content="https://kioshiroi.github.io/blog/brain-inspired-cognitive-computing" property="twitter:url"><meta content="笔记：类脑与认知计算" property="twitter:title"><meta content="类脑与认知计算课程笔记，涵盖绪论、感知觉、记忆、符号主义认知计算、概率推理、神经元特性、SNN等。" property="twitter:description"><meta content="https://kioshiroi.github.io/images/social-card.png" property="twitter:image"><link href="/sitemap-index.xml" rel="sitemap"><link rel="alternate" type="application/rss+xml" title="KIOSHIROI's CS-learning Road" href="https://kioshiroi.github.io/rss.xml"><meta content="Astro v5.16.4" name="generator"><link rel="stylesheet" href="/styles/global.css"><!-- <ClientRouter /> --><!-- <script is:inline>
+  const style = document.createElement('style')
+  style.textContent = `* { transition: none !important; }`
+  document.addEventListener('astro:after-swap', () => {
+    document.head.appendChild(style)
+    setTimeout(() => {
+      style.remove()
+    }, 100)
+  })
+</script> --><script type="module">console.log("%c Astro Theme Axi %c https://github.com/Axi404/","color:#fff;background:linear-gradient(90deg,#448bff,#44e9ff);padding:5px 0;","color:#000;background:linear-gradient(90deg,#44e9ff,#ffffff);padding:5px 10px 5px 0px;");</script><script>
+  function simpleSetTheme() {
+    let theme = localStorage.getItem('theme')
+    // If undefined or 'system', get from system
+    if (!theme || theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#0B0B10' : '#FCFCFD')
+  }
+  simpleSetTheme()
+  document.addEventListener('astro:page-load', () => simpleSetTheme())
+</script><script type="module" src="/_astro/ThemeProvider.astro_astro_type_script_index_0_lang.8WG8SyMG.js"></script><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-J4TR2R7BSM"></script><script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'G-J4TR2R7BSM')
+    </script><link rel="stylesheet" href="/_astro/_id_.N4Rp9Ep2.css">
+<link rel="stylesheet" href="/_astro/_id_.lDyzrzz2.css">
+<link rel="stylesheet" href="/_astro/_id_.CVIgJ6KX.css">
+<style>svg:where(.astro-p7sajfz3){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1.5em;height:1.5em}
+.expand-conetent:where(.astro-jvehtkjd){grid-template-rows:0fr}.expanded:where(.astro-jvehtkjd) .expand-conetent:where(.astro-jvehtkjd){grid-template-rows:1fr}
+.sl-steps{--bullet-size: 1.75rem ;--bullet-margin: .375rem;list-style:none!important;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0!important}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:.8125rem;font-weight:600;text-align:center;color:hsl(var(--foreground) / var(--tw-text-opacity, 1));background-color:hsl(var(--primary-foreground) / var(--tw-bg-opacity, 1));border-radius:99rem;box-shadow:inset 0 0 0 1px hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li>:first-child{--lh: 1.75em ;--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));margin-top:0;transform:translateY(var(--shift-y));margin-bottom:var(--shift-y);color:hsl(var(--foreground) / var(--tw-text-opacity, 1))}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: 1.2em }
+</style><script type="module" src="/_astro/page.D1uwR3nK.js"></script></head> <body class="flex justify-center bg-background astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <!-- <div
+      id='gradient-background'
+      class='pointer-events-none fixed h-screen w-screen blur-2xl transition-opacity duration-1000'
+    >
+      <div
+        class='absolute right-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute right-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute right-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute left-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+      <div
+        class='absolute right-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-orange-300 via-indigo-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+    </div> --> <div id="highlight-gradient" class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25 astro-37fxchfa" style="background-image:linear-gradient(hsl(var(--primary) / var(--tw-text-opacity)),transparent); --highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"></div> <div class="w-full max-w-[70rem] px-4 sm:px-7 lg:px-10 astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <header-component class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl [&#38;.not-top]:border-border [&#38;.not-top]:bg-background/60 [&#38;.not-top]:px-1.5 [&#38;.not-top]:backdrop-blur-md dark:[&#38;.not-top]:bg-muted/60 astro-dpuuw7tv"> <!-- <div
+      class='absolute -left-4 -top-8 -z-10 box-content hidden h-20 w-[calc(100%+2rem)] !duration-0 max-sm:group-[.expanded]:block max-sm:group-[.expanded.not-top]:hidden max-sm:group-[.expanded]:bg-white dark:max-sm:group-[.expanded]:bg-muted'
+    >
+    </div> --> <a class="z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3 astro-dpuuw7tv" style="transition:margin-inline 0.3s" href="/" aria-label="Brand">KIOSHIROI&#39;s CS-learning Road</a> <div class="flex items-center gap-x-2 astro-dpuuw7tv">  <div id="headerExpandConetent" class="end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 dark:group-[.expanded.not-top]:bg-muted/60 max-md:absolute max-md:opacity-0 max-md:pointer-events-none max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-border max-md:group-[.expanded.not-top]:bg-background/60 max-md:group-[.expanded.not-top]:backdrop-blur-md max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:grid-rows-1 astro-dpuuw7tv"> <div class="flex flex-col items-center justify-center md:flex-row astro-dpuuw7tv"> <div class="menu-item-with-dropdown relative w-full md:w-fit astro-dpuuw7tv" style="position: relative;"> <a href="/blog/research" class="blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-none hover:text-primary md:px-3 md:justify-center astro-dpuuw7tv" aria-label="Nav menu item"> Blog <svg aria-hidden="true" class="chevron-icon ml-1 size-4 transition-transform astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.707 15.707a1 1 0 0 1-1.414 0L5.636 10.05A1 1 0 1 1 7.05 8.636l4.95 4.95l4.95-4.95a1 1 0 0 1 1.414 1.414z"/></g></svg>  </a>  <div class="dropdown-menu absolute right-0 top-full mt-0 w-48 rounded-xl border border-border bg-background/80 shadow-lg backdrop-blur-md dark:bg-muted/80 md:left-0 md:right-auto astro-dpuuw7tv" style="z-index: 9999;"> <div class="py-1 astro-dpuuw7tv"> <a href="/blog/research" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Research </a><a href="/blog/tech" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Technical </a><a href="/blog/daily" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Daily Life </a> </div> </div> </div><a href="/links" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> Links </a><a href="/about" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> About </a> <a class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" href="https://www.travellings.cn/go.html" title="Travellings" target="_blank" rel="noopener noreferrer"> <span class="sr-only astro-dpuuw7tv">Travellings</span> <span class="text-xl astro-dpuuw7tv">🚇</span> </a> <div class="flex w-full grow flex-row justify-end gap-x-3 md:w-fit md:gap-x-5 astro-dpuuw7tv"> <a class="px-1 py-2 transition-none md:px-2 astro-dpuuw7tv" href="/search" title="Search"> <span class="sr-only astro-dpuuw7tv">Search</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3"/></g></svg>  </a> </div> </div> </div> <!-- buttons --> <div class="z-30 flex gap-x-4 group-[.not-top]:gap-x-2 astro-dpuuw7tv" style="transition:gap 0.3s"> <button id="toggleDarkMode" class="group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Dark Theme</span> <svg aria-hidden="true" class="system size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" fill-rule="nonzero" d="M19 3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v1h1a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h1v-1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-6 15h-2v1h2zm6-13H5v11h14z"/></g></svg>  <svg aria-hidden="true" class="light hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 19a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1m6.364-2.05l.707.707a1 1 0 0 1-1.414 1.414l-.707-.707a1 1 0 0 1 1.414-1.414m-12.728 0a1 1 0 0 1 1.497 1.32l-.083.094l-.707.707a1 1 0 0 1-1.497-1.32l.083-.094zM12 6a6 6 0 1 1 0 12a6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-8 3a1 1 0 0 1 .117 1.993L4 13H3a1 1 0 0 1-.117-1.993L3 11zm17 0a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2zM4.929 4.929a1 1 0 0 1 1.32-.083l.094.083l.707.707a1 1 0 0 1-1.32 1.497l-.094-.083l-.707-.707a1 1 0 0 1 0-1.414m14.142 0a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1"/></g></svg>  <svg aria-hidden="true" class="dark hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.477 4.546a1.01 1.01 0 0 1 1.097-1.409A9 9 0 0 1 12 21c-4.434 0-8.118-3.206-8.863-7.426a1.01 1.01 0 0 1 1.409-1.097a6 6 0 0 0 7.931-7.931m2.404 1.072a8 8 0 0 1-9.263 9.263A7.002 7.002 0 0 0 19 12.001a7 7 0 0 0-4.12-6.383ZM5.565 7.716l.064.14a3.26 3.26 0 0 0 1.237 1.363l.1.059a.068.068 0 0 1 0 .118l-.1.058a3.26 3.26 0 0 0-1.237 1.364l-.064.14a.071.071 0 0 1-.13 0l-.064-.14a3.26 3.26 0 0 0-1.237-1.364l-.1-.058a.068.068 0 0 1 0-.118l.1-.059A3.26 3.26 0 0 0 5.37 7.855l.064-.14a.071.071 0 0 1 .13 0Zm2.832-4.859c.04-.09.166-.09.206 0l.102.222a5.2 5.2 0 0 0 1.97 2.172l.157.092a.108.108 0 0 1 0 .189l-.158.092a5.2 5.2 0 0 0-2.07 2.394a.113.113 0 0 1-.207 0l-.102-.222a5.2 5.2 0 0 0-1.97-2.172l-.158-.092a.108.108 0 0 1 0-.189l.158-.092a5.2 5.2 0 0 0 1.97-2.172z"/></g></svg>  </button> <button id="toggleMenu" class="rounded-md border p-1.5 transition-colors hover:bg-border md:hidden md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Menu</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M20 18a1 1 0 0 1 .117 1.993L20 20H4a1 1 0 0 1-.117-1.993L4 18zm0-7a1 1 0 1 1 0 2H4a1 1 0 1 1 0-2zm0-7a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2z"/></g></svg>  </button> </div> </div> </header-component>  <script>
+  const toggleDarkModeElement = document.getElementById('toggleDarkMode')
+  if (toggleDarkModeElement) {
+    toggleDarkModeElement.dataset.theme = localStorage.getItem('theme') || 'system'
+  }
+</script> <script type="module" src="/_astro/Header.astro_astro_type_script_index_0_lang.2bVIXSyo.js"></script>   <main class="mt-6 items-start gap-x-10 md:flex">  <aside class="animate top-24 min-w-48 basis-60 overflow-y-scroll max-md:hidden md:sticky md:order-2 lg:shrink-0" style="height:calc(100vh - 8rem);" id="sidebar"> <toc-heading slot="sidebar"> <h2 class="font-semibold">TABLE OF CONTENTS</h2> <ul class="mt-4 text-card-foreground"> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 感觉" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#感觉">感觉</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 感受性与感觉阈限" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#感受性与感觉阈限">感受性与感觉阈限</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 知觉" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#知觉">知觉</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 知觉的两种加工过程" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#知觉的两种加工过程">知觉的两种加工过程</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 模式识别" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#模式识别">模式识别</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 注意" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#注意">注意</a> </div>  </li> </ul> </li> </ul> </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 选择注意的三种模型" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#选择注意的三种模型">选择注意的三种模型</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 短时记忆与工作记忆" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#短时记忆与工作记忆">短时记忆与工作记忆</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 长时记忆" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#长时记忆">长时记忆</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 记忆的存储————知识表征" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#记忆的存储知识表征">记忆的存储————知识表征</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 知识的来源" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#知识的来源">知识的来源</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 符号主义认知计算" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#符号主义认知计算">符号主义认知计算</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 认知架构" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#认知架构">认知架构</a> </div>  </li> </ul> </li> </ul> </li> </ul> </li> </ul> </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: ACT-R 认知架构" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#act-r-认知架构">ACT-R 认知架构</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: Soar认知架构" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#soar认知架构">Soar认知架构</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 5.1 贝叶斯推理的基本概念" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#51-贝叶斯推理的基本概念">5.1 贝叶斯推理的基本概念</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 先验概率" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#先验概率">先验概率</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 似然概率" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#似然概率">似然概率</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 后验概率" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#后验概率">后验概率</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 贝叶斯定理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#贝叶斯定理">贝叶斯定理</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 知觉的贝叶斯推理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#知觉的贝叶斯推理">知觉的贝叶斯推理</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 5.2 不确定知识" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#52-不确定知识">5.2 不确定知识</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 贝叶斯网络表征不确定知识" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#贝叶斯网络表征不确定知识">贝叶斯网络表征不确定知识</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 贝叶斯网络推理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#贝叶斯网络推理">贝叶斯网络推理</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 变分贝叶斯推断" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#变分贝叶斯推断">变分贝叶斯推断</a> </div>  </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 神经元的生理特性" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#神经元的生理特性">神经元的生理特性</a> </div>  </li> </ul> </toc-heading> <script type="module">class c extends HTMLElement{headings=[];tocLinks=[];headingProgress={};constructor(){super(),this.headings=Array.from(document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")),this.tocLinks=Array.from(this.querySelectorAll('a[href^="#"]')).map(e=>({element:e,progressBar:e.previousElementSibling,slug:(e.getAttribute("href")||"").substring(1)}))}updatePositionAndStyle=()=>{const e=window.innerHeight,r=document.querySelector("#content"),o=r?.getBoundingClientRect().top+window.scrollY||0,h=(r?.offsetHeight||0)+o;this.headings.forEach((s,i)=>{const g=s.getBoundingClientRect().top+window.scrollY,n=this.headings[i+1]?this.headings[i+1].getBoundingClientRect().top+window.scrollY:h,t=[g-window.scrollY,n-window.scrollY-s.offsetHeight],l=(e-t[0])/(t[1]-t[0]);this.headingProgress[s.id]={inView:t[0]<e&&t[1]>0,progress:Math.max(0,Math.min(1,l))}}),this.tocLinks.forEach(({element:s,progressBar:i,slug:g},n)=>{const{inView:t,progress:l}=this.headingProgress[g];this.headingProgress[g]&&(s.classList.toggle("highlight",t),s.classList.toggle("highlight-bg-translucent",t),s.classList.toggle("rounded-t-2xl",t&&(n==0||!this.headingProgress[this.tocLinks[n-1]?.slug].inView)),s.classList.toggle("rounded-b-2xl",t&&(n==this.tocLinks.length-1||!this.headingProgress[this.tocLinks[n+1]?.slug].inView)),i.classList.toggle("readed",!t&&l==1),i.classList.toggle("highlight-bg",t),i.style.setProperty("height",`${l*90}%`))})};connectedCallback(){this.tocLinks.forEach(e=>{e.element.addEventListener("click",r=>{r.preventDefault();const o=this.headings.find(h=>h.id===e.slug);o?(history.pushState(null,o.textContent||"",e.element.getAttribute("href")),o.scrollIntoView({behavior:"smooth"})):console.warn(`No heading found for slug: ${e.slug}`)})}),setInterval(this.updatePositionAndStyle,100),window.addEventListener("scroll",this.updatePositionAndStyle)}}customElements.define("toc-heading",c);</script> </aside> <article class="min-w-0 grow">  <div id="content-header" class="animate"> <div class="article-info max-lg:mx-auto"> <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs leading-6 text-muted-foreground">  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16 3a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 2 0v1h6V4a1 1 0 0 1 1-1M8 7H5v2h14V7h-3zm-3 4v8h14v-8zm2 2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2z"/></g></svg>  <span class="text-muted-foreground font-sans"> <time datetime="2025-02-24T00:00:00.000Z"> 2025年2月24日 </time> </span>  </div>  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 2a1 1 0 0 1 .993.883L13 7v4.586l2.707 2.707a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a1 1 0 0 1-.284-.576L11 12V7a1 1 0 0 1 1-1"/></g></svg>  31 min read </div>   <span class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.124 3.008a1 1 0 0 1 .868 1.116L10.508 8h3.984l.516-4.124a1 1 0 1 1 1.984.248L16.508 8H20a1 1 0 1 1 0 2h-3.742l-.5 4H19.5a1 1 0 1 1 0 2h-3.992l-.516 4.124a1 1 0 1 1-1.984-.248L13.492 16H9.508l-.516 4.124a1 1 0 1 1-1.984-.248L7.492 16H4.5a1 1 0 1 1 0-2h3.242l.5-4H5a1 1 0 0 1 0-2h3.492l.516-4.124a1 1 0 0 1 1.116-.868M13.742 14l.5-4h-3.984l-.5 4z"/></g></svg>  <div> <a aria-label="View more blogs with the tag course" class="hover:underline hover:underline-offset-4" data-pagefind-filter="tag" href="/tags/course"> course </a>  </div> </span> </div> <h1 class="mt-4 text-2xl font-medium sm:mb-2 sm:mt-6 sm:text-3xl"> 笔记：类脑与认知计算 </h1> <div class="mt-3 italic"> <blockquote class="text-sm text-muted-foreground"><q>类脑与认知计算课程笔记，涵盖绪论、感知觉、记忆、符号主义认知计算、概率推理、神经元特性、SNN等。</q></blockquote> <div class="text-sm text-muted-foreground mt-1"> <span class="waline-pageview-count" data-path="/blog/brain-inspired-cognitive-computing"></span> views
+<a href="#waline">
+| <span class="waline-comment-count" data-path="/blog/brain-inspired-cognitive-computing"></span> comments
+</a> </div> </div> </div>  <div class="mt-4 w-1/2 border-t max-lg:mx-auto sm:mt-6 sm:w-1/3"></div> <script type="module">const o=window.innerHeight,s=o/9,i=o*2/9,l=o*3/9,e=document.getElementById("blurImage");e&&window.addEventListener("scroll",()=>{const t=window.scrollY;t>=l?e.style.opacity="0.15":t>=i?e.style.opacity="0.3":t>=s&&(e.style.opacity="0.45")});</script> </div>  <div id="content" class="max-w-none animate mt-8 md:min-w-[45ch] break-words prose prose-axi dark:prose-invert dark:prose-axi prose-headings:font-medium">  <h1 id="1-绪论">1. 绪论<a class="anchor" href="#1-绪论">#</a></h1>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>主体</th><th>结构</th><th>功能</th></tr></thead><tbody><tr><td>计算机</td><td>硬件</td><td>软件</td></tr><tr><td>脑</td><td>神经元</td><td>认知加工</td></tr></tbody></table>
+<ul>
+<li>类脑（结构）</li>
+<li>认知（功能）</li>
+<li>类脑 + 计算 -> 类脑智能</li>
+<li>认知 + 计算 -> 认知智能</li>
+</ul>
+<hr>
+<ul>
+<li>
+<p>智能</p>
+<ul>
+<li>心理能力
+<ul>
+<li>从经验中学习的能力</li>
+<li>理解和处理抽象概念的能力</li>
+<li>使用知识<strong>操纵</strong>环境的能力</li>
+<li>适应环境的能力</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>认知</p>
+<ul>
+<li>指人们获取知识和应用知识的<strong>心理过程</strong></li>
+</ul>
+</li>
+<li>
+<p>计算</p>
+<ul>
+<li>
+<p>广义计算：信息加工系统具有可计算性</p>
+</li>
+<li>
+<p>认知过程是否可计算</p>
+<ul>
+<li>心智哲学中的功能主义
+<ul>
+<li>功能主义认为人类心智的物质载体时大脑</li>
+<li>心智时人脑的一种功能属性</li>
+<li>人脑类似于计算机</li>
+</ul>
+</li>
+<li>心智可计算理论
+<ul>
+<li>心智不仅包括认知，也包括意识现象以及人的主观感受性等。</li>
+</ul>
+</li>
+<li>认知的可计算理论
+<ul>
+<li>认为神经元活动仅仅解释认知</li>
+<li>CTC认为心智的某些方面具有不可计算性流出可能性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>认知计算</p>
+<ul>
+<li>用信息处理的方法模拟<strong>人的各种认知加工过程</strong>。</li>
+</ul>
+</li>
+<li>
+<p>人工智能与认知科学</p>
+<ul>
+<li>认知科学
+<ul>
+<li>非常重视认知模型的可解释性，而不是预测。</li>
+<li>如何利用认知模型帮助我们理解人类的认知加工机制。</li>
+</ul>
+</li>
+<li>人工智能
+<ul>
+<li>关注技术的性能，忽略可解释性。</li>
+</ul>
+</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th>认知研究范式</th><th>三大学派</th></tr></thead><tbody><tr><td>符号范式</td><td>符号主义</td></tr><tr><td>联结主义范式</td><td>联结主义</td></tr><tr><td>具身智能范式</td><td>行为主义</td></tr></tbody></table>
+</li>
+<li>
+<p>计算神经科学：综合数学建模、理论分析及计算模拟等方法，阐明神经系统发育、生理过程和认知能力产生的基本原理。</p>
+<ul>
+<li>计算
+<ul>
+<li>研究神经系统信息处理中的计算过程</li>
+<li>构建计算模型模拟神经系统</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>认知神经科学：认知+神经</p>
+<ul>
+<li>旨在阐明认知活动的脑机制</li>
+<li>宏观和微观两个研究层次
+<ul>
+<li>宏观：脑皮层层次，认知加工的脑机制</li>
+<li>微观：分子神经细胞层次，认知加工的神经机制</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="2-感知觉">2. 感知觉<a class="anchor" href="#2-感知觉">#</a></h1>
+<h3 id="感觉">感觉<a class="anchor" href="#感觉">#</a></h3>
+<ul>
+<li>
+<p>五感：视听味嗅触</p>
+</li>
+<li>
+<p>感觉是指感官器官（如眼睛、耳朵、皮肤等）接受和检测外界刺激的过程。</p>
+</li>
+<li>
+<p>把外界的物理能量转化为神经信号，传递到各个感官对应的大脑皮层的过程。</p>
+</li>
+<li>
+<p>感觉加工过程：以视觉为例</p>
+<ul>
+<li>光->视网膜->光感受器->双极细胞->节细胞->LGN->大脑皮层</li>
+</ul>
+</li>
+<li>
+<p>感觉加工过程：<strong>感觉器</strong>将<strong>物理刺激</strong>转化为<strong>生物电信号</strong>，并通过<strong>动作电位</strong>把外界事件的信号传递到<strong>大脑中枢特定区域</strong>的过程。</p>
+<ul>
+<li>第一步：感觉信息的转录（光 ----> 双极细胞）</li>
+<li>第二步：编码为动作电位 （节细胞 ----> 初级视觉皮层）</li>
+</ul>
+</li>
+</ul>
+<h3 id="感受性与感觉阈限">感受性与感觉阈限<a class="anchor" href="#感受性与感觉阈限">#</a></h3>
+<ul>
+<li>感觉性：感觉器官对刺激的感受能力。</li>
+<li>感觉阈限：
+<ul>
+<li>绝对感觉阈限：是指刚刚能够引起感觉的最小刺激量。</li>
+</ul>
+</li>
+</ul>
+<h3 id="知觉">知觉<a class="anchor" href="#知觉">#</a></h3>
+<ul>
+<li>
+<p>定义：认知系统对外界世界建构<strong>内部表征</strong>的过程。</p>
+</li>
+<li>
+<p>知觉并不是对现实世界的精确表征</p>
+</li>
+<li>
+<p>知觉加工过程</p>
+<ul>
+<li>大脑皮层内部发生</li>
+<li>what通路（腹侧通路）：
+<ul>
+<li>负责物体识别和形状分析</li>
+<li>从初级视觉皮层（V1）经过V2、V4到下颞叶皮层（IT）</li>
+<li>处理物体的形状、颜色、纹理等特征</li>
+<li>回答”这是什么？“的问题</li>
+</ul>
+</li>
+<li>where通路（背侧通路）：
+<ul>
+<li>负责空间定位和运动分析</li>
+<li>从V1经过V2、MT到顶叶皮层</li>
+<li>处理物体的位置、运动、空间关系等信息</li>
+<li>回答”在哪里？“的问题</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="知觉的两种加工过程">知觉的两种加工过程<a class="anchor" href="#知觉的两种加工过程">#</a></h3>
+<ul>
+<li>
+<p>自下而上：仅仅是环境刺激，不需要复杂的思维推理等</p>
+</li>
+<li>
+<p>自上而下：个体运用自己已有的经验和概念来加工当前刺激的过程（高级知识的参与）</p>
+</li>
+<li>
+<p>知觉的特性</p>
+<ul>
+<li>错觉：人们在观察物体时，由于物体受到形、光、色的干扰，加上人们的生理、心理原因而误认</li>
+<li>恒常性：当知觉的对象在一定范围内发生变化，知觉的映像仍然保持相对不变</li>
+</ul>
+</li>
+</ul>
+<h3 id="模式识别">模式识别<a class="anchor" href="#模式识别">#</a></h3>
+<ul>
+<li>
+<p>模式：由若干元素或特征按一定关系集合而成的某种刺激结构或刺激的组合。</p>
+</li>
+<li>
+<p>模板匹配、原型匹配、特征匹配</p>
+<ul>
+<li>原型匹配
+<ul>
+<li>原型：一类客观事物的抽象物，是一类客观事物所共有的一组特征</li>
+<li>优点：减轻了记忆的负担；主导类别识别，实现快速分类与范畴化。</li>
+<li>缺陷：过渡依赖共性，忽略个体差异。</li>
+</ul>
+</li>
+<li>特征匹配理论
+<ul>
+<li>特征提取</li>
+<li>特征整合</li>
+<li>模式匹配</li>
+<li>优点：
+<ul>
+<li>依据刺激的特征和关系进行识别，抗干扰性强</li>
+<li>特征复用，只需记住不同模式中特征间关系，减轻了记忆负担</li>
+<li>带有学习色彩</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="注意">注意<a class="anchor" href="#注意">#</a></h3>
+<ul>
+<li>注意的定义：注意是对心智的占用。是指对外在或内在环境的<strong>某方面选择性指向和集中</strong>，同时忽略其他方面的过程。</li>
+<li>注意的特性：
+<ul>
+<li>选择性</li>
+<li>分配性</li>
+<li>持续性</li>
+</ul>
+</li>
+<li>选择注意：
+<ul>
+<li>自下而上注意与自上而下注意
+<ul>
+<li>根据注意朝向的方式是内在还是外在的过程区分。</li>
+<li>自下而上注意（外源性注意）
+<ul>
+<li>由外在视觉刺激的凸显物理属性引起的选择性注意。</li>
+<li>由外部刺激所驱动和控制，属于自下而上的加工。</li>
+<li>具有本能反应和自动加工的特性，属于自动化加工。</li>
+<li>属于反射性注意。</li>
+</ul>
+</li>
+<li>自上而下注意
+<ul>
+<li>根据观察者的行为目标和意图控制注意的朝向。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="选择注意的三种模型">选择注意的三种模型<a class="anchor" href="#选择注意的三种模型">#</a></h4>
+<ol>
+<li>
+<p>过滤模型（1958）</p>
+<ul>
+<li>注意是一种全或无的过滤器。</li>
+<li>过滤器在早期选择信息进行加工。</li>
+<li>未被注意的刺激特征完全被滤波器滤除。</li>
+<li>如何选择注意通道？
+<ul>
+<li>可以采用自上而下的有意注意</li>
+<li>也可采用自下而上的反射注意
+<ul>
+<li>刺激的凸显性</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>注意的衰减模型</p>
+</li>
+<li>
+<p>后期选择模型</p>
+</li>
+</ol>
+<ul>
+<li>
+<p>特征整合模型</p>
+<ul>
+<li>两个阶段：特征登记阶段、前注意阶段</li>
+<li>第二阶段：
+<ul>
+<li>特征整合（物体知觉）
+<ul>
+<li>形成位置地图</li>
+<li>选择注意</li>
+<li>集中注意</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>全过程：特征提取->形成位置地图->选择注意->模式匹配</li>
+</ul>
+</li>
+<li>
+<p>导向搜索模型</p>
+<ul>
+<li>特征整合模型没有考虑注意选择的方式，如何选择特定的位置。</li>
+<li>在特征整合理论基础上，增加了注意选择的方式。</li>
+<li>两个加工过程：
+<ul>
+<li>特征加工过程</li>
+<li>生成激活映射图。
+<ul>
+<li>自下而上：奇异刺激（具有搞得凸显性）</li>
+<li>自上而下：受特定的搜寻任务所指导</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>全过程：特征提取->生成激活映射图->形成位置地图->选择注意->模式匹配</li>
+</ul>
+</li>
+</ul>
+<h1 id="3-记忆">3. 记忆<a class="anchor" href="#3-记忆">#</a></h1>
+<ul>
+<li>记忆是个体保持和提取过去经验，并在当下应用这些信息的一种能力。</li>
+<li>记忆的信息加工阶段
+<ul>
+<li>信息编码、信息存储、信息提取</li>
+</ul>
+</li>
+</ul>
+<h3 id="短时记忆与工作记忆">短时记忆与工作记忆<a class="anchor" href="#短时记忆与工作记忆">#</a></h3>
+<ul>
+<li>短时记忆
+<ul>
+<li>在短时间内将少量信息保持在一种活跃的，容易获取的状态</li>
+</ul>
+</li>
+<li>工作记忆
+<ul>
+<li>对信息短时间的存储</li>
+<li>操纵信息的能力</li>
+</ul>
+</li>
+<li>比较
+<ul>
+<li>短时记忆仅有存贮功能</li>
+<li>工作记忆除了具备存贮能力之外，还具备操作功能</li>
+<li>工作记忆在语言推理和问题解决等高级认知过程中起着重要作用。</li>
+</ul>
+</li>
+<li>组块</li>
+</ul>
+<h3 id="长时记忆">长时记忆<a class="anchor" href="#长时记忆">#</a></h3>
+<ul>
+<li>在人脑中存储一分钟以上，乃至终身的记忆。</li>
+<li>尝试记忆中所存储的信息是<strong>过去经历</strong>的经验和获取的知识。</li>
+<li>短时记忆使个体应对当前的事物或时间，长时记忆使个体生活在过去与现在的世界中。</li>
+<li>长时记忆系统
+<ul>
+<li>陈述性记忆（信息提取方式：外显）
+<ul>
+<li>对<em>事实和事件</em>的记忆</li>
+<li>语义记忆（关于事实的记忆）</li>
+<li>情景记忆（关于事件的记忆）
+<ul>
+<li>与个人自身体验有关</li>
+<li>在特定时间与空间发生的情景或事件。</li>
+<li>发展较晚，退化较早</li>
+<li>记忆特性
+<ul>
+<li>对时间的主观感觉</li>
+<li>以视觉图像的形式呈现</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>程序性记忆（信息提取方式：内隐）
+<ul>
+<li>是以<strong>技巧性动作</strong>为基础的记忆。</li>
+<li>程序性记忆通常不能用语言加以描述，需要多次<strong>尝试和练习</strong>才能逐渐获得，<strong>不容易讲述</strong>。</li>
+<li>记忆的提取是无意识的。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>长时记忆中信息存储的检索
+<ul>
+<li>回忆和再认是检索长时记忆中刺激信息存储的两种方法</li>
+<li>回忆：是过去经历过的事物的形象或概念在头脑中重新再现的过程
+<ol>
+<li>自由回忆</li>
+<li>线索回忆</li>
+</ol>
+</li>
+<li>再认：是指对感知过的事物、思考过的问题、体验过的情绪、联系过的动作，再度出现时仍能认出来的过程。</li>
+<li>再认与回忆的区别：
+<ul>
+<li>再认比回忆简单</li>
+<li>再认发展更早</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="记忆的存储知识表征">记忆的存储————知识表征<a class="anchor" href="#记忆的存储知识表征">#</a></h3>
+<ul>
+<li>符号取向、联结取向</li>
+<li>符号取向
+<ul>
+<li>命题表征
+<ul>
+<li>命题是对事实的表达，可以判断真假</li>
+<li>同一命题可以用不同句子表达。</li>
+<li>同一在不同语境中可能表达不同命题。</li>
+<li>命题是句子中所表达的抽象意义，即能够判断真假的陈述性内容。</li>
+</ul>
+</li>
+<li>语义网络
+<ul>
+<li>一种用图形结构表示知识的方法</li>
+<li>复杂逻辑表达能力有限，推理能力弱。</li>
+<li>层次语义网络
+<ul>
+<li>通过层级路径搜索和属性继承规则实现推理</li>
+</ul>
+</li>
+<li>激活扩散网络
+<ul>
+<li>节点表示概念，便表示概念之间的语义关联程度。</li>
+<li>放弃层级结构，允许任意概念间直接关联</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>图式
+<ul>
+<li>物质客体的图式（静态）称为框架</li>
+<li>核(不变的特征)、槽(变化的特征)</li>
+<li>作用：加速认知处理（通过预存模板快速分类信息）</li>
+</ul>
+</li>
+<li>脚本
+<ul>
+<li>人所从事的某些典型活动，按先后次序所作的有组织的认知称为脚本</li>
+<li>用来解释生活中出现的典型事件的序列，以及人类行为的某些固定的模式。</li>
+</ul>
+</li>
+<li>程序性知识表征
+<ul>
+<li>程序性知识通常与动作有关。</li>
+<li>程序性知识在人脑中以<strong>产生式规则</strong>存储。</li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mtext>条件</mtext><mo>⟶</mo><mtext>行动</mtext></mrow><annotation encoding="application/x-tex">条件\longrightarrow 行动</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6943em;vertical-align:-0.011em;"></span><span class="mord cjk_fallback">条件</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">⟶</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord cjk_fallback">行动</span></span></span></span></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>联结取向</li>
+</ul>
+<h1 id="4-符号主义认知计算">4. 符号主义认知计算<a class="anchor" href="#4-符号主义认知计算">#</a></h1>
+<h3 id="知识的来源">知识的来源<a class="anchor" href="#知识的来源">#</a></h3>
+<ul>
+<li>经验论与唯理论（哲学）
+<ul>
+<li>经验论：
+<ul>
+<li>一切只是归根到底都来源于感觉经验。</li>
+</ul>
+</li>
+<li>唯理论：
+<ul>
+<li>强调<strong>理性</strong>在知识构建中核心地位。</li>
+<li>科学知识具有普遍必然性</li>
+<li>天赋观念：某些真理是心灵与生俱来的，无需依赖经验。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>符号主义和联结主义
+<ul>
+<li>符号主义 - 理性推理</li>
+<li>联结主义 - 经验学习</li>
+</ul>
+</li>
+</ul>
+<h3 id="符号主义认知计算">符号主义认知计算<a class="anchor" href="#符号主义认知计算">#</a></h3>
+<p>唯理论：从不证自明的<strong>天赋理念（先验理性）<strong>出发，遵循</strong>理性演绎逻辑推理法</strong>。</p>
+<ul>
+<li>
+<p>符号主义认知计算架构包括以下 两关键组成部分：</p>
+<ul>
+<li>手工构造的知识库
+<ul>
+<li>知识库是符号主义系统的<strong>静态知识存储模块</strong>，通过人工定义的符号、规则和逻辑关系<strong>对领域知识进行结构化表征。</strong></li>
+<li>这一设计源于符号主义对”<strong>知识需由理性先验（天赋观念）构建</strong>”的哲学立场，强调知识的可解释性与确定性。</li>
+</ul>
+</li>
+<li>基于逻辑的推理引擎
+<ul>
+<li>推理引擎是符号主义系统的动态计算模块。</li>
+<li>通过<strong>形式化逻辑（如谓词逻辑、产生式规则）对知识库中的符号进行操作</strong>，实现问题求解与决策推理。</li>
+<li>推理引擎的运作依赖于符号间的逻辑约束关系，体现**唯理论”理性演绎逻辑推理”**的方法论。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>是一种自顶向下的设计模式</p>
+</li>
+<li>
+<p>逻辑推理：确定性推理和不确定性推理</p>
+</li>
+<li>
+<p>符号主义确定性推理基于的是<strong>演绎逻辑推理</strong></p>
+</li>
+<li>
+<p>演绎推理</p>
+<ul>
+<li>如果前提为真且推理形式正确，则结论必然为真</li>
+<li>演绎推理的演变：古典演绎逻辑->数理逻辑</li>
+</ul>
+</li>
+<li>
+<p>数理逻辑</p>
+<ul>
+<li>命题逻辑
+<ul>
+<li>使用逻辑连接词（如 ¬（非）、∧（与）、∨（或）、→（蕴含）、↔（等价））连接命题变量。</li>
+<li>例子： (P ∧ Q) → R</li>
+</ul>
+</li>
+<li>​谓词逻辑
+<ul>
+<li>在命题逻辑的基础上，增加了谓词符号、变量、常量和量词。</li>
+<li>例子： ∀x (P(x) → Q(x))</li>
+<li>∃y (R(y) ∧ S(y, z))</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="认知架构">认知架构<a class="anchor" href="#认知架构">#</a></h3>
+<ul>
+<li><img src="/images/20250407/08-26-31.png" alt="" class="zoomable"></li>
+</ul>
+<h4 id="act-r-认知架构">ACT-R 认知架构<a class="anchor" href="#act-r-认知架构">#</a></h4>
+<ul>
+<li>认知架构通用模型和ACT-R认知架构的关系</li>
+<li><img src="/images/20250414/08-06-05.png" alt="" class="zoomable"></li>
+<li>来源于人类联想记忆</li>
+<li><img src="/images/20250407/08-26-05.png" alt="" class="zoomable"></li>
+<li>符号主义认知计算的两个核心部分
+<ul>
+<li>知识库，存储在陈述性记忆中</li>
+<li>规则推理引擎，存储在程序性记忆中</li>
+</ul>
+</li>
+<li>输入：感觉模块</li>
+<li>输出：运动模块</li>
+<li>目标模块存储当前任务目标及子目标的层级化状态，为产生式规则提供匹配条件，从而间接驱动任务流程。</li>
+<li>工作记忆：4个Buffer</li>
+<li>知识表征：
+<ul>
+<li>陈述性知识与程序性知识</li>
+</ul>
+</li>
+<li>陈述性知识
+<ul>
+<li>由组块构成</li>
+<li>组块：组块类型和若干槽组成</li>
+<li>陈述性知识创建
+<ul>
+<li>首先创建组块类型（Chunk-Type）
+<ul>
+<li>定义组块的基本结构：(CHUNK-TYPE NAME SLOT1 SLOT2 SLOTN)</li>
+</ul>
+</li>
+<li>再创建具体组块
+<ul>
+<li>使用add-dm命令将组块添加到陈述性记忆(declarative memory, dm)中</li>
+<li>组块格式：
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="lisp"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">(chunk-name</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    isa Name     </span><span style="color:#6A737D;--shiki-dark:#6A737D">; 指定组块类型</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    SLOT1 value1 </span><span style="color:#6A737D;--shiki-dark:#6A737D">; 槽位及其值</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    SLOT2 value2</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    ...</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    SLOTN valueN</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">lisp</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="(chunk-name
+    isa Name     ; 指定组块类型
+    SLOT1 value1 ; 槽位及其值
+    SLOT2 value2
+    ...
+    SLOTN valueN
+)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>程序性知识
+<ul>
+<li>
+<p>产生式结构</p>
+<ul>
+<li>每个产生式(Production)必须有唯一的命名(name)</li>
+<li>产生式条件：用于产生系统的匹配和选择两个操作
+<ul>
+<li>如果某产生式指定的所有条件与现有缓冲器内容匹配，该产生式则被选中</li>
+</ul>
+</li>
+<li>产生式行动：当产生式被选中时，执行该产生式的行为(action)</li>
+</ul>
+</li>
+<li>
+<p>产生式格式：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="lisp"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">(p name    </span><span style="color:#6A737D;--shiki-dark:#6A737D">; p表示production，name为产生式名称</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    ; 条件部分：指定Buffer测试</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    condition</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> part</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    ==>     </span><span style="color:#6A737D;--shiki-dark:#6A737D">; 分隔符</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    ; 动作部分：指定Buffer转换</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    action part</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">lisp</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="(p name    ; p表示production，name为产生式名称
+    ; 条件部分：指定Buffer测试
+    condition part
+    ==>     ; 分隔符
+    ; 动作部分：指定Buffer转换
+    action part
+)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+</li>
+<li>
+<p>产生式系统工作流程：</p>
+<ol>
+<li>匹配(Matching)：检查哪些产生式的条件与当前缓冲器内容匹配</li>
+<li>选择(Selection)：从匹配的产生式中选择一个执行</li>
+<li>执行(Execution)：执行被选中产生式的动作部分</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="soar认知架构">Soar认知架构<a class="anchor" href="#soar认知架构">#</a></h4>
+<h1 id="5-概率推理">5. 概率推理<a class="anchor" href="#5-概率推理">#</a></h1>
+<ul>
+<li>概率推理是一种处理不确定性的推理方法，基于贝叶斯理论，用于在不完全信息的情况下进行决策和预测。</li>
+</ul>
+<h2 id="51-贝叶斯推理的基本概念">5.1 贝叶斯推理的基本概念<a class="anchor" href="#51-贝叶斯推理的基本概念">#</a></h2>
+<h3 id="先验概率">先验概率<a class="anchor" href="#先验概率">#</a></h3>
+<ul>
+<li>先验概率(Prior Probability)是指在获得新证据之前，对某一事件发生可能性的初始估计。</li>
+<li>它代表了我们对事件的先验知识或信念，通常基于历史数据、领域知识或主观判断。</li>
+<li>表示为P(H)，其中H表示假设。</li>
+<li>例如：在医学诊断中，某种疾病在人群中的发病率(如1%)就是该疾病存在的先验概率。</li>
+</ul>
+<h3 id="似然概率">似然概率<a class="anchor" href="#似然概率">#</a></h3>
+<ul>
+<li>似然概率(Likelihood)表示在假设H成立的条件下，观察到特定证据E的概率。</li>
+<li>它衡量了证据与假设之间的一致性程度。</li>
+<li>表示为P(E|H)，读作”在H条件下E的概率”。</li>
+<li>例如：如果患有某种疾病(H)，检测结果呈阳性(E)的概率是95%，则P(E|H)=0.95。</li>
+</ul>
+<h3 id="后验概率">后验概率<a class="anchor" href="#后验概率">#</a></h3>
+<ul>
+<li>后验概率(Posterior Probability)是指在获得新证据后，对假设成立可能性的更新估计。</li>
+<li>它结合了先验知识和新证据，形成更新后的信念。</li>
+<li>表示为P(H|E)，读作”在观察到E的条件下H的概率”。</li>
+<li>例如：在观察到检测结果呈阳性后，患者实际患病的概率。</li>
+</ul>
+<h3 id="贝叶斯定理">贝叶斯定理<a class="anchor" href="#贝叶斯定理">#</a></h3>
+<ul>
+<li>
+<p>贝叶斯定理提供了计算后验概率的数学公式：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>H</mi><mi mathvariant="normal">∣</mi><mi>E</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>E</mi><mi mathvariant="normal">∣</mi><mi>H</mi><mo stretchy="false">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false">(</mo><mi>H</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>E</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(H|E) = \frac{P(E|H) \times P(H)}{P(E)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.53em;vertical-align:-0.52em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0576em;">E</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0576em;">E</span><span class="mord mtight">∣</span><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mclose mtight">)</span><span class="mbin mtight">×</span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0813em;">H</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+</li>
+<li>
+<p>其中：</p>
+<ul>
+<li>P(H|E)是后验概率</li>
+<li>P(E|H)是似然概率</li>
+<li>P(H)是先验概率</li>
+<li>P(E)是证据的<em>边际概率</em>，可以通过全概率公式计算：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>E</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>E</mi><mi mathvariant="normal">∣</mi><mi>H</mi><mo stretchy="false">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false">(</mo><mi>H</mi><mo stretchy="false">)</mo><mo>+</mo><mi>P</mi><mo stretchy="false">(</mo><mi>E</mi><mi mathvariant="normal">∣</mi><mi mathvariant="normal">¬</mi><mi>H</mi><mo stretchy="false">)</mo><mo>×</mo><mi>P</mi><mo stretchy="false">(</mo><mi mathvariant="normal">¬</mi><mi>H</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(E) = P(E|H) \times P(H) + P(E|\neg H) \times P(\neg H)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0576em;">E</span><span class="mord">∣¬</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord">¬</span><span class="mord mathnormal" style="margin-right:0.0813em;">H</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+<li>
+<p>调节因子</p>
+</li>
+</ul>
+<h3 id="知觉的贝叶斯推理">知觉的贝叶斯推理<a class="anchor" href="#知觉的贝叶斯推理">#</a></h3>
+<ul>
+<li>
+<p>知觉也是一种贝叶斯推理</p>
+</li>
+<li>
+<p>贝叶斯脑假说：认为大脑通过<strong>贝叶斯推理</strong>机制处理信息，以预测和解释感官输入。</p>
+</li>
+<li>
+<p>机制：</p>
+<ul>
+<li><strong>预测与误差修正</strong>
+<ul>
+<li>大脑基于先验经验生成对未来的预测（先验概率），并将实际感官输入（似然概率）与预测进行对比。当两者存在差异时，通过贝叶斯定理更新内部模型（后验概率），以最小化预测误差。这一过程被称为<strong>预测编码</strong>，是大脑主动适应环境的核心机制</li>
+<li><strong>该假说强调先验知识在信息处理的重要性。</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>贝叶斯推理与知觉的心理理论的关系</p>
+</li>
+<li>
+<p>知觉加工</p>
+<ul>
+<li>知觉不仅仅是一个把一个把感官输入转换为内部表征的自下而上的过程。 —> 似然概率</li>
+<li>知觉是一个推理过程，将自上而下的先验信息与自下而上的感觉信息相结合。</li>
+<li>自上而下：编码基于先验信息的预测（先验概率）</li>
+<li>自下而上：编码器官接收到的信息（似然概率）</li>
+</ul>
+</li>
+</ul>
+<h2 id="52-不确定知识">5.2 不确定知识<a class="anchor" href="#52-不确定知识">#</a></h2>
+<h3 id="贝叶斯网络表征不确定知识">贝叶斯网络表征不确定知识<a class="anchor" href="#贝叶斯网络表征不确定知识">#</a></h3>
+<ul>
+<li>
+<p>利用变量间的独立性和条件独立关系减少完全联合概率分布所需指定的概率数目</p>
+</li>
+<li>
+<p>用于表示变量之间的依赖关系</p>
+</li>
+<li>
+<p>贝叶斯网络可以本质上表示任何完全联合概率分布</p>
+</li>
+<li>
+<p>问题：</p>
+<ul>
+<li>随着变量数目增加计算量呈指数增长</li>
+</ul>
+</li>
+<li>
+<p>变量X和Y之间独立即：</p>
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X,Y) = P(X)P(Y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mi mathvariant="normal">∣</mi><mi>Y</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X|Y) = P(X)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mclose">)</span></span></span></span></li>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mi mathvariant="normal">∣</mi><mi>X</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(Y|X) = P(Y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span></span></span></span></li>
+</ul>
+</li>
+<li>
+<p>条件独立性</p>
+<ul>
+<li>无条件时的关联：
+<ul>
+<li>X和Y可能存在相关性，即<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mo stretchy="false">)</mo><mo mathvariant="normal">≠</mo><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo stretchy="false">)</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X,Y) \neq P(X)P(Y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel"><span class="mrel"><span class="mord vbox"><span class="thinbox"><span class="rlap"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="inner"><span class="mord"><span class="mrel"></span></span></span><span class="fix"></span></span></span></span></span><span class="mspace nobreak"></span><span class="mrel">=</span></span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mclose">)</span></span></span></span></li>
+<li>例如：下雨(X)和地面湿润(Y)这两个事件之间存在相关性</li>
+</ul>
+</li>
+<li>条件独立：
+<ul>
+<li>给定第三个随机变量Z后，如果X和Y之间的关联被切断，则称X与Y在给定Z的条件下独立</li>
+<li>记作：<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mo separator="true">,</mo><mi>Y</mi><mi mathvariant="normal">∣</mi><mi>Z</mi><mo stretchy="false">)</mo><mo>=</mo><mi>P</mi><mo stretchy="false">(</mo><mi>X</mi><mi mathvariant="normal">∣</mi><mi>Z</mi><mo stretchy="false">)</mo><mi>P</mi><mo stretchy="false">(</mo><mi>Y</mi><mi mathvariant="normal">∣</mi><mi>Z</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(X,Y|Z) = P(X|Z)P(Y|Z)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0715em;">Z</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0785em;">X</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0715em;">Z</span><span class="mclose">)</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.2222em;">Y</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0715em;">Z</span><span class="mclose">)</span></span></span></span></li>
+<li>例如：
+<ul>
+<li>如果我们知道有人浇水(Z)，那么下雨(X)和地面湿润(Y)这两个事件就变得条件独立</li>
+<li>因为地面湿润的原因已经确定是浇水，此时下雨与否就不会影响地面湿润的概率了</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>条件独立性特点：</p>
+<ul>
+<li>条件独立分布允许将完全联合分布分解成更小的分布
+<ul>
+<li>完全联合分布P(X,Y,Z)需要计算所有可能组合的概率</li>
+<li>通过条件独立性，可以将其分解为更简单的形式</li>
+</ul>
+</li>
+<li>利用条件独立对联合概率分解
+<ul>
+<li>一般形式：P(X, Y, Z) = P(X, Y|Z)P(Z)</li>
+<li>当X和Y在给定Z时条件独立，可进一步分解为：
+<ul>
+<li>P(X, Y, Z) = P(X|Z)P(Y|Z)P(Z)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>优点：
+<ul>
+<li>大大减少了需要存储和计算的概率数量</li>
+<li>例如：对于二值变量，完全联合分布需要8个概率值</li>
+<li>分解后只需要5个概率值（P(Z)和各条件下的P(X|Z)、P(Y|Z)）</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>贝叶斯网络是一种用<strong>概率图表示变量间依赖关系</strong>的统计模型。</p>
+</li>
+<li>
+<p>他结合了<strong>概率论</strong>和<strong>图论</strong>的思想，用于表示复杂系统中变量之间的依赖关系。</p>
+</li>
+<li>
+<p>贝叶斯网络是一个<strong>有向图</strong>，由节点和有向边组成。</p>
+<ul>
+<li>节点代表随机变量</li>
+<li>有向边表示变量之间的依赖关系</li>
+</ul>
+</li>
+<li>
+<p>如何判断贝叶斯网络中的变量是否条件独立？</p>
+<ul>
+<li>贝叶斯网络通过**有向分离（d-separation）**规则，判断变量是否条件独立：
+<ul>
+<li>如果两个变量在给定一组其他变量的条件下，在贝叶斯网络中不通过任何有向边连接，则称这两个变量在给定这些条件下条件独立。</li>
+<li><strong>方法</strong>：检查所有从X到Y的无向路径是否被Z阻塞，若所有路径均备足，则X和Y在给定Z时条件独立。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>贝叶斯网络的三要素：</p>
+<ol>
+<li>**变量。**变量用节点表示。</li>
+<li><strong>因果关系。</strong></li>
+<li><strong>条件概率表。</strong></li>
+</ol>
+</li>
+<li>
+<p>全连接贝叶斯网络</p>
+</li>
+</ul>
+<h3 id="贝叶斯网络推理">贝叶斯网络推理<a class="anchor" href="#贝叶斯网络推理">#</a></h3>
+<h4 id="变分贝叶斯推断">变分贝叶斯推断<a class="anchor" href="#变分贝叶斯推断">#</a></h4>
+<p>变分贝叶斯推断是一种使用KL散度度量来评估概率分布之间相似程度的方法。它通过计算KL散度来比较近似分布Q与后验概率P之间的差异。公式如下：</p>
+<ul>
+<li>
+<p>KL散度公式 ：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mrow><mi>K</mi><mi>L</mi></mrow></msub><mo stretchy="false">(</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">∣</mi><mi>y</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>=</mo><msub><mo>∑</mo><mi>x</mi></msub><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi>ln</mi><mo>⁡</mo><mfrac><mrow><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">∣</mi><mi>y</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">D_{KL}(Q(x)||P(x|y)) = \sum_x Q(x) \ln \frac{Q(x)}{P(x|y)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0715em;">K</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord">∣∣</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.53em;vertical-align:-0.52em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">x</span><span class="mord mtight">∣</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">Q</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">x</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+</li>
+<li>
+<p>后验概率公式 ：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">∣</mi><mi>y</mi><mo stretchy="false">)</mo><mo>=</mo><mfrac><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo></mrow></mfrac></mrow><annotation encoding="application/x-tex">P(x|y) = \frac{P(x,y)}{P(y)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.53em;vertical-align:-0.52em;"></span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.01em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.485em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">x</span><span class="mpunct mtight">,</span><span class="mord mathnormal mtight" style="margin-right:0.0359em;">y</span><span class="mclose mtight">)</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.52em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span></p>
+</li>
+<li>
+<p>KL散度展开 ：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>D</mi><mrow><mi>K</mi><mi>L</mi></mrow></msub><mo stretchy="false">(</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mi mathvariant="normal">∣</mi><mi mathvariant="normal">∣</mi><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">∣</mi><mi>y</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>=</mo><msub><mo>∑</mo><mi>x</mi></msub><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mrow><mo fence="true">(</mo><mi>ln</mi><mo>⁡</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>−</mo><mi>ln</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mi mathvariant="normal">∣</mi><mi>y</mi><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">D_{KL}(Q(x)||P(x|y)) = \sum_x Q(x) \left( \ln Q(x) - \ln P(x|y) \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3283em;"><span style="top:-2.55em;margin-left:-0.0278em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0715em;">K</span><span class="mord mathnormal mtight">L</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mord">∣∣</span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mord">∣</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></p>
+<p>进一步展开为：
+<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>=</mo><msub><mo>∑</mo><mi>x</mi></msub><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mrow><mo fence="true">(</mo><mi>ln</mi><mo>⁡</mo><mi>Q</mi><mo stretchy="false">(</mo><mi>x</mi><mo stretchy="false">)</mo><mo>−</mo><mi>ln</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo><mo>+</mo><mi>ln</mi><mo>⁡</mo><mi>P</mi><mo stretchy="false">(</mo><mi>y</mi><mo stretchy="false">)</mo><mo fence="true">)</mo></mrow></mrow><annotation encoding="application/x-tex">= \sum_x Q(x) \left( \ln Q(x) - \ln P(x,y) + \ln P(y) \right)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.3669em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0497em;vertical-align:-0.2997em;"></span><span class="mop"><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.0017em;"><span style="top:-2.4003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">x</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2997em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="minner"><span class="mopen delimcenter" style="top:0em;">(</span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal">Q</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mop">ln</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mclose">)</span><span class="mclose delimcenter" style="top:0em;">)</span></span></span></span></span></p>
+<p>其中，P(y)相对于x为常数。
+变分贝叶斯推断通过最小化KL散度来优化近似分布Q，使其尽可能接近真实的后验分布P。这种方法在机器学习和统计推断中广泛应用，用于处理复杂模型中的不确定性</p>
+</li>
+</ul>
+<h1 id="6-神经元特性">6. 神经元特性<a class="anchor" href="#6-神经元特性">#</a></h1>
+<h2 id="神经元的生理特性">神经元的生理特性<a class="anchor" href="#神经元的生理特性">#</a></h2>
+<ul>
+<li>
+<p>对所通透的例子的选择性很高。</p>
+</li>
+<li>
+<p>离子通道的显著特征：</p>
+<ul>
+<li>例子沿着<strong>顺离子浓度梯度</strong>转运</li>
+<li><strong>传输速率非常高</strong></li>
+</ul>
+</li>
+<li>
+<p>钠离子通道和钾离子通道</p>
+</li>
+<li>
+<p>钾漏通道</p>
+<ul>
+<li>速率慢</li>
+<li>比较稳定，对外界刺激不敏感，<strong>钾漏通道一直开放</strong></li>
+</ul>
+</li>
+<li>
+<p>离子泵</p>
+<ul>
+<li><strong>主动消耗能量</strong></li>
+<li>逆离子浓度梯度转运</li>
+<li>离子传输效率不高</li>
+</ul>
+</li>
+<li>
+<p>钠-钾离子泵</p>
+</li>
+<li>
+<p>膜电位</p>
+<ul>
+<li>细胞内外电位差</li>
+<li>负值</li>
+</ul>
+</li>
+<li>
+<p>静息电位</p>
+<ul>
+<li>-70mV</li>
+</ul>
+</li>
+<li>
+<p>动作电位</p>
+<ul>
+<li>超极化和去极化</li>
+<li>去极化：动作电位上升
+<ul>
+<li>去极化阈值（-55mV）</li>
+<li>膜电位去极化到阈值水平</li>
+<li>钠离子爆发式内流（大量钠离子通道打开）</li>
+<li>钾离子通道关闭</li>
+</ul>
+</li>
+<li>复极化：动作电位下降</li>
+<li>过极化：
+<ul>
+<li>复极化导致细胞膜电位出现过度下降，膜电位低于静息电位</li>
+<li>钠离子通道未关闭，钠离子外流</li>
+</ul>
+</li>
+<li>恢复静息态：
+<ul>
+<li>关闭所有离子通道和钠钾-离子泵，重新恢复到静息电位</li>
+</ul>
+</li>
+<li>不应期：
+很难产生动作电位</li>
+</ul>
+</li>
+</ul>
+<h1 id="9-神经元计算模型">9. 神经元计算模型<a class="anchor" href="#9-神经元计算模型">#</a></h1>
+<ul>
+<li>
+<p>一个神经元等价于一个电容</p>
+</li>
+<li>
+<p><img src="/images/20250512/08-10-01.png" alt="" class="zoomable"></p>
+</li>
+<li>
+<p>神经元编码</p>
+<ul>
+<li>发放率</li>
+<li>神经响应的时间结构
+<ul>
+<li>时间编码
+<ul>
+<li>第一个脉冲发放时间
+<ul>
+<li>发放时间越早，与刺激关系越强</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="10-脉冲神经网络snn">10. 脉冲神经网络（SNN）<a class="anchor" href="#10-脉冲神经网络snn">#</a></h1>
+<ul>
+<li>
+<p>第三代神经网络</p>
+</li>
+<li>
+<p>ANN与真正的人脑信息处理过程的差异</p>
+<ul>
+<li>信息载体
+<ul>
+<li>ANN使用高精度的浮点数进行运算</li>
+<li>人脑中，信息会以动作电位或电脉冲的形式传递、接受和处理</li>
+</ul>
+</li>
+<li>神经元计算模型
+<ul>
+<li>ANN忽略动态特性</li>
+<li>人脑神经元神经元输入电流与膜电位均随时间动态变化。</li>
+</ul>
+</li>
+<li>神经元突触学习
+<ul>
+<li>ANN通常需要大量的标签数据集驱动网络的拟合（给予梯度现将的反向传播算法）。</li>
+<li>人类在很多情况下的感知和学习过程都是非监督式的。</li>
+</ul>
+</li>
+<li>能耗的不同</li>
+</ul>
+</li>
+<li>
+<p>SNN神经元的三个S特性</p>
+<ul>
+<li>Spike 脉冲特性</li>
+<li>Sparse 稀疏特性</li>
+<li>Static suppression 静态压缩特性</li>
+</ul>
+</li>
+<li>
+<p>神经元编码</p>
+<ul>
+<li>发放率编码、时间编码、Delta编码、直接编码 -> (与SNN网络分离)</li>
+<li>直接编码 -> 作为SNN网络的输入编码层（直接输入浮点型数据）</li>
+</ul>
+</li>
+</ul>    </div> </article> </main> <div class="mt-6 items-start gap-x-10 md:flex">  <div class="mt-8 flex-1 text-muted-foreground md:min-w-[50ch]"> <div class="relative flex flex-col gap-y-2 rounded-xl border px-3 sm:px-4 py-2 sm:py-3 astro-tju7bdtj"> <svg aria-hidden="true" class="absolute end-4 top-4 size-20 opacity-10 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 3a5 5 0 0 1 3.75 1.692a1 1 0 1 1-1.5 1.324a3 3 0 1 0 0 3.968a1 1 0 1 1 1.5 1.324A5 5 0 1 1 12 7"/></g></svg>  <div class="absolute bottom-2 right-2 w-20 h-10 signature-container astro-tju7bdtj"> <svg viewBox="0 -1 163.403 90.305" xmlns="http://www.w3.org/2000/svg" class="w-full h-full signature-svg astro-tju7bdtj"> <g stroke-linecap="round" fill-rule="evenodd" stroke="currentColor" stroke-width="0.3mm" fill="currentColor" class="astro-tju7bdtj"> <path class="signature-path astro-tju7bdtj" d="M 24.402 85.301 Q 17.502 85.301 11.952 81.901 Q 6.402 78.501 3.202 72.051 Q 0.002 65.601 0.002 56.801 Q 0.002 41.601 6.502 28.651 Q 13.002 15.701 25.702 7.851 Q 38.402 0.001 56.202 0.001 Q 60.802 0.001 66.052 0.701 Q 71.302 1.401 75.602 2.801 Q 78.402 3.601 78.402 6.801 Q 78.402 9.401 76.452 11.701 Q 74.502 14.001 71.902 14.001 Q 71.102 14.001 70.702 13.901 Q 65.502 12.701 61.802 12.151 Q 58.102 11.601 54.002 11.601 Q 41.302 11.601 32.402 17.751 Q 23.502 23.901 19.102 34.001 Q 14.702 44.101 14.702 55.801 Q 14.702 64.301 18.052 68.951 Q 21.402 73.601 26.802 73.601 Q 32.902 73.601 37.502 68.601 Q 42.102 63.601 45.902 52.401 Q 49.702 41.201 53.402 22.001 Q 54.002 19.201 55.802 18.201 Q 57.602 17.201 60.602 17.201 Q 67.702 17.201 67.702 21.801 Q 67.702 22.601 67.402 23.801 Q 64.802 33.501 62.652 45.251 Q 60.502 57.001 60.502 63.101 Q 60.502 68.501 62.102 70.951 Q 63.702 73.401 67.002 73.401 Q 70.202 73.401 73.102 71.251 A 23.845 23.845 0 0 0 74.956 69.705 A 43.109 43.109 0 0 0 75.125 69.55 A 12.009 12.009 0 0 1 76.332 66.429 A 10.164 10.164 0 0 1 77.002 65.401 Q 79.302 62.301 83.502 62.301 Q 87.102 62.301 87.102 65.001 Q 87.102 65.701 86.902 67.501 Q 86.602 71.101 86.602 71.601 Q 86.602 74.601 89.202 74.601 Q 91.102 74.601 92.852 72.351 Q 94.602 70.101 95.752 66.201 Q 96.902 62.301 96.902 57.601 Q 96.902 54.001 96.002 51.551 Q 95.102 49.101 93.802 49.101 Q 92.702 49.101 92.202 49.651 Q 91.702 50.201 91.202 51.501 Q 90.602 53.101 89.602 54.051 Q 88.602 55.001 86.102 55.001 Q 83.902 55.001 82.602 53.451 Q 81.302 51.901 81.302 48.701 Q 81.302 43.601 84.402 40.701 Q 87.502 37.801 92.402 37.801 Q 96.602 37.801 100.002 39.851 Q 103.402 41.901 105.202 45.801 Q 108.202 41.801 111.952 39.801 Q 115.702 37.801 119.302 37.801 Q 123.202 37.801 125.252 39.601 Q 127.302 41.401 127.302 45.401 Q 127.302 49.901 125.602 52.451 Q 123.902 55.001 121.502 55.001 Q 119.302 55.001 118.502 54.101 Q 117.702 53.201 117.302 51.501 Q 117.102 50.301 116.702 49.701 Q 116.302 49.101 115.302 49.101 Q 114.102 49.101 112.752 51.351 Q 111.402 53.601 110.452 57.301 Q 109.502 61.001 109.502 65.001 Q 109.502 69.701 111.752 72.251 Q 114.002 74.801 117.902 74.801 Q 121.802 74.801 125.252 72.151 Q 127.442 70.468 130.096 67.598 A 81.726 81.726 0 0 0 130.631 67.01 A 46.575 46.575 0 0 1 130.738 65.106 Q 130.998 61.577 131.752 56.951 Q 132.902 49.901 134.702 43.801 Q 135.602 40.601 137.102 39.401 Q 138.602 38.201 141.902 38.201 Q 147.002 38.201 147.002 41.601 Q 147.002 44.101 145.102 53.201 Q 142.702 64.201 142.702 68.101 Q 142.702 71.101 143.502 72.701 Q 144.302 74.301 146.202 74.301 Q 148.002 74.301 150.702 71.801 Q 153.402 69.301 157.902 63.901 Q 159.102 62.501 160.602 62.501 Q 161.902 62.501 162.652 63.701 Q 163.402 64.901 163.402 67.001 Q 163.402 71.001 161.502 73.201 Q 151.602 85.301 143.002 85.301 Q 136.502 85.301 133.552 80.701 A 17.114 17.114 0 0 1 132.192 78.047 A 46.504 46.504 0 0 1 129.824 80.016 A 41.632 41.632 0 0 1 127.252 81.851 Q 122.002 85.301 115.402 85.301 Q 110.302 85.301 106.352 83.401 Q 102.402 81.501 100.102 78.001 Q 94.402 85.201 86.602 85.201 Q 81.102 85.201 77.902 82.001 A 10.732 10.732 0 0 1 76.686 80.537 A 42.127 42.127 0 0 1 76.431 80.739 A 31.425 31.425 0 0 1 74.402 82.201 Q 69.702 85.301 62.902 85.301 Q 55.902 85.301 51.602 81.251 Q 47.302 77.201 46.202 69.801 Q 38.802 85.301 24.402 85.301 Z M 143.802 31.601 Q 139.602 31.601 137.502 29.651 Q 135.402 27.701 135.402 24.201 Q 135.402 20.701 138.152 18.351 Q 140.902 16.001 145.002 16.001 Q 148.702 16.001 151.002 17.801 Q 153.302 19.601 153.302 22.901 Q 153.302 26.901 150.702 29.251 Q 148.102 31.601 143.802 31.601 Z" vector-effect="non-scaling-stroke"></path> </g> </svg> </div>  <div class="flex flex-col astro-tju7bdtj"> <div class="font-medium text-foreground astro-tju7bdtj">笔记：类脑与认知计算</div> <div class="text-sm astro-tju7bdtj">https://kioshiroi.github.io/blog/brain-inspired-cognitive-computing</div> </div>  <div class="flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8 astro-tju7bdtj"> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Author</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj">KIOSHIROI</span> </div> <div class="flex gap-x-2 sm:min-w-16 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Published at</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj"> 2025年2月24日 </span> </div> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Copyright</span> <a class="text-sm text-foreground max-sm:place-self-center underline decoration-muted-foreground/50 underline-offset-2 rounded px-1 -mx-1 transition-all duration-200 hover:no-underline hover:bg-foreground hover:text-background astro-tju7bdtj" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+CC BY-NC-SA 4.0
+</a> </div> </div>  <div class="relative astro-tju7bdtj"> <div class="flex flex-row gap-3 astro-tju7bdtj"> <button id="copy-link" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16.243 9.878a1 1 0 0 1 1.32-.083l.094.083L19.778 12a5.5 5.5 0 0 1-7.596 7.952L12 19.778l-2.121-2.121a1 1 0 0 1 1.32-1.498l.094.083l2.121 2.122a3.5 3.5 0 0 0 5.091-4.8l-.141-.15l-2.121-2.121a1 1 0 0 1 0-1.415M9.17 9.171a1 1 0 0 1 1.32-.083l.095.083l4.242 4.243a1 1 0 0 1-1.32 1.497l-.094-.083l-4.243-4.242a1 1 0 0 1 0-1.415m-4.95-4.95a5.5 5.5 0 0 1 7.597-.173l.182.174l2.121 2.12A1 1 0 0 1 12.8 7.84l-.094-.083l-2.121-2.121a3.5 3.5 0 0 0-5.091 4.8l.141.15l2.121 2.12a1 1 0 0 1-1.32 1.498l-.094-.083L4.222 12a5.5 5.5 0 0 1 0-7.778Z"/></g></svg>  </button> <button id="get-qrcode" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11 3a2 2 0 0 1 1.995 1.85L13 5v6a2 2 0 0 1-1.85 1.995L11 13H5a2 2 0 0 1-1.995-1.85L3 11V5a2 2 0 0 1 1.85-1.995L5 3zm0 2H5v6h6zM8.5 7a.5.5 0 0 1 .492.41L9 7.5v1a.5.5 0 0 1-.41.492L8.5 9h-1a.5.5 0 0 1-.492-.41L7 8.5v-1a.5.5 0 0 1 .41-.492L7.5 7zM21 5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zM7 15a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2zm0 2H5v2h2zm14 0a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zm-2-5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1m-2 4a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0z"/></g></svg>  </button>  </div> <div id="qrcode-container" class="absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out aria-expanded:max-h-44 aria-expanded:translate-y-4 aria-expanded:opacity-100 astro-tju7bdtj" aria-expanded="false"></div> <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script> <script>(function(){const content = undefined;
+
+  const renderContent = content ?? window.location.href
+  // Load qrcode
+  function loadqrcode(qrcodeContainer) {
+    if (!qrcodeContainer) throw new Error('qrcode container not found')
+    if (qrcodeContainer.innerHTML !== '') return
+    new QRCode(qrcodeContainer, renderContent)
+  }
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  if (!qrcodeContainer) throw new Error('qrcode container not found')
+  loadqrcode(qrcodeContainer)
+})();</script> </div> </div> <div class="mx-6 rounded-b-xl border border-t-0 px-3 pb-1.5 pt-1 sm:mx-8 sm:px-4 astro-tju7bdtj"> <a href="/projects#sponsorship" class="flex items-center justify-between text-muted-foreground no-underline astro-tju7bdtj"> <span class="astro-tju7bdtj">Buy me a cup of coffee ☕.</span> <svg aria-hidden="true" class="box-content size-5 p-1 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M17 2a3 3 0 0 1 3 3v12a1 1 0 0 1 .351 1.936l-8 3a1 1 0 0 1-.702 0l-8-3A1 1 0 0 1 4 17V5a3 3 0 0 1 3-3zm0 2H7a1 1 0 0 0-.993.883L6 5v12.682l6 2.25l6-2.25V5a1 1 0 0 0-.883-.993zm-5 1a1 1 0 0 1 .993.883L13 6v1h2a1 1 0 0 1 .117 1.993L15 9h-5a.5.5 0 0 0-.09.992L10 10h4a2.5 2.5 0 0 1 .164 4.995L14 15h-1v1a1 1 0 0 1-1.993.117L11 16v-1H9a1 1 0 0 1-.117-1.993L9 13h5a.5.5 0 0 0 .09-.992L14 12h-4a2.5 2.5 0 0 1-.164-4.995L10 7h1V6a1 1 0 0 1 1-1"/></g></svg>  </a> </div>  <script type="module" src="/_astro/Copyright.astro_astro_type_script_index_0_lang.CQ7TF57l.js"></script> <div class="flex max-sm:flex-col sm:justify-between gap-2 mt-3 sm:mt-6"> <span class="min-w-0"> <a href="/blog/big-data-processing" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 hover:bg-muted max-sm:max-w-[80%] sm:flex"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 rotate-180 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> <p class="truncate font-medium transition-colors">笔记：大数据处理概述</p> </a> </span> <span class="min-w-0"> <a href="/blog/nlp" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-right no-underline transition-colors duration-300 hover:bg-muted max-sm:float-end max-sm:max-w-[80%] sm:flex"> <p class="truncate font-medium transition-colors">笔记：自然语言处理</p> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> </a> </span> </div> <comment-component class="astro-w2uxdene"><div id="waline" class="not-prose mt-3 sm:mt-6 astro-w2uxdene">
+Comment seems to stuck. Try to refresh?✨
+</div></comment-component><script type="module" src="/_astro/Comment.astro_astro_type_script_index_0_lang.CoJ8wWoz.js"></script> </div> <div class="min-w-48 basis-60">  </div> </div> <button aria-label="Back to Top" class="z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12" data-show="false" id="to-top-btn"> <div class="absolute bottom-0 end-0 start-0 top-0 flex items-center justify-center transition-opacity group-hover:opacity-0 group-[.ended]:opacity-0"> <span class="text">10</span> <span class="text-xs">%</span> </div> <svg aria-hidden="true" class="opacity-0 transition-opacity group-hover:opacity-100 group-[.ended]:opacity-100 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11.293 8.293a1 1 0 0 1 1.414 0l5.657 5.657a1 1 0 0 1-1.414 1.414L12 10.414l-4.95 4.95a1 1 0 0 1-1.414-1.414z"/></g></svg>  </button> <script>(function(){const headerName = "content-header";
+const contentName = "content";
+const needPercent = true;
+
+  const scrollBtn = document.getElementById('to-top-btn')
+  const scrollPercentEl = scrollBtn.children[0].children[0]
+  const targetHeader = document.getElementById(headerName)
+  const articleElement = document.getElementById(contentName)
+
+  // scroll to top
+  function callback(entries) {
+    entries.forEach((entry) => {
+      // only show the scroll to top button when the heading is out of view
+      scrollBtn.dataset.show = (!entry.isIntersecting).toString()
+    })
+  }
+  scrollBtn.addEventListener('click', () => {
+    document.documentElement.scrollTo({ behavior: 'smooth', top: 0 })
+  })
+  if (targetHeader) {
+    const observer = new IntersectionObserver(callback)
+    observer.observe(targetHeader)
+  } else {
+    console.error(`Element with ID ${headerName} not found.`)
+  }
+
+  if (needPercent) {
+    // scroll percentage
+    let scrollHeight = articleElement.scrollHeight // total height
+    let articleTop = articleElement.offsetTop // article top
+    const clientHeight = document.documentElement.clientHeight // client height
+
+    function recalculateHeights() {
+      scrollHeight = articleElement.scrollHeight
+      articleTop = articleElement.offsetTop
+    }
+
+    const images = articleElement.querySelectorAll('img')
+    let loadedImagesCount = 0
+    const totalImages = images.length
+
+    if (totalImages > 0) {
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedImagesCount++
+        } else {
+          img.addEventListener('load', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+          img.addEventListener('error', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+        }
+      })
+      if (loadedImagesCount === totalImages) {
+        recalculateHeights()
+      }
+    }
+
+    function calculateScrollPercent() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop < articleTop) return
+      
+      const scrollableHeight = Math.max(scrollHeight - clientHeight, 1)
+      const scrolledAmount = scrollTop - articleTop
+      
+      const percent = Math.round((scrolledAmount / scrollableHeight) * 100)
+      return Math.max(0, Math.min(100, percent))
+    }
+
+    document.addEventListener('scroll', () => {
+      const scrollPercent = calculateScrollPercent()
+      if (scrollPercent === undefined) return
+      scrollPercentEl.innerText = scrollPercent.toString()
+
+      // If percent is 100, percent won't need to show
+      scrollBtn.classList.toggle('ended', scrollPercent >= 100)
+    })
+
+    window.addEventListener('resize', recalculateHeights)
+  } else {
+    scrollBtn.classList.add('ended')
+  }
+})();</script>  <footer class="mx-auto mb-5 mt-16"> <div class="border-t border-border pt-5"> <div class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0"> <div class="flex items-center gap-x-4 gap-y-2 text-muted-foreground max-sm:flex-col [&_a:hover]:text-primary [&_a]:text-foreground"> <a class="text-xs" style="color:hsl(var(--muted-foreground)/var(--tw-text-opacity,1))" href target="_blank">  </a> <span>
+© 2026 KIOSHIROI &
+<a href="/terms/list">Site policy</a> </span> <span class="text-muted-foreground [&_a:hover]:text-primary [&_a]:text-foreground"> <a href="https://github.com/withastro/astro" target="_blank">
+Astro
+</a> 
+theme powered
+</span> </div>  <div class="flex items-center gap-x-4"> <a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="https://github.com/KIOSHIROI" aria-label="github"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M6.315 6.176c-.25-.638-.24-1.367-.129-2.034a6.8 6.8 0 0 1 2.12 1.07c.28.214.647.283.989.18A9.3 9.3 0 0 1 12 5c.961 0 1.874.14 2.703.391c.342.104.709.034.988-.18a6.8 6.8 0 0 1 2.119-1.07c.111.667.12 1.396-.128 2.033c-.15.384-.075.826.208 1.14C18.614 8.117 19 9.04 19 10c0 2.114-1.97 4.187-5.134 4.818c-.792.158-1.101 1.155-.495 1.726c.389.366.629.882.629 1.456v3a1 1 0 0 0 2 0v-3c0-.57-.12-1.112-.334-1.603C18.683 15.35 21 12.993 21 10c0-1.347-.484-2.585-1.287-3.622c.21-.82.191-1.646.111-2.28c-.071-.568-.17-1.312-.57-1.756c-.595-.659-1.58-.271-2.28-.032a9 9 0 0 0-2.125 1.045A11.4 11.4 0 0 0 12 3c-.994 0-1.953.125-2.851.356a9 9 0 0 0-2.125-1.045c-.7-.24-1.686-.628-2.281.031c-.408.452-.493 1.137-.566 1.719l-.005.038c-.08.635-.098 1.462.112 2.283C3.484 7.418 3 8.654 3 10c0 2.992 2.317 5.35 5.334 6.397A4 4 0 0 0 8 17.98l-.168.034c-.717.099-1.176.01-1.488-.122c-.76-.322-1.152-1.133-1.63-1.753c-.298-.385-.732-.866-1.398-1.088a1 1 0 0 0-.632 1.898c.558.186.944 1.142 1.298 1.566c.373.448.869.916 1.58 1.218c.682.29 1.483.393 2.438.276V21a1 1 0 0 0 2 0v-3c0-.574.24-1.09.629-1.456c.607-.572.297-1.568-.495-1.726C6.969 14.187 5 12.114 5 10c0-.958.385-1.881 1.108-2.684c.283-.314.357-.756.207-1.14"/></g></svg>  </a><a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="/rss.xml" aria-label="rss"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5.5 17a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3m0-14C14.06 3 21 9.94 21 18.5q0 .268-.009.534a1 1 0 0 1-1.999-.068Q19 18.734 19 18.5C19 11.044 12.956 5 5.5 5q-.234 0-.466.008a1 1 0 0 1-.068-1.999Q5.231 3 5.5 3m0 7a8.5 8.5 0 0 1 8.482 9.066a1 1 0 0 1-1.996-.132a6.5 6.5 0 0 0-6.92-6.92a1 1 0 1 1-.132-1.995q.28-.02.566-.019"/></g></svg>  </a> </div> </div> </div> </footer> </div> <script>(function(){const live2dAutoloadSrc = "/live2d-autoload.js?v=20260612b";
+const live2dCdnPath = "/live2d-api/";
+
+      (() => {
+        const LIVE2D_AUTOLOAD_SRC = live2dAutoloadSrc
+        const LIVE2D_FLAG_KEY = '__live2d_autoload_injected__'
+        const LIVE2D_SCHEDULED_KEY = '__live2d_autoload_scheduled__'
+
+        window.__LIVE2D_CDN_PATH__ = live2dCdnPath
+
+        function injectLive2D() {
+          if (window[LIVE2D_FLAG_KEY]) return
+          window[LIVE2D_FLAG_KEY] = true
+
+          const script = document.createElement('script')
+          script.src = LIVE2D_AUTOLOAD_SRC
+          script.async = true
+          script.defer = true
+          script.crossOrigin = 'anonymous'
+          document.body.appendChild(script)
+        }
+
+        function scheduleLive2DLoad() {
+          if (window[LIVE2D_SCHEDULED_KEY]) return
+          window[LIVE2D_SCHEDULED_KEY] = true
+
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => injectLive2D(), { timeout: 3000 })
+          } else {
+            setTimeout(injectLive2D, 1200)
+          }
+        }
+
+        if (document.readyState !== 'loading') {
+          scheduleLive2DLoad()
+        } else {
+          document.addEventListener('DOMContentLoaded', scheduleLive2DLoad, { once: true })
+          window.addEventListener('load', scheduleLive2DLoad, { once: true })
+        }
+
+        document.addEventListener('astro:page-load', scheduleLive2DLoad)
+      })()
+    })();</script> <script>
+      (() => {
+        const OBSERVER_KEY = '__deferred_image_observer__'
+
+        function revealDeferredImage(img) {
+          const source = img.getAttribute('data-src')
+          if (!source) return
+          img.setAttribute('src', source)
+          img.removeAttribute('data-src')
+          img.removeAttribute('data-deferred-image')
+        }
+
+        function getObserver() {
+          if (!('IntersectionObserver' in window)) return null
+          if (!window[OBSERVER_KEY]) {
+            window[OBSERVER_KEY] = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return
+                  const image = entry.target
+                  revealDeferredImage(image)
+                  window[OBSERVER_KEY].unobserve(image)
+                })
+              },
+              {
+                rootMargin: '320px 0px'
+              }
+            )
+          }
+          return window[OBSERVER_KEY]
+        }
+
+        function bindDeferredImages(root = document) {
+          const deferredImages = root.querySelectorAll('img[data-deferred-image="true"][data-src]')
+          if (!deferredImages.length) return
+
+          const observer = getObserver()
+
+          deferredImages.forEach((img) => {
+            if (img.hasAttribute('data-deferred-bound')) return
+            img.setAttribute('data-deferred-bound', 'true')
+
+            if (observer) {
+              observer.observe(img)
+            } else {
+              revealDeferredImage(img)
+            }
+          })
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => bindDeferredImages(), { once: true })
+        } else {
+          bindDeferredImages()
+        }
+
+        document.addEventListener('astro:page-load', () => bindDeferredImages())
+      })()
+    </script>   <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BK0m7-AI.js"></script> <!-- <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const originalTitle = document.title
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+          } else {
+            document.title = originalTitle
+          }
+        })
+        window.addEventListener('blur', () => {
+          document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+        })
+        window.addEventListener('focus', () => {
+          document.title = originalTitle
+        })
+      })
+    </script> --> <script type="module">document.addEventListener("DOMContentLoaded",()=>{function s(n,i,a,e,o){const t=document.createElement("div");t.className=`click-particle color-${o}`;const c=Math.cos(a)*e,l=Math.sin(a)*e;t.style.setProperty("--dx",c+"px"),t.style.setProperty("--dy",l+"px"),t.style.left=n+"px",t.style.top=i+"px";const d=Math.random()*6+8;t.style.width=d+"px",t.style.height=d+"px",document.body.appendChild(t),setTimeout(()=>{t.parentNode&&t.parentNode.removeChild(t)},1100)}document.addEventListener("click",n=>{for(let e=0;e<10;e++){const o=Math.PI*2/10*e,t=18+Math.random()*8,c=e%10+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},e*12)}for(let e=0;e<4;e++){const o=Math.random()*Math.PI*2,t=18+Math.random()*10,c=Math.floor(Math.random()*10)+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},(10+e)*12)}})});</script> <script type="module">document.addEventListener("DOMContentLoaded",()=>{document.addEventListener("click",n=>{const e=n.target.closest('a[href^="#"]');if(!e||e.closest("toc-heading"))return;const t=e.getAttribute("href");if(!t||t==="#")return;const o=t.substring(1),r=document.getElementById(o);r&&(n.preventDefault(),history.pushState(null,"",t),r.scrollIntoView({behavior:"smooth",block:"start"}))})});</script> </body> </html> <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script> <script>(function(){const selector = ".prose .zoomable";
+const background = "hsl(var(--background) / 0.8)";
+
+  if (typeof mediumZoom !== 'undefined') {
+    mediumZoom(selector, { background })
+  }
+})();</script> 

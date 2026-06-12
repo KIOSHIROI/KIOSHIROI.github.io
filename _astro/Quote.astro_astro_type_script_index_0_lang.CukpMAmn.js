@@ -1,0 +1,1 @@
+import{c as o}from"./site.config.DcEMGN8b.js";const{quote:n}=o.integ;class r extends HTMLElement{constructor(){super()}render(t){const e=this.querySelector("#quote-sentence");e&&(e.innerText=t)}connectedCallback(){const t=new Function("return "+n.target)();fetch(n.server).then(e=>e.json()).then(e=>this.render(t(e)))}}customElements.define("quote-component",r);

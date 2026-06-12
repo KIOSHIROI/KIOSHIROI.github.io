@@ -1,0 +1,1157 @@
+<!DOCTYPE html><html lang="zh" class="astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"><meta content="IE=edge" http-equiv="X-UA-Compatible"><title>python进阶 • KIOSHIROI&#39;s CS-learning Road</title><link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon.ico"><link rel="manifest" href="/favicon/site.webmanifest"><link rel="preload" href="/fonts/Satoshi-Variable.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="/fonts/Satoshi-VariableItalic.ttf" as="font" type="font/ttf" crossorigin><link rel="canonical" href="https://kioshiroi.github.io/blog/python3"><meta content="python进阶 • KIOSHIROI's CS-learning Road" name="title"><meta content="面向对象编程（OOP）是一种编程范式，使用对象来组织代码。本教程涵盖面向对象编程、装饰器、生成器、Lambda函数以及NumPy、pandas等数据科学库。" name="description"><meta content="KIOSHIROI" name="author"><meta content="" name="theme-color"><meta content="article" property="og:type"><meta content="python进阶" property="og:title"><meta content="面向对象编程（OOP）是一种编程范式，使用对象来组织代码。本教程涵盖面向对象编程、装饰器、生成器、Lambda函数以及NumPy、pandas等数据科学库。" property="og:description"><meta content="https://kioshiroi.github.io/blog/python3" property="og:url"><meta content="KIOSHIROI's CS-learning Road" property="og:site_name"><meta content="zh_CN" property="og:locale"><meta content="https://kioshiroi.github.io/images/social-card.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="KIOSHIROI" property="article:author"><meta content="2024-05-16T00:00:00.000Z" property="article:published_time"><meta content="summary_large_image" property="twitter:card"><meta content="https://kioshiroi.github.io/blog/python3" property="twitter:url"><meta content="python进阶" property="twitter:title"><meta content="面向对象编程（OOP）是一种编程范式，使用对象来组织代码。本教程涵盖面向对象编程、装饰器、生成器、Lambda函数以及NumPy、pandas等数据科学库。" property="twitter:description"><meta content="https://kioshiroi.github.io/images/social-card.png" property="twitter:image"><link href="/sitemap-index.xml" rel="sitemap"><link rel="alternate" type="application/rss+xml" title="KIOSHIROI's CS-learning Road" href="https://kioshiroi.github.io/rss.xml"><meta content="Astro v5.16.4" name="generator"><link rel="stylesheet" href="/styles/global.css"><!-- <ClientRouter /> --><!-- <script is:inline>
+  const style = document.createElement('style')
+  style.textContent = `* { transition: none !important; }`
+  document.addEventListener('astro:after-swap', () => {
+    document.head.appendChild(style)
+    setTimeout(() => {
+      style.remove()
+    }, 100)
+  })
+</script> --><script type="module">console.log("%c Astro Theme Axi %c https://github.com/Axi404/","color:#fff;background:linear-gradient(90deg,#448bff,#44e9ff);padding:5px 0;","color:#000;background:linear-gradient(90deg,#44e9ff,#ffffff);padding:5px 10px 5px 0px;");</script><script>
+  function simpleSetTheme() {
+    let theme = localStorage.getItem('theme')
+    // If undefined or 'system', get from system
+    if (!theme || theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#0B0B10' : '#FCFCFD')
+  }
+  simpleSetTheme()
+  document.addEventListener('astro:page-load', () => simpleSetTheme())
+</script><script type="module" src="/_astro/ThemeProvider.astro_astro_type_script_index_0_lang.8WG8SyMG.js"></script><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-J4TR2R7BSM"></script><script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'G-J4TR2R7BSM')
+    </script><link rel="stylesheet" href="/_astro/_id_.N4Rp9Ep2.css">
+<link rel="stylesheet" href="/_astro/_id_.lDyzrzz2.css">
+<link rel="stylesheet" href="/_astro/_id_.CVIgJ6KX.css">
+<style>svg:where(.astro-p7sajfz3){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1.5em;height:1.5em}
+.expand-conetent:where(.astro-jvehtkjd){grid-template-rows:0fr}.expanded:where(.astro-jvehtkjd) .expand-conetent:where(.astro-jvehtkjd){grid-template-rows:1fr}
+.sl-steps{--bullet-size: 1.75rem ;--bullet-margin: .375rem;list-style:none!important;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0!important}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:.8125rem;font-weight:600;text-align:center;color:hsl(var(--foreground) / var(--tw-text-opacity, 1));background-color:hsl(var(--primary-foreground) / var(--tw-bg-opacity, 1));border-radius:99rem;box-shadow:inset 0 0 0 1px hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li>:first-child{--lh: 1.75em ;--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));margin-top:0;transform:translateY(var(--shift-y));margin-bottom:var(--shift-y);color:hsl(var(--foreground) / var(--tw-text-opacity, 1))}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: 1.2em }
+</style><script type="module" src="/_astro/page.D1uwR3nK.js"></script></head> <body class="flex justify-center bg-background astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <!-- <div
+      id='gradient-background'
+      class='pointer-events-none fixed h-screen w-screen blur-2xl transition-opacity duration-1000'
+    >
+      <div
+        class='absolute right-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute right-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute right-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute left-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+      <div
+        class='absolute right-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-orange-300 via-indigo-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+    </div> --> <div id="highlight-gradient" class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25 astro-37fxchfa" style="background-image:linear-gradient(hsl(var(--primary) / var(--tw-text-opacity)),transparent); --highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"></div> <div class="w-full max-w-[70rem] px-4 sm:px-7 lg:px-10 astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <header-component class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl [&#38;.not-top]:border-border [&#38;.not-top]:bg-background/60 [&#38;.not-top]:px-1.5 [&#38;.not-top]:backdrop-blur-md dark:[&#38;.not-top]:bg-muted/60 astro-dpuuw7tv"> <!-- <div
+      class='absolute -left-4 -top-8 -z-10 box-content hidden h-20 w-[calc(100%+2rem)] !duration-0 max-sm:group-[.expanded]:block max-sm:group-[.expanded.not-top]:hidden max-sm:group-[.expanded]:bg-white dark:max-sm:group-[.expanded]:bg-muted'
+    >
+    </div> --> <a class="z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3 astro-dpuuw7tv" style="transition:margin-inline 0.3s" href="/" aria-label="Brand">KIOSHIROI&#39;s CS-learning Road</a> <div class="flex items-center gap-x-2 astro-dpuuw7tv">  <div id="headerExpandConetent" class="end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 dark:group-[.expanded.not-top]:bg-muted/60 max-md:absolute max-md:opacity-0 max-md:pointer-events-none max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-border max-md:group-[.expanded.not-top]:bg-background/60 max-md:group-[.expanded.not-top]:backdrop-blur-md max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:grid-rows-1 astro-dpuuw7tv"> <div class="flex flex-col items-center justify-center md:flex-row astro-dpuuw7tv"> <div class="menu-item-with-dropdown relative w-full md:w-fit astro-dpuuw7tv" style="position: relative;"> <a href="/blog/research" class="blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-none hover:text-primary md:px-3 md:justify-center astro-dpuuw7tv" aria-label="Nav menu item"> Blog <svg aria-hidden="true" class="chevron-icon ml-1 size-4 transition-transform astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.707 15.707a1 1 0 0 1-1.414 0L5.636 10.05A1 1 0 1 1 7.05 8.636l4.95 4.95l4.95-4.95a1 1 0 0 1 1.414 1.414z"/></g></svg>  </a>  <div class="dropdown-menu absolute right-0 top-full mt-0 w-48 rounded-xl border border-border bg-background/80 shadow-lg backdrop-blur-md dark:bg-muted/80 md:left-0 md:right-auto astro-dpuuw7tv" style="z-index: 9999;"> <div class="py-1 astro-dpuuw7tv"> <a href="/blog/research" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Research </a><a href="/blog/tech" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Technical </a><a href="/blog/daily" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Daily Life </a> </div> </div> </div><a href="/links" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> Links </a><a href="/about" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> About </a> <a class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" href="https://www.travellings.cn/go.html" title="Travellings" target="_blank" rel="noopener noreferrer"> <span class="sr-only astro-dpuuw7tv">Travellings</span> <span class="text-xl astro-dpuuw7tv">🚇</span> </a> <div class="flex w-full grow flex-row justify-end gap-x-3 md:w-fit md:gap-x-5 astro-dpuuw7tv"> <a class="px-1 py-2 transition-none md:px-2 astro-dpuuw7tv" href="/search" title="Search"> <span class="sr-only astro-dpuuw7tv">Search</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3"/></g></svg>  </a> </div> </div> </div> <!-- buttons --> <div class="z-30 flex gap-x-4 group-[.not-top]:gap-x-2 astro-dpuuw7tv" style="transition:gap 0.3s"> <button id="toggleDarkMode" class="group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Dark Theme</span> <svg aria-hidden="true" class="system size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" fill-rule="nonzero" d="M19 3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v1h1a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h1v-1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-6 15h-2v1h2zm6-13H5v11h14z"/></g></svg>  <svg aria-hidden="true" class="light hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 19a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1m6.364-2.05l.707.707a1 1 0 0 1-1.414 1.414l-.707-.707a1 1 0 0 1 1.414-1.414m-12.728 0a1 1 0 0 1 1.497 1.32l-.083.094l-.707.707a1 1 0 0 1-1.497-1.32l.083-.094zM12 6a6 6 0 1 1 0 12a6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-8 3a1 1 0 0 1 .117 1.993L4 13H3a1 1 0 0 1-.117-1.993L3 11zm17 0a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2zM4.929 4.929a1 1 0 0 1 1.32-.083l.094.083l.707.707a1 1 0 0 1-1.32 1.497l-.094-.083l-.707-.707a1 1 0 0 1 0-1.414m14.142 0a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1"/></g></svg>  <svg aria-hidden="true" class="dark hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.477 4.546a1.01 1.01 0 0 1 1.097-1.409A9 9 0 0 1 12 21c-4.434 0-8.118-3.206-8.863-7.426a1.01 1.01 0 0 1 1.409-1.097a6 6 0 0 0 7.931-7.931m2.404 1.072a8 8 0 0 1-9.263 9.263A7.002 7.002 0 0 0 19 12.001a7 7 0 0 0-4.12-6.383ZM5.565 7.716l.064.14a3.26 3.26 0 0 0 1.237 1.363l.1.059a.068.068 0 0 1 0 .118l-.1.058a3.26 3.26 0 0 0-1.237 1.364l-.064.14a.071.071 0 0 1-.13 0l-.064-.14a3.26 3.26 0 0 0-1.237-1.364l-.1-.058a.068.068 0 0 1 0-.118l.1-.059A3.26 3.26 0 0 0 5.37 7.855l.064-.14a.071.071 0 0 1 .13 0Zm2.832-4.859c.04-.09.166-.09.206 0l.102.222a5.2 5.2 0 0 0 1.97 2.172l.157.092a.108.108 0 0 1 0 .189l-.158.092a5.2 5.2 0 0 0-2.07 2.394a.113.113 0 0 1-.207 0l-.102-.222a5.2 5.2 0 0 0-1.97-2.172l-.158-.092a.108.108 0 0 1 0-.189l.158-.092a5.2 5.2 0 0 0 1.97-2.172z"/></g></svg>  </button> <button id="toggleMenu" class="rounded-md border p-1.5 transition-colors hover:bg-border md:hidden md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Menu</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M20 18a1 1 0 0 1 .117 1.993L20 20H4a1 1 0 0 1-.117-1.993L4 18zm0-7a1 1 0 1 1 0 2H4a1 1 0 1 1 0-2zm0-7a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2z"/></g></svg>  </button> </div> </div> </header-component>  <script>
+  const toggleDarkModeElement = document.getElementById('toggleDarkMode')
+  if (toggleDarkModeElement) {
+    toggleDarkModeElement.dataset.theme = localStorage.getItem('theme') || 'system'
+  }
+</script> <script type="module" src="/_astro/Header.astro_astro_type_script_index_0_lang.2bVIXSyo.js"></script>   <main class="mt-6 items-start gap-x-10 md:flex">  <aside class="animate top-24 min-w-48 basis-60 overflow-y-scroll max-md:hidden md:sticky md:order-2 lg:shrink-0" style="height:calc(100vh - 8rem);" id="sidebar"> <toc-heading slot="sidebar"> <h2 class="font-semibold">TABLE OF CONTENTS</h2> <ul class="mt-4 text-card-foreground"> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 9. 面向对象编程" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#9-面向对象编程">9. 面向对象编程</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 类和对象" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#类和对象">类和对象</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 继承" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#继承">继承</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 多态" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#多态">多态</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 封装" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#封装">封装</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 私有属性" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#私有属性">私有属性</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 10. 高级主题" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#10-高级主题">10. 高级主题</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 装饰器" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#装饰器">装饰器</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 生成器" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#生成器">生成器</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 高阶生成器" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#高阶生成器">高阶生成器</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: Lambda函数" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#lambda函数">Lambda函数</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 列表推导式" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#列表推导式">列表推导式</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 面向对象编程的高级特性" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#面向对象编程的高级特性">面向对象编程的高级特性</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. 类方法（Class Method）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#1-类方法class-method">1. 类方法（Class Method）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. 静态方法（Static Method）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#2-静态方法static-method">2. 静态方法（Static Method）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 3. 属性装饰器（Property Decorator）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#3-属性装饰器property-decorator">3. 属性装饰器（Property Decorator）</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. 基本用法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-14" href="#1-基本用法">1. 基本用法</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. 设置器（Setter）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-14" href="#2-设置器setter">2. 设置器（Setter）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 3. 删除器（Deleter）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-14" href="#3-删除器deleter">3. 删除器（Deleter）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 4. 完整示例" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-14" href="#4-完整示例">4. 完整示例</a> </div>  </li> </ul> </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 11. 数据科学与机器学习库" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#11-数据科学与机器学习库">11. 数据科学与机器学习库</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. NumPy" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#1-numpy">1. NumPy</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. pandas" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#2-pandas">2. pandas</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 3. matplotlib" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#3-matplotlib">3. matplotlib</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 4. scikit-learn" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#4-scikit-learn">4. scikit-learn</a> </div>  </li> </ul> </li> </ul> </toc-heading> <script type="module">class c extends HTMLElement{headings=[];tocLinks=[];headingProgress={};constructor(){super(),this.headings=Array.from(document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")),this.tocLinks=Array.from(this.querySelectorAll('a[href^="#"]')).map(e=>({element:e,progressBar:e.previousElementSibling,slug:(e.getAttribute("href")||"").substring(1)}))}updatePositionAndStyle=()=>{const e=window.innerHeight,r=document.querySelector("#content"),o=r?.getBoundingClientRect().top+window.scrollY||0,h=(r?.offsetHeight||0)+o;this.headings.forEach((s,i)=>{const g=s.getBoundingClientRect().top+window.scrollY,n=this.headings[i+1]?this.headings[i+1].getBoundingClientRect().top+window.scrollY:h,t=[g-window.scrollY,n-window.scrollY-s.offsetHeight],l=(e-t[0])/(t[1]-t[0]);this.headingProgress[s.id]={inView:t[0]<e&&t[1]>0,progress:Math.max(0,Math.min(1,l))}}),this.tocLinks.forEach(({element:s,progressBar:i,slug:g},n)=>{const{inView:t,progress:l}=this.headingProgress[g];this.headingProgress[g]&&(s.classList.toggle("highlight",t),s.classList.toggle("highlight-bg-translucent",t),s.classList.toggle("rounded-t-2xl",t&&(n==0||!this.headingProgress[this.tocLinks[n-1]?.slug].inView)),s.classList.toggle("rounded-b-2xl",t&&(n==this.tocLinks.length-1||!this.headingProgress[this.tocLinks[n+1]?.slug].inView)),i.classList.toggle("readed",!t&&l==1),i.classList.toggle("highlight-bg",t),i.style.setProperty("height",`${l*90}%`))})};connectedCallback(){this.tocLinks.forEach(e=>{e.element.addEventListener("click",r=>{r.preventDefault();const o=this.headings.find(h=>h.id===e.slug);o?(history.pushState(null,o.textContent||"",e.element.getAttribute("href")),o.scrollIntoView({behavior:"smooth"})):console.warn(`No heading found for slug: ${e.slug}`)})}),setInterval(this.updatePositionAndStyle,100),window.addEventListener("scroll",this.updatePositionAndStyle)}}customElements.define("toc-heading",c);</script> </aside> <article class="min-w-0 grow">  <div id="content-header" class="animate"> <div class="article-info max-lg:mx-auto"> <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs leading-6 text-muted-foreground">  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16 3a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 2 0v1h6V4a1 1 0 0 1 1-1M8 7H5v2h14V7h-3zm-3 4v8h14v-8zm2 2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2z"/></g></svg>  <span class="text-muted-foreground font-sans"> <time datetime="2024-05-16T00:00:00.000Z"> 2024年5月16日 </time> </span>  </div>  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 2a1 1 0 0 1 .993.883L13 7v4.586l2.707 2.707a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a1 1 0 0 1-.284-.576L11 12V7a1 1 0 0 1 1-1"/></g></svg>  13 min read </div>   <span class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.124 3.008a1 1 0 0 1 .868 1.116L10.508 8h3.984l.516-4.124a1 1 0 1 1 1.984.248L16.508 8H20a1 1 0 1 1 0 2h-3.742l-.5 4H19.5a1 1 0 1 1 0 2h-3.992l-.516 4.124a1 1 0 1 1-1.984-.248L13.492 16H9.508l-.516 4.124a1 1 0 1 1-1.984-.248L7.492 16H4.5a1 1 0 1 1 0-2h3.242l.5-4H5a1 1 0 0 1 0-2h3.492l.516-4.124a1 1 0 0 1 1.116-.868M13.742 14l.5-4h-3.984l-.5 4z"/></g></svg>  <div> <a aria-label="View more blogs with the tag python" class="hover:underline hover:underline-offset-4" data-pagefind-filter="tag" href="/tags/python"> python </a>  </div> </span> </div> <h1 class="mt-4 text-2xl font-medium sm:mb-2 sm:mt-6 sm:text-3xl"> python进阶 </h1> <div class="mt-3 italic"> <blockquote class="text-sm text-muted-foreground"><q>面向对象编程（OOP）是一种编程范式，使用对象来组织代码。本教程涵盖面向对象编程、装饰器、生成器、Lambda函数以及NumPy、pandas等数据科学库。</q></blockquote> <div class="text-sm text-muted-foreground mt-1"> <span class="waline-pageview-count" data-path="/blog/python3"></span> views
+<a href="#waline">
+| <span class="waline-comment-count" data-path="/blog/python3"></span> comments
+</a> </div> </div> </div>  <div class="mt-4 w-1/2 border-t max-lg:mx-auto sm:mt-6 sm:w-1/3"></div> <script type="module">const o=window.innerHeight,s=o/9,i=o*2/9,l=o*3/9,e=document.getElementById("blurImage");e&&window.addEventListener("scroll",()=>{const t=window.scrollY;t>=l?e.style.opacity="0.15":t>=i?e.style.opacity="0.3":t>=s&&(e.style.opacity="0.45")});</script> </div>  <div id="content" class="max-w-none animate mt-8 md:min-w-[45ch] break-words prose prose-axi dark:prose-invert dark:prose-axi prose-headings:font-medium">  <h2 id="9-面向对象编程">9. 面向对象编程<a class="anchor" href="#9-面向对象编程">#</a></h2>
+<p>面向对象编程（OOP）是一种编程范式，使用”对象”来组织代码。对象是类的实例，类定义了对象的属性和方法。</p>
+<h3 id="类和对象">类和对象<a class="anchor" href="#类和对象">#</a></h3>
+<ul>
+<li>类是对象的蓝图或模板，定义了对象的属性和行为。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义一个类</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Dog</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 相当于Dog(object)</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 初始化方法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, name, age):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> name</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.age </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> age</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 实例方法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> bark</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> is barking"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象（实例）</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">my_dog </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Dog(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Buddy"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 访问对象属性</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_dog.name)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Buddy"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_dog.age)   </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 3</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 调用对象方法</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">my_dog.bark()  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Buddy is barking"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 定义一个类
+class Dog: # 相当于Dog(object)
+    # 初始化方法
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    # 实例方法
+    def bark(self):
+        print(f&#x22;{self.name} is barking&#x22;)
+
+# 创建对象（实例）
+my_dog = Dog(&#x22;Buddy&#x22;, 3)
+
+# 访问对象属性
+print(my_dog.name)  # 输出 &#x22;Buddy&#x22;
+print(my_dog.age)   # 输出 3
+
+# 调用对象方法
+my_dog.bark()  # 输出 &#x22;Buddy is barking&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="继承">继承<a class="anchor" href="#继承">#</a></h3>
+<ul>
+<li>继承是面向对象编程的一个重要特性，允许一个类继承另一个类的属性和方法。基类（父类）和派生类（子类）之间存在继承关系。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义基类</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Animal</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, name):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> name</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> speak</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> is making a sound"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义派生类</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Cat</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">Animal</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, name, color):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        super</span><span style="color:#24292E;--shiki-dark:#E1E4E8">().</span><span style="color:#005CC5;--shiki-dark:#79B8FF">__init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(name)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.color </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> color</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> speak</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> is meowing"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建派生类对象</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">my_cat </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Cat(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Whiskers"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"white"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 访问派生类对象属性和方法</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_cat.name)   </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Whiskers"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_cat.color)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "white"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">my_cat.speak()       </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Whiskers is meowing"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 定义基类
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+    def speak(self):
+        print(f&#x22;{self.name} is making a sound&#x22;)
+
+# 定义派生类
+class Cat(Animal):
+    def __init__(self, name, color):
+        super().__init__(name)
+        self.color = color
+
+    def speak(self):
+        print(f&#x22;{self.name} is meowing&#x22;)
+
+# 创建派生类对象
+my_cat = Cat(&#x22;Whiskers&#x22;, &#x22;white&#x22;)
+
+# 访问派生类对象属性和方法
+print(my_cat.name)   # 输出 &#x22;Whiskers&#x22;
+print(my_cat.color)  # 输出 &#x22;white&#x22;
+my_cat.speak()       # 输出 &#x22;Whiskers is meowing&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="多态">多态<a class="anchor" href="#多态">#</a></h3>
+<p>多态是指不同类的对象可以通过相同的接口调用方法，产生不同的行为。通常通过方法重载实现。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Bird</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#6F42C1;--shiki-dark:#B392F0">Animal</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> speak</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> is chirping"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义一个函数，接受一个动物对象</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> animal_speak</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(animal):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    animal.speak()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建不同的动物对象</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">dog </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Dog(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Buddy"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">cat </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Cat(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Whiskers"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"white"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">bird </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Bird(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Tweety"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 调用函数</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">animal_speak(dog)   </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Buddy is barking"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">animal_speak(cat)   </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Whiskers is meowing"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">animal_speak(bird)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Tweety is chirping"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+class Bird(Animal):
+    def speak(self):
+        print(f&#x22;{self.name} is chirping&#x22;)
+
+# 定义一个函数，接受一个动物对象
+def animal_speak(animal):
+    animal.speak()
+
+# 创建不同的动物对象
+dog = Dog(&#x22;Buddy&#x22;, 3)
+cat = Cat(&#x22;Whiskers&#x22;, &#x22;white&#x22;)
+bird = Bird(&#x22;Tweety&#x22;)
+
+# 调用函数
+animal_speak(dog)   # 输出 &#x22;Buddy is barking&#x22;
+animal_speak(cat)   # 输出 &#x22;Whiskers is meowing&#x22;
+animal_speak(bird)  # 输出 &#x22;Tweety is chirping&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="封装">封装<a class="anchor" href="#封装">#</a></h3>
+<p>封装是指将对象的属性和方法私有化，保护对象的内部状态不被外部直接访问和修改。通过定义公有和私有方法和属性实现封装。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> BankAccount</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, owner, balance):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.owner </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> owner</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__balance </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> balance  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 私有属性</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> deposit</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, amount):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> amount </span><span style="color:#D73A49;--shiki-dark:#F97583">></span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">            self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__balance </span><span style="color:#D73A49;--shiki-dark:#F97583">+=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> amount</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        else</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">            print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"存款金额必须大于零"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> withdraw</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, amount):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> amount </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__balance:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">            self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__balance </span><span style="color:#D73A49;--shiki-dark:#F97583">-=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> amount</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        else</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">            print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"余额不足"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> get_balance</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__balance</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">account </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> BankAccount(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Alice"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">1000</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 访问公有属性和方法</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(account.owner)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Alice"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">account.deposit(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">500</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">account.withdraw(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">200</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(account.get_balance())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 1300</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 试图访问私有属性（会报错）</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># print(account.__balance)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+class BankAccount:
+    def __init__(self, owner, balance):
+        self.owner = owner
+        self.__balance = balance  # 私有属性
+
+    def deposit(self, amount):
+        if amount > 0:
+            self.__balance += amount
+        else:
+            print(&#x22;存款金额必须大于零&#x22;)
+
+    def withdraw(self, amount):
+        if amount <= self.__balance:
+            self.__balance -= amount
+        else:
+            print(&#x22;余额不足&#x22;)
+
+    def get_balance(self):
+        return self.__balance
+
+# 创建对象
+account = BankAccount(&#x22;Alice&#x22;, 1000)
+
+# 访问公有属性和方法
+print(account.owner)  # 输出 &#x22;Alice&#x22;
+account.deposit(500)
+account.withdraw(200)
+print(account.get_balance())  # 输出 1300
+
+# 试图访问私有属性（会报错）
+# print(account.__balance)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>通过掌握面向对象编程的基本概念和技巧，你可以编写更具结构化、可扩展性和可维护性的代码。</p>
+<h3 id="私有属性">私有属性<a class="anchor" href="#私有属性">#</a></h3>
+<p>在面向对象编程中，让类属性能够被直接访问是危险的。使用私有属性可以保证属性不能被直接访问修改，增强安全性。私有属性用<code>__</code>(双下划线)前缀进行标识。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">#-- coding:UTF-8 --</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义一个类</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Dog</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 初始化方法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, name, age):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.name </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> name</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.__age </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> age </span><span style="color:#6A737D;--shiki-dark:#6A737D"># __age为私有属性</span></span>
+<span class="line"></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象（实例）</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">my_dog </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Dog(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Buddy"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 访问对象属性</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_dog.name)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Buddy"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">#print(my_dog.__age)   # 无法访问</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 强制访问私有属性</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(my_dog._Dog__age)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="#-- coding:UTF-8 --
+# 定义一个类
+class Dog:
+    # 初始化方法
+    def __init__(self, name, age):
+        self.name = name
+        self.__age = age # __age为私有属性
+
+
+# 创建对象（实例）
+my_dog = Dog(&#x22;Buddy&#x22;, 3)
+
+# 访问对象属性
+print(my_dog.name)  # 输出 &#x22;Buddy&#x22;
+#print(my_dog.__age)   # 无法访问
+
+# 强制访问私有属性
+print(my_dog._Dog__age)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h2 id="10-高级主题">10. 高级主题<a class="anchor" href="#10-高级主题">#</a></h2>
+<h3 id="装饰器">装饰器<a class="anchor" href="#装饰器">#</a></h3>
+<ul>
+<li>装饰器是一种用于修改或增强函数行为的高级技术。它本质上是一个函数，接受一个函数作为参数，并返回一个新的函数。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义装饰器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> my_decorator</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(func):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> wrapper</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"在函数执行之前"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        func()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"在函数执行之后"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> wrapper</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用装饰器</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">@my_decorator</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> say_hello</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello!"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">say_hello()</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 定义装饰器
+def my_decorator(func):
+    def wrapper():
+        print(&#x22;在函数执行之前&#x22;)
+        func()
+        print(&#x22;在函数执行之后&#x22;)
+    return wrapper
+
+# 使用装饰器
+@my_decorator
+def say_hello():
+    print(&#x22;Hello!&#x22;)
+
+say_hello()" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>
+<p>在这个示例中，<code>my_decorator</code> 装饰器在 <code>say_hello</code> 函数的执行前后添加了额外的打印语句。</p>
+</li>
+<li>
+<p>装饰器可以接受参数，以提供更灵活的功能。</p>
+</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义带参数的装饰器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> repeat</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(num_times):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> decorator_repeat</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(func):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> wrapper</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">*</span><span style="color:#24292E;--shiki-dark:#E1E4E8">args, </span><span style="color:#D73A49;--shiki-dark:#F97583">**</span><span style="color:#24292E;--shiki-dark:#E1E4E8">kwargs):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> _ </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(num_times):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                func(</span><span style="color:#D73A49;--shiki-dark:#F97583">*</span><span style="color:#24292E;--shiki-dark:#E1E4E8">args, </span><span style="color:#D73A49;--shiki-dark:#F97583">**</span><span style="color:#24292E;--shiki-dark:#E1E4E8">kwargs)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> wrapper</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> decorator_repeat</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">@repeat</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#E36209;--shiki-dark:#FFAB70">num_times</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> say_hello</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(name):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">!"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">say_hello(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Alice"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 定义带参数的装饰器
+def repeat(num_times):
+    def decorator_repeat(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(num_times):
+                func(*args, **kwargs)
+        return wrapper
+    return decorator_repeat
+
+@repeat(num_times=3)
+def say_hello(name):
+    print(f&#x22;Hello, {name}!&#x22;)
+
+say_hello(&#x22;Alice&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，<code>repeat</code> 装饰器接受参数 <code>num_times</code>，并重复执行 <code>say_hello</code> 函数指定的次数。</li>
+</ul>
+<h3 id="生成器">生成器<a class="anchor" href="#生成器">#</a></h3>
+<ul>
+<li>生成器是一种特殊的迭代器，使用 <code>yield</code> 关键字生成值。与普通函数不同，生成器在每次生成值后暂停，并在下次调用时继续执行。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 定义生成器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> count_up_to</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(max):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    count </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    while</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> count </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> max</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        yield</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> count</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        count </span><span style="color:#D73A49;--shiki-dark:#F97583">+=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用生成器</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">counter </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> count_up_to(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> num </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> counter:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(num)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 定义生成器
+def count_up_to(max):
+    count = 1
+    while count <= max:
+        yield count
+        count += 1
+
+# 使用生成器
+counter = count_up_to(5)
+for num in counter:
+    print(num)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，<code>count_up_to</code> 生成器每次生成一个数值，并在达到 <code>max</code> 值时停止。</li>
+</ul>
+<h3 id="高阶生成器">高阶生成器<a class="anchor" href="#高阶生成器">#</a></h3>
+<ul>
+<li>生成器可以与其他生成器组合使用，以创建复杂的数据处理管道。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> generator1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    yield from</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> generator2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    yield from</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">6</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 组合生成器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> combined_generator</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    yield from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> generator1()</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    yield from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> generator2()</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> combined_generator():</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(value)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="def generator1():
+    yield from range(3)
+
+def generator2():
+    yield from range(3, 6)
+
+# 组合生成器
+def combined_generator():
+    yield from generator1()
+    yield from generator2()
+
+for value in combined_generator():
+    print(value)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="lambda函数">Lambda函数<a class="anchor" href="#lambda函数">#</a></h3>
+<ul>
+<li>Lambda函数是一种简洁的匿名函数，用于定义简单的函数。常用于需要一个短期函数的场景。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">add </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#D73A49;--shiki-dark:#F97583"> lambda</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x, y: x </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> y</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(add(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 8</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+add = lambda x, y: x + y
+print(add(3, 5))  # 输出 8" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="列表推导式">列表推导式<a class="anchor" href="#列表推导式">#</a></h3>
+<ul>
+<li>列表推导式是一种创建列表的简洁方法，可以在一行代码中生成列表。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">squares </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [x</span><span style="color:#D73A49;--shiki-dark:#F97583">**</span><span style="color:#005CC5;--shiki-dark:#79B8FF">2</span><span style="color:#D73A49;--shiki-dark:#F97583"> for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">10</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)]</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(squares)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+squares = [x**2 for x in range(10)]
+print(squares)  # 输出 [0, 1, 4, 9, 16, 25, 36, 49, 64, 81]" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="面向对象编程的高级特性">面向对象编程的高级特性<a class="anchor" href="#面向对象编程的高级特性">#</a></h3>
+<ul>
+<li>包括<strong>类方法</strong>、<strong>静态方法</strong>和<strong>属性装饰器</strong>等。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> MyClass</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    class_variable </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "I am a class variable"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, instance_variable):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.instance_variable </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> instance_variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">classmethod</span><span style="color:#6A737D;--shiki-dark:#6A737D"> # 类方法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> class_method</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(cls):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> cls</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.class_variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">staticmethod</span><span style="color:#6A737D;--shiki-dark:#6A737D"> # 静态方法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> static_method</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "I am a static method"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">property</span><span style="color:#6A737D;--shiki-dark:#6A737D"> # 属性装饰器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> instance_property</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.instance_variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">obj </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> MyClass(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"I am an instance variable"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(MyClass.class_method())      </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "I am a class variable"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(MyClass.static_method())     </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "I am a static method"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(obj.instance_property)       </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "I am an instance variable"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+class MyClass:
+    class_variable = &#x22;I am a class variable&#x22;
+
+    def __init__(self, instance_variable):
+        self.instance_variable = instance_variable
+
+    @classmethod # 类方法
+    def class_method(cls):
+        return cls.class_variable
+
+    @staticmethod # 静态方法
+    def static_method():
+        return &#x22;I am a static method&#x22;
+
+    @property # 属性装饰器
+    def instance_property(self):
+        return self.instance_variable
+
+obj = MyClass(&#x22;I am an instance variable&#x22;)
+print(MyClass.class_method())      # 输出 &#x22;I am a class variable&#x22;
+print(MyClass.static_method())     # 输出 &#x22;I am a static method&#x22;
+print(obj.instance_property)       # 输出 &#x22;I am an instance variable&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h4 id="1-类方法class-method">1. 类方法（Class Method）<a class="anchor" href="#1-类方法class-method">#</a></h4>
+<p>类方法使用 <code>@classmethod</code> 装饰器定义，第一个参数是类本身，通常命名为 <code>cls</code>。类方法可以访问类变量和修改类状态。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> MyClass</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    class_variable </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "I am a class variable"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, instance_variable):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.instance_variable </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> instance_variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">classmethod</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> class_method</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(cls):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> cls</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.class_variable</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用类方法</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(MyClass.class_method())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "I am a class variable"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class MyClass:
+    class_variable = &#x22;I am a class variable&#x22;
+
+    def __init__(self, instance_variable):
+        self.instance_variable = instance_variable
+
+    @classmethod
+    def class_method(cls):
+        return cls.class_variable
+
+# 使用类方法
+print(MyClass.class_method())  # 输出 &#x22;I am a class variable&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>在这个示例中，<code>class_method</code> 是一个类方法，它返回类变量 <code>class_variable</code> 的值。</p>
+<h4 id="2-静态方法static-method">2. 静态方法（Static Method）<a class="anchor" href="#2-静态方法static-method">#</a></h4>
+<p>静态方法使用 <code>@staticmethod</code> 装饰器定义，不需要传入类或实例作为参数。静态方法通常用于执行一些逻辑操作，这些操作与类和实例无关。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> MyClass</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">staticmethod</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> static_method</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "I am a static method"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用静态方法</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(MyClass.static_method())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "I am a static method"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class MyClass:
+
+    @staticmethod
+    def static_method():
+        return &#x22;I am a static method&#x22;
+
+# 使用静态方法
+print(MyClass.static_method())  # 输出 &#x22;I am a static method&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>在这个示例中，<code>static_method</code> 是一个静态方法，它不访问类或实例的数据，仅执行独立的逻辑。</p>
+<h4 id="3-属性装饰器property-decorator">3. 属性装饰器（Property Decorator）<a class="anchor" href="#3-属性装饰器property-decorator">#</a></h4>
+<p>属性装饰器 <code>@property</code> 允许你将类的方法转换为只读属性，使得你可以像访问属性一样访问方法。这使得类的设计更直观和易于使用。</p>
+<h5 id="1-基本用法">1. 基本用法<a class="anchor" href="#1-基本用法">#</a></h5>
+<p>使用 <code>@property</code> 可以定义一个只读属性。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Circle</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, radius):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">property</span><span style="color:#6A737D;--shiki-dark:#6A737D">  # 将方法转换为属性</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象并访问属性</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Circle(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 5</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property  # 将方法转换为属性
+    def radius(self):
+        return self._radius
+
+# 创建对象并访问属性
+c = Circle(5)
+print(c.radius)  # 输出 5" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>在这个示例中，<code>radius</code> 方法被转换为一个只读属性，因此你可以像访问属性一样访问它，而不需要调用方法。</p>
+<h5 id="2-设置器setter">2. 设置器（Setter）<a class="anchor" href="#2-设置器setter">#</a></h5>
+<p>除了只读属性，属性装饰器还可以定义属性的设置器，允许你在设置属性值时执行一些额外的逻辑。使用 <code>@</code>&lt;property_name&gt;.setter 装饰器来定义设置器。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Circle</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, radius):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">property</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @radius.setter</span><span style="color:#6A737D;--shiki-dark:#6A737D">  # 定义设置器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, value):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"半径不能为负数"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象并设置属性</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Circle(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 5</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c.radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 10</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># c.radius = -1  # 会引发 ValueError: 半径不能为负数</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter  # 定义设置器
+    def radius(self, value):
+        if value < 0:
+            raise ValueError(&#x22;半径不能为负数&#x22;)
+        self._radius = value
+
+# 创建对象并设置属性
+c = Circle(5)
+print(c.radius)  # 输出 5
+c.radius = 10
+print(c.radius)  # 输出 10
+# c.radius = -1  # 会引发 ValueError: 半径不能为负数" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>在这个示例中，<code>radius</code> 属性有一个设置器，当尝试设置负值时会引发异常。</p>
+<h5 id="3-删除器deleter">3. 删除器（Deleter）<a class="anchor" href="#3-删除器deleter">#</a></h5>
+<p>同样地，你还可以定义属性的删除器，使用 <code>@</code>&lt;property_name&gt;.deleter 装饰器来定义删除器。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Circle</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, radius):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">property</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @radius.setter</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, value):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"半径不能为负数"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @radius.deleter</span><span style="color:#6A737D;--shiki-dark:#6A737D">  # 定义删除器</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"删除半径属性"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        del</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建对象并删除属性</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Circle(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 5</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">del</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c.radius</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># print(c.radius)  # 会引发 AttributeError: 'Circle' object has no attribute '_radius'</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        if value < 0:
+            raise ValueError(&#x22;半径不能为负数&#x22;)
+        self._radius = value
+
+    @radius.deleter  # 定义删除器
+    def radius(self):
+        print(&#x22;删除半径属性&#x22;)
+        del self._radius
+
+# 创建对象并删除属性
+c = Circle(5)
+print(c.radius)  # 输出 5
+del c.radius
+# print(c.radius)  # 会引发 AttributeError: &#x27;Circle&#x27; object has no attribute &#x27;_radius&#x27;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>在这个示例中，<code>radius</code> 属性有一个删除器，当属性被删除时会执行特定的逻辑。</p>
+<h5 id="4-完整示例">4. 完整示例<a class="anchor" href="#4-完整示例">#</a></h5>
+<p>一个包含所有三种方法的完整示例如下：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> Circle</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, radius):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @</span><span style="color:#005CC5;--shiki-dark:#79B8FF">property</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @radius.setter</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, value):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"半径不能为负数"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> value</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">    @radius.deleter</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> radius</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self):</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"删除半径属性"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        del</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">._radius</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用属性装饰器</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> Circle(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 5</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">c.radius </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(c.radius)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 10</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">del</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> c.radius</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class Circle:
+    def __init__(self, radius):
+        self._radius = radius
+
+    @property
+    def radius(self):
+        return self._radius
+
+    @radius.setter
+    def radius(self, value):
+        if value < 0:
+            raise ValueError(&#x22;半径不能为负数&#x22;)
+        self._radius = value
+
+    @radius.deleter
+    def radius(self):
+        print(&#x22;删除半径属性&#x22;)
+        del self._radius
+
+# 使用属性装饰器
+c = Circle(5)
+print(c.radius)  # 输出 5
+c.radius = 10
+print(c.radius)  # 输出 10
+del c.radius" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>通过使用属性装饰器，你可以使类的接口更加直观和易于使用，同时能够控制属性的访问和修改。</p>
+<h2 id="11-数据科学与机器学习库">11. 数据科学与机器学习库<a class="anchor" href="#11-数据科学与机器学习库">#</a></h2>
+<h3 id="1-numpy">1. NumPy<a class="anchor" href="#1-numpy">#</a></h3>
+<p>NumPy 是一个用于科学计算的库，支持多维数组和矩阵运算，提供了大量的数学函数。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> numpy </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> np</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建数组</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">array </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> np.array([</span><span style="color:#005CC5;--shiki-dark:#79B8FF">1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">4</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(array)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 数组运算</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(array </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(array </span><span style="color:#D73A49;--shiki-dark:#F97583">*</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import numpy as np
+
+# 创建数组
+array = np.array([1, 2, 3, 4, 5])
+print(array)
+
+# 数组运算
+print(array + 10)
+print(array * 2)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="2-pandas">2. pandas<a class="anchor" href="#2-pandas">#</a></h3>
+<p>pandas 是一个数据分析和处理库，提供了高性能的数据结构和数据分析工具。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pandas </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pd</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建数据框</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">data </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Name'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Alice'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Bob'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Charlie'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">], </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Age'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: [</span><span style="color:#005CC5;--shiki-dark:#79B8FF">25</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">30</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">35</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]}</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">df </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> pd.DataFrame(data)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 数据框操作</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df[</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'Name'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(df.describe())</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import pandas as pd
+
+# 创建数据框
+data = {&#x27;Name&#x27;: [&#x27;Alice&#x27;, &#x27;Bob&#x27;, &#x27;Charlie&#x27;], &#x27;Age&#x27;: [25, 30, 35]}
+df = pd.DataFrame(data)
+print(df)
+
+# 数据框操作
+print(df[&#x27;Name&#x27;])
+print(df.describe())" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="3-matplotlib">3. matplotlib<a class="anchor" href="#3-matplotlib">#</a></h3>
+<p>matplotlib 是一个绘图库，用于创建静态、动态和交互式的图表。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> matplotlib.pyplot </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> plt</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建数据</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">x </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#005CC5;--shiki-dark:#79B8FF">1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">4</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">y </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#005CC5;--shiki-dark:#79B8FF">2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">7</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">11</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 绘制折线图</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">plt.plot(x, y)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">plt.xlabel(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'x轴'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">plt.ylabel(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'y轴'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">plt.title(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'折线图示例'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">plt.show()</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import matplotlib.pyplot as plt
+
+# 创建数据
+x = [1, 2, 3, 4, 5]
+y = [2, 3, 5, 7, 11]
+
+# 绘制折线图
+plt.plot(x, y)
+plt.xlabel(&#x27;x轴&#x27;)
+plt.ylabel(&#x27;y轴&#x27;)
+plt.title(&#x27;折线图示例&#x27;)
+plt.show()" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="4-scikit-learn">4. scikit-learn<a class="anchor" href="#4-scikit-learn">#</a></h3>
+<p>scikit-learn 是一个用于机器学习的库，提供了简单高效的数据挖掘和数据分析工具。</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sklearn </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> datasets</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sklearn.model_selection </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> train_test_split</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sklearn.linear_model </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> LogisticRegression</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sklearn.metrics </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> accuracy_score</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 加载数据集</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">iris </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> datasets.load_iris()</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">X </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> iris.data</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">y </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> iris.target</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 划分数据集</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">X_train, X_test, y_train, y_test </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> train_test_split(X, y, </span><span style="color:#E36209;--shiki-dark:#FFAB70">test_size</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">0.3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#E36209;--shiki-dark:#FFAB70">random_state</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">42</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建并训练模型</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">model </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> LogisticRegression()</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">model.fit(X_train, y_train)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 预测并评估模型</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">y_pred </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> model.predict(X_test)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"准确率: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">accuracy_score(y_test, y_pred)</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="from sklearn import datasets
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score
+
+# 加载数据集
+iris = datasets.load_iris()
+X = iris.data
+y = iris.target
+
+# 划分数据集
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+
+# 创建并训练模型
+model = LogisticRegression()
+model.fit(X_train, y_train)
+
+# 预测并评估模型
+y_pred = model.predict(X_test)
+print(f&#x22;准确率: {accuracy_score(y_test, y_pred)}&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>    </div> </article> </main> <div class="mt-6 items-start gap-x-10 md:flex">  <div class="mt-8 flex-1 text-muted-foreground md:min-w-[50ch]"> <div class="relative flex flex-col gap-y-2 rounded-xl border px-3 sm:px-4 py-2 sm:py-3 astro-tju7bdtj"> <svg aria-hidden="true" class="absolute end-4 top-4 size-20 opacity-10 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 3a5 5 0 0 1 3.75 1.692a1 1 0 1 1-1.5 1.324a3 3 0 1 0 0 3.968a1 1 0 1 1 1.5 1.324A5 5 0 1 1 12 7"/></g></svg>  <div class="absolute bottom-2 right-2 w-20 h-10 signature-container astro-tju7bdtj"> <svg viewBox="0 -1 163.403 90.305" xmlns="http://www.w3.org/2000/svg" class="w-full h-full signature-svg astro-tju7bdtj"> <g stroke-linecap="round" fill-rule="evenodd" stroke="currentColor" stroke-width="0.3mm" fill="currentColor" class="astro-tju7bdtj"> <path class="signature-path astro-tju7bdtj" d="M 24.402 85.301 Q 17.502 85.301 11.952 81.901 Q 6.402 78.501 3.202 72.051 Q 0.002 65.601 0.002 56.801 Q 0.002 41.601 6.502 28.651 Q 13.002 15.701 25.702 7.851 Q 38.402 0.001 56.202 0.001 Q 60.802 0.001 66.052 0.701 Q 71.302 1.401 75.602 2.801 Q 78.402 3.601 78.402 6.801 Q 78.402 9.401 76.452 11.701 Q 74.502 14.001 71.902 14.001 Q 71.102 14.001 70.702 13.901 Q 65.502 12.701 61.802 12.151 Q 58.102 11.601 54.002 11.601 Q 41.302 11.601 32.402 17.751 Q 23.502 23.901 19.102 34.001 Q 14.702 44.101 14.702 55.801 Q 14.702 64.301 18.052 68.951 Q 21.402 73.601 26.802 73.601 Q 32.902 73.601 37.502 68.601 Q 42.102 63.601 45.902 52.401 Q 49.702 41.201 53.402 22.001 Q 54.002 19.201 55.802 18.201 Q 57.602 17.201 60.602 17.201 Q 67.702 17.201 67.702 21.801 Q 67.702 22.601 67.402 23.801 Q 64.802 33.501 62.652 45.251 Q 60.502 57.001 60.502 63.101 Q 60.502 68.501 62.102 70.951 Q 63.702 73.401 67.002 73.401 Q 70.202 73.401 73.102 71.251 A 23.845 23.845 0 0 0 74.956 69.705 A 43.109 43.109 0 0 0 75.125 69.55 A 12.009 12.009 0 0 1 76.332 66.429 A 10.164 10.164 0 0 1 77.002 65.401 Q 79.302 62.301 83.502 62.301 Q 87.102 62.301 87.102 65.001 Q 87.102 65.701 86.902 67.501 Q 86.602 71.101 86.602 71.601 Q 86.602 74.601 89.202 74.601 Q 91.102 74.601 92.852 72.351 Q 94.602 70.101 95.752 66.201 Q 96.902 62.301 96.902 57.601 Q 96.902 54.001 96.002 51.551 Q 95.102 49.101 93.802 49.101 Q 92.702 49.101 92.202 49.651 Q 91.702 50.201 91.202 51.501 Q 90.602 53.101 89.602 54.051 Q 88.602 55.001 86.102 55.001 Q 83.902 55.001 82.602 53.451 Q 81.302 51.901 81.302 48.701 Q 81.302 43.601 84.402 40.701 Q 87.502 37.801 92.402 37.801 Q 96.602 37.801 100.002 39.851 Q 103.402 41.901 105.202 45.801 Q 108.202 41.801 111.952 39.801 Q 115.702 37.801 119.302 37.801 Q 123.202 37.801 125.252 39.601 Q 127.302 41.401 127.302 45.401 Q 127.302 49.901 125.602 52.451 Q 123.902 55.001 121.502 55.001 Q 119.302 55.001 118.502 54.101 Q 117.702 53.201 117.302 51.501 Q 117.102 50.301 116.702 49.701 Q 116.302 49.101 115.302 49.101 Q 114.102 49.101 112.752 51.351 Q 111.402 53.601 110.452 57.301 Q 109.502 61.001 109.502 65.001 Q 109.502 69.701 111.752 72.251 Q 114.002 74.801 117.902 74.801 Q 121.802 74.801 125.252 72.151 Q 127.442 70.468 130.096 67.598 A 81.726 81.726 0 0 0 130.631 67.01 A 46.575 46.575 0 0 1 130.738 65.106 Q 130.998 61.577 131.752 56.951 Q 132.902 49.901 134.702 43.801 Q 135.602 40.601 137.102 39.401 Q 138.602 38.201 141.902 38.201 Q 147.002 38.201 147.002 41.601 Q 147.002 44.101 145.102 53.201 Q 142.702 64.201 142.702 68.101 Q 142.702 71.101 143.502 72.701 Q 144.302 74.301 146.202 74.301 Q 148.002 74.301 150.702 71.801 Q 153.402 69.301 157.902 63.901 Q 159.102 62.501 160.602 62.501 Q 161.902 62.501 162.652 63.701 Q 163.402 64.901 163.402 67.001 Q 163.402 71.001 161.502 73.201 Q 151.602 85.301 143.002 85.301 Q 136.502 85.301 133.552 80.701 A 17.114 17.114 0 0 1 132.192 78.047 A 46.504 46.504 0 0 1 129.824 80.016 A 41.632 41.632 0 0 1 127.252 81.851 Q 122.002 85.301 115.402 85.301 Q 110.302 85.301 106.352 83.401 Q 102.402 81.501 100.102 78.001 Q 94.402 85.201 86.602 85.201 Q 81.102 85.201 77.902 82.001 A 10.732 10.732 0 0 1 76.686 80.537 A 42.127 42.127 0 0 1 76.431 80.739 A 31.425 31.425 0 0 1 74.402 82.201 Q 69.702 85.301 62.902 85.301 Q 55.902 85.301 51.602 81.251 Q 47.302 77.201 46.202 69.801 Q 38.802 85.301 24.402 85.301 Z M 143.802 31.601 Q 139.602 31.601 137.502 29.651 Q 135.402 27.701 135.402 24.201 Q 135.402 20.701 138.152 18.351 Q 140.902 16.001 145.002 16.001 Q 148.702 16.001 151.002 17.801 Q 153.302 19.601 153.302 22.901 Q 153.302 26.901 150.702 29.251 Q 148.102 31.601 143.802 31.601 Z" vector-effect="non-scaling-stroke"></path> </g> </svg> </div>  <div class="flex flex-col astro-tju7bdtj"> <div class="font-medium text-foreground astro-tju7bdtj">python进阶</div> <div class="text-sm astro-tju7bdtj">https://kioshiroi.github.io/blog/python3</div> </div>  <div class="flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8 astro-tju7bdtj"> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Author</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj">KIOSHIROI</span> </div> <div class="flex gap-x-2 sm:min-w-16 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Published at</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj"> 2024年5月16日 </span> </div> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Copyright</span> <a class="text-sm text-foreground max-sm:place-self-center underline decoration-muted-foreground/50 underline-offset-2 rounded px-1 -mx-1 transition-all duration-200 hover:no-underline hover:bg-foreground hover:text-background astro-tju7bdtj" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+CC BY-NC-SA 4.0
+</a> </div> </div>  <div class="relative astro-tju7bdtj"> <div class="flex flex-row gap-3 astro-tju7bdtj"> <button id="copy-link" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16.243 9.878a1 1 0 0 1 1.32-.083l.094.083L19.778 12a5.5 5.5 0 0 1-7.596 7.952L12 19.778l-2.121-2.121a1 1 0 0 1 1.32-1.498l.094.083l2.121 2.122a3.5 3.5 0 0 0 5.091-4.8l-.141-.15l-2.121-2.121a1 1 0 0 1 0-1.415M9.17 9.171a1 1 0 0 1 1.32-.083l.095.083l4.242 4.243a1 1 0 0 1-1.32 1.497l-.094-.083l-4.243-4.242a1 1 0 0 1 0-1.415m-4.95-4.95a5.5 5.5 0 0 1 7.597-.173l.182.174l2.121 2.12A1 1 0 0 1 12.8 7.84l-.094-.083l-2.121-2.121a3.5 3.5 0 0 0-5.091 4.8l.141.15l2.121 2.12a1 1 0 0 1-1.32 1.498l-.094-.083L4.222 12a5.5 5.5 0 0 1 0-7.778Z"/></g></svg>  </button> <button id="get-qrcode" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11 3a2 2 0 0 1 1.995 1.85L13 5v6a2 2 0 0 1-1.85 1.995L11 13H5a2 2 0 0 1-1.995-1.85L3 11V5a2 2 0 0 1 1.85-1.995L5 3zm0 2H5v6h6zM8.5 7a.5.5 0 0 1 .492.41L9 7.5v1a.5.5 0 0 1-.41.492L8.5 9h-1a.5.5 0 0 1-.492-.41L7 8.5v-1a.5.5 0 0 1 .41-.492L7.5 7zM21 5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zM7 15a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2zm0 2H5v2h2zm14 0a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zm-2-5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1m-2 4a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0z"/></g></svg>  </button>  </div> <div id="qrcode-container" class="absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out aria-expanded:max-h-44 aria-expanded:translate-y-4 aria-expanded:opacity-100 astro-tju7bdtj" aria-expanded="false"></div> <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script> <script>(function(){const content = undefined;
+
+  const renderContent = content ?? window.location.href
+  // Load qrcode
+  function loadqrcode(qrcodeContainer) {
+    if (!qrcodeContainer) throw new Error('qrcode container not found')
+    if (qrcodeContainer.innerHTML !== '') return
+    new QRCode(qrcodeContainer, renderContent)
+  }
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  if (!qrcodeContainer) throw new Error('qrcode container not found')
+  loadqrcode(qrcodeContainer)
+})();</script> </div> </div> <div class="mx-6 rounded-b-xl border border-t-0 px-3 pb-1.5 pt-1 sm:mx-8 sm:px-4 astro-tju7bdtj"> <a href="/projects#sponsorship" class="flex items-center justify-between text-muted-foreground no-underline astro-tju7bdtj"> <span class="astro-tju7bdtj">Buy me a cup of coffee ☕.</span> <svg aria-hidden="true" class="box-content size-5 p-1 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M17 2a3 3 0 0 1 3 3v12a1 1 0 0 1 .351 1.936l-8 3a1 1 0 0 1-.702 0l-8-3A1 1 0 0 1 4 17V5a3 3 0 0 1 3-3zm0 2H7a1 1 0 0 0-.993.883L6 5v12.682l6 2.25l6-2.25V5a1 1 0 0 0-.883-.993zm-5 1a1 1 0 0 1 .993.883L13 6v1h2a1 1 0 0 1 .117 1.993L15 9h-5a.5.5 0 0 0-.09.992L10 10h4a2.5 2.5 0 0 1 .164 4.995L14 15h-1v1a1 1 0 0 1-1.993.117L11 16v-1H9a1 1 0 0 1-.117-1.993L9 13h5a.5.5 0 0 0 .09-.992L14 12h-4a2.5 2.5 0 0 1-.164-4.995L10 7h1V6a1 1 0 0 1 1-1"/></g></svg>  </a> </div>  <script type="module" src="/_astro/Copyright.astro_astro_type_script_index_0_lang.CQ7TF57l.js"></script> <div class="flex max-sm:flex-col sm:justify-between gap-2 mt-3 sm:mt-6"> <span class="min-w-0"> <a href="/blog/invalid-character-go-vue" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 hover:bg-muted max-sm:max-w-[80%] sm:flex"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 rotate-180 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> <p class="truncate font-medium transition-colors">invalid character &#39;-&#39; in numeric literal错误</p> </a> </span> <span class="min-w-0"> <a href="/blog/python" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-right no-underline transition-colors duration-300 hover:bg-muted max-sm:float-end max-sm:max-w-[80%] sm:flex"> <p class="truncate font-medium transition-colors">python入门（上）</p> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> </a> </span> </div> <comment-component class="astro-w2uxdene"><div id="waline" class="not-prose mt-3 sm:mt-6 astro-w2uxdene">
+Comment seems to stuck. Try to refresh?✨
+</div></comment-component><script type="module" src="/_astro/Comment.astro_astro_type_script_index_0_lang.CoJ8wWoz.js"></script> </div> <div class="min-w-48 basis-60">  </div> </div> <button aria-label="Back to Top" class="z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12" data-show="false" id="to-top-btn"> <div class="absolute bottom-0 end-0 start-0 top-0 flex items-center justify-center transition-opacity group-hover:opacity-0 group-[.ended]:opacity-0"> <span class="text">10</span> <span class="text-xs">%</span> </div> <svg aria-hidden="true" class="opacity-0 transition-opacity group-hover:opacity-100 group-[.ended]:opacity-100 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11.293 8.293a1 1 0 0 1 1.414 0l5.657 5.657a1 1 0 0 1-1.414 1.414L12 10.414l-4.95 4.95a1 1 0 0 1-1.414-1.414z"/></g></svg>  </button> <script>(function(){const headerName = "content-header";
+const contentName = "content";
+const needPercent = true;
+
+  const scrollBtn = document.getElementById('to-top-btn')
+  const scrollPercentEl = scrollBtn.children[0].children[0]
+  const targetHeader = document.getElementById(headerName)
+  const articleElement = document.getElementById(contentName)
+
+  // scroll to top
+  function callback(entries) {
+    entries.forEach((entry) => {
+      // only show the scroll to top button when the heading is out of view
+      scrollBtn.dataset.show = (!entry.isIntersecting).toString()
+    })
+  }
+  scrollBtn.addEventListener('click', () => {
+    document.documentElement.scrollTo({ behavior: 'smooth', top: 0 })
+  })
+  if (targetHeader) {
+    const observer = new IntersectionObserver(callback)
+    observer.observe(targetHeader)
+  } else {
+    console.error(`Element with ID ${headerName} not found.`)
+  }
+
+  if (needPercent) {
+    // scroll percentage
+    let scrollHeight = articleElement.scrollHeight // total height
+    let articleTop = articleElement.offsetTop // article top
+    const clientHeight = document.documentElement.clientHeight // client height
+
+    function recalculateHeights() {
+      scrollHeight = articleElement.scrollHeight
+      articleTop = articleElement.offsetTop
+    }
+
+    const images = articleElement.querySelectorAll('img')
+    let loadedImagesCount = 0
+    const totalImages = images.length
+
+    if (totalImages > 0) {
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedImagesCount++
+        } else {
+          img.addEventListener('load', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+          img.addEventListener('error', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+        }
+      })
+      if (loadedImagesCount === totalImages) {
+        recalculateHeights()
+      }
+    }
+
+    function calculateScrollPercent() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop < articleTop) return
+      
+      const scrollableHeight = Math.max(scrollHeight - clientHeight, 1)
+      const scrolledAmount = scrollTop - articleTop
+      
+      const percent = Math.round((scrolledAmount / scrollableHeight) * 100)
+      return Math.max(0, Math.min(100, percent))
+    }
+
+    document.addEventListener('scroll', () => {
+      const scrollPercent = calculateScrollPercent()
+      if (scrollPercent === undefined) return
+      scrollPercentEl.innerText = scrollPercent.toString()
+
+      // If percent is 100, percent won't need to show
+      scrollBtn.classList.toggle('ended', scrollPercent >= 100)
+    })
+
+    window.addEventListener('resize', recalculateHeights)
+  } else {
+    scrollBtn.classList.add('ended')
+  }
+})();</script>  <footer class="mx-auto mb-5 mt-16"> <div class="border-t border-border pt-5"> <div class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0"> <div class="flex items-center gap-x-4 gap-y-2 text-muted-foreground max-sm:flex-col [&_a:hover]:text-primary [&_a]:text-foreground"> <a class="text-xs" style="color:hsl(var(--muted-foreground)/var(--tw-text-opacity,1))" href target="_blank">  </a> <span>
+© 2026 KIOSHIROI &
+<a href="/terms/list">Site policy</a> </span> <span class="text-muted-foreground [&_a:hover]:text-primary [&_a]:text-foreground"> <a href="https://github.com/withastro/astro" target="_blank">
+Astro
+</a> 
+theme powered
+</span> </div>  <div class="flex items-center gap-x-4"> <a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="https://github.com/KIOSHIROI" aria-label="github"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M6.315 6.176c-.25-.638-.24-1.367-.129-2.034a6.8 6.8 0 0 1 2.12 1.07c.28.214.647.283.989.18A9.3 9.3 0 0 1 12 5c.961 0 1.874.14 2.703.391c.342.104.709.034.988-.18a6.8 6.8 0 0 1 2.119-1.07c.111.667.12 1.396-.128 2.033c-.15.384-.075.826.208 1.14C18.614 8.117 19 9.04 19 10c0 2.114-1.97 4.187-5.134 4.818c-.792.158-1.101 1.155-.495 1.726c.389.366.629.882.629 1.456v3a1 1 0 0 0 2 0v-3c0-.57-.12-1.112-.334-1.603C18.683 15.35 21 12.993 21 10c0-1.347-.484-2.585-1.287-3.622c.21-.82.191-1.646.111-2.28c-.071-.568-.17-1.312-.57-1.756c-.595-.659-1.58-.271-2.28-.032a9 9 0 0 0-2.125 1.045A11.4 11.4 0 0 0 12 3c-.994 0-1.953.125-2.851.356a9 9 0 0 0-2.125-1.045c-.7-.24-1.686-.628-2.281.031c-.408.452-.493 1.137-.566 1.719l-.005.038c-.08.635-.098 1.462.112 2.283C3.484 7.418 3 8.654 3 10c0 2.992 2.317 5.35 5.334 6.397A4 4 0 0 0 8 17.98l-.168.034c-.717.099-1.176.01-1.488-.122c-.76-.322-1.152-1.133-1.63-1.753c-.298-.385-.732-.866-1.398-1.088a1 1 0 0 0-.632 1.898c.558.186.944 1.142 1.298 1.566c.373.448.869.916 1.58 1.218c.682.29 1.483.393 2.438.276V21a1 1 0 0 0 2 0v-3c0-.574.24-1.09.629-1.456c.607-.572.297-1.568-.495-1.726C6.969 14.187 5 12.114 5 10c0-.958.385-1.881 1.108-2.684c.283-.314.357-.756.207-1.14"/></g></svg>  </a><a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="/rss.xml" aria-label="rss"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5.5 17a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3m0-14C14.06 3 21 9.94 21 18.5q0 .268-.009.534a1 1 0 0 1-1.999-.068Q19 18.734 19 18.5C19 11.044 12.956 5 5.5 5q-.234 0-.466.008a1 1 0 0 1-.068-1.999Q5.231 3 5.5 3m0 7a8.5 8.5 0 0 1 8.482 9.066a1 1 0 0 1-1.996-.132a6.5 6.5 0 0 0-6.92-6.92a1 1 0 1 1-.132-1.995q.28-.02.566-.019"/></g></svg>  </a> </div> </div> </div> </footer> </div> <script>(function(){const live2dAutoloadSrc = "/live2d-autoload.js?v=20260612b";
+const live2dCdnPath = "/live2d-api/";
+
+      (() => {
+        const LIVE2D_AUTOLOAD_SRC = live2dAutoloadSrc
+        const LIVE2D_FLAG_KEY = '__live2d_autoload_injected__'
+        const LIVE2D_SCHEDULED_KEY = '__live2d_autoload_scheduled__'
+
+        window.__LIVE2D_CDN_PATH__ = live2dCdnPath
+
+        function injectLive2D() {
+          if (window[LIVE2D_FLAG_KEY]) return
+          window[LIVE2D_FLAG_KEY] = true
+
+          const script = document.createElement('script')
+          script.src = LIVE2D_AUTOLOAD_SRC
+          script.async = true
+          script.defer = true
+          script.crossOrigin = 'anonymous'
+          document.body.appendChild(script)
+        }
+
+        function scheduleLive2DLoad() {
+          if (window[LIVE2D_SCHEDULED_KEY]) return
+          window[LIVE2D_SCHEDULED_KEY] = true
+
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => injectLive2D(), { timeout: 3000 })
+          } else {
+            setTimeout(injectLive2D, 1200)
+          }
+        }
+
+        if (document.readyState !== 'loading') {
+          scheduleLive2DLoad()
+        } else {
+          document.addEventListener('DOMContentLoaded', scheduleLive2DLoad, { once: true })
+          window.addEventListener('load', scheduleLive2DLoad, { once: true })
+        }
+
+        document.addEventListener('astro:page-load', scheduleLive2DLoad)
+      })()
+    })();</script> <script>
+      (() => {
+        const OBSERVER_KEY = '__deferred_image_observer__'
+
+        function revealDeferredImage(img) {
+          const source = img.getAttribute('data-src')
+          if (!source) return
+          img.setAttribute('src', source)
+          img.removeAttribute('data-src')
+          img.removeAttribute('data-deferred-image')
+        }
+
+        function getObserver() {
+          if (!('IntersectionObserver' in window)) return null
+          if (!window[OBSERVER_KEY]) {
+            window[OBSERVER_KEY] = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return
+                  const image = entry.target
+                  revealDeferredImage(image)
+                  window[OBSERVER_KEY].unobserve(image)
+                })
+              },
+              {
+                rootMargin: '320px 0px'
+              }
+            )
+          }
+          return window[OBSERVER_KEY]
+        }
+
+        function bindDeferredImages(root = document) {
+          const deferredImages = root.querySelectorAll('img[data-deferred-image="true"][data-src]')
+          if (!deferredImages.length) return
+
+          const observer = getObserver()
+
+          deferredImages.forEach((img) => {
+            if (img.hasAttribute('data-deferred-bound')) return
+            img.setAttribute('data-deferred-bound', 'true')
+
+            if (observer) {
+              observer.observe(img)
+            } else {
+              revealDeferredImage(img)
+            }
+          })
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => bindDeferredImages(), { once: true })
+        } else {
+          bindDeferredImages()
+        }
+
+        document.addEventListener('astro:page-load', () => bindDeferredImages())
+      })()
+    </script>   <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BK0m7-AI.js"></script> <!-- <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const originalTitle = document.title
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+          } else {
+            document.title = originalTitle
+          }
+        })
+        window.addEventListener('blur', () => {
+          document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+        })
+        window.addEventListener('focus', () => {
+          document.title = originalTitle
+        })
+      })
+    </script> --> <script type="module">document.addEventListener("DOMContentLoaded",()=>{function s(n,i,a,e,o){const t=document.createElement("div");t.className=`click-particle color-${o}`;const c=Math.cos(a)*e,l=Math.sin(a)*e;t.style.setProperty("--dx",c+"px"),t.style.setProperty("--dy",l+"px"),t.style.left=n+"px",t.style.top=i+"px";const d=Math.random()*6+8;t.style.width=d+"px",t.style.height=d+"px",document.body.appendChild(t),setTimeout(()=>{t.parentNode&&t.parentNode.removeChild(t)},1100)}document.addEventListener("click",n=>{for(let e=0;e<10;e++){const o=Math.PI*2/10*e,t=18+Math.random()*8,c=e%10+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},e*12)}for(let e=0;e<4;e++){const o=Math.random()*Math.PI*2,t=18+Math.random()*10,c=Math.floor(Math.random()*10)+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},(10+e)*12)}})});</script> <script type="module">document.addEventListener("DOMContentLoaded",()=>{document.addEventListener("click",n=>{const e=n.target.closest('a[href^="#"]');if(!e||e.closest("toc-heading"))return;const t=e.getAttribute("href");if(!t||t==="#")return;const o=t.substring(1),r=document.getElementById(o);r&&(n.preventDefault(),history.pushState(null,"",t),r.scrollIntoView({behavior:"smooth",block:"start"}))})});</script> </body> </html> <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script> <script>(function(){const selector = ".prose .zoomable";
+const background = "hsl(var(--background) / 0.8)";
+
+  if (typeof mediumZoom !== 'undefined') {
+    mediumZoom(selector, { background })
+  }
+})();</script> 

@@ -1,0 +1,1215 @@
+<!DOCTYPE html><html lang="zh" class="astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"><meta content="IE=edge" http-equiv="X-UA-Compatible"><title>python入门（下） • KIOSHIROI&#39;s CS-learning Road</title><link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon.ico"><link rel="manifest" href="/favicon/site.webmanifest"><link rel="preload" href="/fonts/Satoshi-Variable.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="/fonts/Satoshi-VariableItalic.ttf" as="font" type="font/ttf" crossorigin><link rel="canonical" href="https://kioshiroi.github.io/blog/python2"><meta content="python入门（下） • KIOSHIROI's CS-learning Road" name="title"><meta content="在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。" name="description"><meta content="KIOSHIROI" name="author"><meta content="" name="theme-color"><meta content="article" property="og:type"><meta content="python入门（下）" property="og:title"><meta content="在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。" property="og:description"><meta content="https://kioshiroi.github.io/blog/python2" property="og:url"><meta content="KIOSHIROI's CS-learning Road" property="og:site_name"><meta content="zh_CN" property="og:locale"><meta content="https://kioshiroi.github.io/images/social-card.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="KIOSHIROI" property="article:author"><meta content="2024-05-15T00:00:00.000Z" property="article:published_time"><meta content="summary_large_image" property="twitter:card"><meta content="https://kioshiroi.github.io/blog/python2" property="twitter:url"><meta content="python入门（下）" property="twitter:title"><meta content="在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。" property="twitter:description"><meta content="https://kioshiroi.github.io/images/social-card.png" property="twitter:image"><link href="/sitemap-index.xml" rel="sitemap"><link rel="alternate" type="application/rss+xml" title="KIOSHIROI's CS-learning Road" href="https://kioshiroi.github.io/rss.xml"><meta content="Astro v5.16.4" name="generator"><link rel="stylesheet" href="/styles/global.css"><!-- <ClientRouter /> --><!-- <script is:inline>
+  const style = document.createElement('style')
+  style.textContent = `* { transition: none !important; }`
+  document.addEventListener('astro:after-swap', () => {
+    document.head.appendChild(style)
+    setTimeout(() => {
+      style.remove()
+    }, 100)
+  })
+</script> --><script type="module">console.log("%c Astro Theme Axi %c https://github.com/Axi404/","color:#fff;background:linear-gradient(90deg,#448bff,#44e9ff);padding:5px 0;","color:#000;background:linear-gradient(90deg,#44e9ff,#ffffff);padding:5px 10px 5px 0px;");</script><script>
+  function simpleSetTheme() {
+    let theme = localStorage.getItem('theme')
+    // If undefined or 'system', get from system
+    if (!theme || theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#0B0B10' : '#FCFCFD')
+  }
+  simpleSetTheme()
+  document.addEventListener('astro:page-load', () => simpleSetTheme())
+</script><script type="module" src="/_astro/ThemeProvider.astro_astro_type_script_index_0_lang.8WG8SyMG.js"></script><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-J4TR2R7BSM"></script><script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'G-J4TR2R7BSM')
+    </script><link rel="stylesheet" href="/_astro/_id_.N4Rp9Ep2.css">
+<link rel="stylesheet" href="/_astro/_id_.lDyzrzz2.css">
+<link rel="stylesheet" href="/_astro/_id_.CVIgJ6KX.css">
+<style>svg:where(.astro-p7sajfz3){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1.5em;height:1.5em}
+.expand-conetent:where(.astro-jvehtkjd){grid-template-rows:0fr}.expanded:where(.astro-jvehtkjd) .expand-conetent:where(.astro-jvehtkjd){grid-template-rows:1fr}
+.sl-steps{--bullet-size: 1.75rem ;--bullet-margin: .375rem;list-style:none!important;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0!important}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:.8125rem;font-weight:600;text-align:center;color:hsl(var(--foreground) / var(--tw-text-opacity, 1));background-color:hsl(var(--primary-foreground) / var(--tw-bg-opacity, 1));border-radius:99rem;box-shadow:inset 0 0 0 1px hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li>:first-child{--lh: 1.75em ;--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));margin-top:0;transform:translateY(var(--shift-y));margin-bottom:var(--shift-y);color:hsl(var(--foreground) / var(--tw-text-opacity, 1))}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: 1.2em }
+</style><script type="module" src="/_astro/page.D1uwR3nK.js"></script></head> <body class="flex justify-center bg-background astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <!-- <div
+      id='gradient-background'
+      class='pointer-events-none fixed h-screen w-screen blur-2xl transition-opacity duration-1000'
+    >
+      <div
+        class='absolute right-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute right-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute right-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute left-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+      <div
+        class='absolute right-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-orange-300 via-indigo-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+    </div> --> <div id="highlight-gradient" class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25 astro-37fxchfa" style="background-image:linear-gradient(hsl(var(--primary) / var(--tw-text-opacity)),transparent); --highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"></div> <div class="w-full max-w-[70rem] px-4 sm:px-7 lg:px-10 astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <header-component class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl [&#38;.not-top]:border-border [&#38;.not-top]:bg-background/60 [&#38;.not-top]:px-1.5 [&#38;.not-top]:backdrop-blur-md dark:[&#38;.not-top]:bg-muted/60 astro-dpuuw7tv"> <!-- <div
+      class='absolute -left-4 -top-8 -z-10 box-content hidden h-20 w-[calc(100%+2rem)] !duration-0 max-sm:group-[.expanded]:block max-sm:group-[.expanded.not-top]:hidden max-sm:group-[.expanded]:bg-white dark:max-sm:group-[.expanded]:bg-muted'
+    >
+    </div> --> <a class="z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3 astro-dpuuw7tv" style="transition:margin-inline 0.3s" href="/" aria-label="Brand">KIOSHIROI&#39;s CS-learning Road</a> <div class="flex items-center gap-x-2 astro-dpuuw7tv">  <div id="headerExpandConetent" class="end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 dark:group-[.expanded.not-top]:bg-muted/60 max-md:absolute max-md:opacity-0 max-md:pointer-events-none max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-border max-md:group-[.expanded.not-top]:bg-background/60 max-md:group-[.expanded.not-top]:backdrop-blur-md max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:grid-rows-1 astro-dpuuw7tv"> <div class="flex flex-col items-center justify-center md:flex-row astro-dpuuw7tv"> <div class="menu-item-with-dropdown relative w-full md:w-fit astro-dpuuw7tv" style="position: relative;"> <a href="/blog/research" class="blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-none hover:text-primary md:px-3 md:justify-center astro-dpuuw7tv" aria-label="Nav menu item"> Blog <svg aria-hidden="true" class="chevron-icon ml-1 size-4 transition-transform astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.707 15.707a1 1 0 0 1-1.414 0L5.636 10.05A1 1 0 1 1 7.05 8.636l4.95 4.95l4.95-4.95a1 1 0 0 1 1.414 1.414z"/></g></svg>  </a>  <div class="dropdown-menu absolute right-0 top-full mt-0 w-48 rounded-xl border border-border bg-background/80 shadow-lg backdrop-blur-md dark:bg-muted/80 md:left-0 md:right-auto astro-dpuuw7tv" style="z-index: 9999;"> <div class="py-1 astro-dpuuw7tv"> <a href="/blog/research" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Research </a><a href="/blog/tech" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Technical </a><a href="/blog/daily" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Daily Life </a> </div> </div> </div><a href="/links" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> Links </a><a href="/about" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> About </a> <a class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" href="https://www.travellings.cn/go.html" title="Travellings" target="_blank" rel="noopener noreferrer"> <span class="sr-only astro-dpuuw7tv">Travellings</span> <span class="text-xl astro-dpuuw7tv">🚇</span> </a> <div class="flex w-full grow flex-row justify-end gap-x-3 md:w-fit md:gap-x-5 astro-dpuuw7tv"> <a class="px-1 py-2 transition-none md:px-2 astro-dpuuw7tv" href="/search" title="Search"> <span class="sr-only astro-dpuuw7tv">Search</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3"/></g></svg>  </a> </div> </div> </div> <!-- buttons --> <div class="z-30 flex gap-x-4 group-[.not-top]:gap-x-2 astro-dpuuw7tv" style="transition:gap 0.3s"> <button id="toggleDarkMode" class="group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Dark Theme</span> <svg aria-hidden="true" class="system size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" fill-rule="nonzero" d="M19 3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v1h1a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h1v-1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-6 15h-2v1h2zm6-13H5v11h14z"/></g></svg>  <svg aria-hidden="true" class="light hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 19a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1m6.364-2.05l.707.707a1 1 0 0 1-1.414 1.414l-.707-.707a1 1 0 0 1 1.414-1.414m-12.728 0a1 1 0 0 1 1.497 1.32l-.083.094l-.707.707a1 1 0 0 1-1.497-1.32l.083-.094zM12 6a6 6 0 1 1 0 12a6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-8 3a1 1 0 0 1 .117 1.993L4 13H3a1 1 0 0 1-.117-1.993L3 11zm17 0a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2zM4.929 4.929a1 1 0 0 1 1.32-.083l.094.083l.707.707a1 1 0 0 1-1.32 1.497l-.094-.083l-.707-.707a1 1 0 0 1 0-1.414m14.142 0a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1"/></g></svg>  <svg aria-hidden="true" class="dark hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.477 4.546a1.01 1.01 0 0 1 1.097-1.409A9 9 0 0 1 12 21c-4.434 0-8.118-3.206-8.863-7.426a1.01 1.01 0 0 1 1.409-1.097a6 6 0 0 0 7.931-7.931m2.404 1.072a8 8 0 0 1-9.263 9.263A7.002 7.002 0 0 0 19 12.001a7 7 0 0 0-4.12-6.383ZM5.565 7.716l.064.14a3.26 3.26 0 0 0 1.237 1.363l.1.059a.068.068 0 0 1 0 .118l-.1.058a3.26 3.26 0 0 0-1.237 1.364l-.064.14a.071.071 0 0 1-.13 0l-.064-.14a3.26 3.26 0 0 0-1.237-1.364l-.1-.058a.068.068 0 0 1 0-.118l.1-.059A3.26 3.26 0 0 0 5.37 7.855l.064-.14a.071.071 0 0 1 .13 0Zm2.832-4.859c.04-.09.166-.09.206 0l.102.222a5.2 5.2 0 0 0 1.97 2.172l.157.092a.108.108 0 0 1 0 .189l-.158.092a5.2 5.2 0 0 0-2.07 2.394a.113.113 0 0 1-.207 0l-.102-.222a5.2 5.2 0 0 0-1.97-2.172l-.158-.092a.108.108 0 0 1 0-.189l.158-.092a5.2 5.2 0 0 0 1.97-2.172z"/></g></svg>  </button> <button id="toggleMenu" class="rounded-md border p-1.5 transition-colors hover:bg-border md:hidden md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Menu</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M20 18a1 1 0 0 1 .117 1.993L20 20H4a1 1 0 0 1-.117-1.993L4 18zm0-7a1 1 0 1 1 0 2H4a1 1 0 1 1 0-2zm0-7a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2z"/></g></svg>  </button> </div> </div> </header-component>  <script>
+  const toggleDarkModeElement = document.getElementById('toggleDarkMode')
+  if (toggleDarkModeElement) {
+    toggleDarkModeElement.dataset.theme = localStorage.getItem('theme') || 'system'
+  }
+</script> <script type="module" src="/_astro/Header.astro_astro_type_script_index_0_lang.2bVIXSyo.js"></script>   <main class="mt-6 items-start gap-x-10 md:flex">  <aside class="animate top-24 min-w-48 basis-60 overflow-y-scroll max-md:hidden md:sticky md:order-2 lg:shrink-0" style="height:calc(100vh - 8rem);" id="sidebar"> <toc-heading slot="sidebar"> <h2 class="font-semibold">TABLE OF CONTENTS</h2> <ul class="mt-4 text-card-foreground"> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 5. 异常处理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#5-异常处理">5. 异常处理</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 基本的异常处理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#基本的异常处理">基本的异常处理</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: else 和 finally 块" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#else-和-finally-块">else 和 finally 块</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 自定义异常" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#自定义异常">自定义异常</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 捕获所有异常" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#捕获所有异常">捕获所有异常</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 抛出异常" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#抛出异常">抛出异常</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: assert" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#assert">assert</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: raise" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#raise">raise</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 异常链" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#异常链">异常链</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 6. 模块和包" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#6-模块和包">6. 模块和包</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 模块" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#模块">模块</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 包" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#包">包</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 使用标准库" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#使用标准库">使用标准库</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 安装第三方包" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#安装第三方包">安装第三方包</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: wheel" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#wheel">wheel</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 镜像" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#镜像">镜像</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. 永久配置镜像源" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#1-永久配置镜像源">1. 永久配置镜像源</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. 临时使用镜像源" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#2-临时使用镜像源">2. 临时使用镜像源</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 参考资料" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#参考资料">参考资料</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 7. 字符串处理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#7-字符串处理">7. 字符串处理</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. 字符串创建与基本操作" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#1-字符串创建与基本操作">1. 字符串创建与基本操作</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. 字符串拼接" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#2-字符串拼接">2. 字符串拼接</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 3. 字符串格式化" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#3-字符串格式化">3. 字符串格式化</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 4. 字符串索引&#38;切片" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#4-字符串索引切片">4. 字符串索引&amp;切片</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 5. 常用字符串方法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#5-常用字符串方法">5. 常用字符串方法</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 6. 字符串的不可变性" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#6-字符串的不可变性">6. 字符串的不可变性</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 7. 字符串的编码和解码" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#7-字符串的编码和解码">7. 字符串的编码和解码</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 8. 多行字符串和转义字符" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#8-多行字符串和转义字符">8. 多行字符串和转义字符</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 8. 文件处理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#8-文件处理">8. 文件处理</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 打开和关闭文件" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#打开和关闭文件">打开和关闭文件</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 使用 with 语句" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#使用-with-语句">使用 with 语句</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 读取文件" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#读取文件">读取文件</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 写入文件" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#写入文件">写入文件</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 文件模式" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#文件模式">文件模式</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 文件和目录操作" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#文件和目录操作">文件和目录操作</a> </div>  </li> </ul> </li> </ul> </toc-heading> <script type="module">class c extends HTMLElement{headings=[];tocLinks=[];headingProgress={};constructor(){super(),this.headings=Array.from(document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")),this.tocLinks=Array.from(this.querySelectorAll('a[href^="#"]')).map(e=>({element:e,progressBar:e.previousElementSibling,slug:(e.getAttribute("href")||"").substring(1)}))}updatePositionAndStyle=()=>{const e=window.innerHeight,r=document.querySelector("#content"),o=r?.getBoundingClientRect().top+window.scrollY||0,h=(r?.offsetHeight||0)+o;this.headings.forEach((s,i)=>{const g=s.getBoundingClientRect().top+window.scrollY,n=this.headings[i+1]?this.headings[i+1].getBoundingClientRect().top+window.scrollY:h,t=[g-window.scrollY,n-window.scrollY-s.offsetHeight],l=(e-t[0])/(t[1]-t[0]);this.headingProgress[s.id]={inView:t[0]<e&&t[1]>0,progress:Math.max(0,Math.min(1,l))}}),this.tocLinks.forEach(({element:s,progressBar:i,slug:g},n)=>{const{inView:t,progress:l}=this.headingProgress[g];this.headingProgress[g]&&(s.classList.toggle("highlight",t),s.classList.toggle("highlight-bg-translucent",t),s.classList.toggle("rounded-t-2xl",t&&(n==0||!this.headingProgress[this.tocLinks[n-1]?.slug].inView)),s.classList.toggle("rounded-b-2xl",t&&(n==this.tocLinks.length-1||!this.headingProgress[this.tocLinks[n+1]?.slug].inView)),i.classList.toggle("readed",!t&&l==1),i.classList.toggle("highlight-bg",t),i.style.setProperty("height",`${l*90}%`))})};connectedCallback(){this.tocLinks.forEach(e=>{e.element.addEventListener("click",r=>{r.preventDefault();const o=this.headings.find(h=>h.id===e.slug);o?(history.pushState(null,o.textContent||"",e.element.getAttribute("href")),o.scrollIntoView({behavior:"smooth"})):console.warn(`No heading found for slug: ${e.slug}`)})}),setInterval(this.updatePositionAndStyle,100),window.addEventListener("scroll",this.updatePositionAndStyle)}}customElements.define("toc-heading",c);</script> </aside> <article class="min-w-0 grow">  <div id="content-header" class="animate"> <div class="article-info max-lg:mx-auto"> <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs leading-6 text-muted-foreground">  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16 3a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 2 0v1h6V4a1 1 0 0 1 1-1M8 7H5v2h14V7h-3zm-3 4v8h14v-8zm2 2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2z"/></g></svg>  <span class="text-muted-foreground font-sans"> <time datetime="2024-05-15T00:00:00.000Z"> 2024年5月15日 </time> </span>  </div>  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 2a1 1 0 0 1 .993.883L13 7v4.586l2.707 2.707a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a1 1 0 0 1-.284-.576L11 12V7a1 1 0 0 1 1-1"/></g></svg>  17 min read </div>   <span class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.124 3.008a1 1 0 0 1 .868 1.116L10.508 8h3.984l.516-4.124a1 1 0 1 1 1.984.248L16.508 8H20a1 1 0 1 1 0 2h-3.742l-.5 4H19.5a1 1 0 1 1 0 2h-3.992l-.516 4.124a1 1 0 1 1-1.984-.248L13.492 16H9.508l-.516 4.124a1 1 0 1 1-1.984-.248L7.492 16H4.5a1 1 0 1 1 0-2h3.242l.5-4H5a1 1 0 0 1 0-2h3.492l.516-4.124a1 1 0 0 1 1.116-.868M13.742 14l.5-4h-3.984l-.5 4z"/></g></svg>  <div> <a aria-label="View more blogs with the tag python" class="hover:underline hover:underline-offset-4" data-pagefind-filter="tag" href="/tags/python"> python </a>  </div> </span> </div> <h1 class="mt-4 text-2xl font-medium sm:mb-2 sm:mt-6 sm:text-3xl"> python入门（下） </h1> <div class="mt-3 italic"> <blockquote class="text-sm text-muted-foreground"><q>在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。</q></blockquote> <div class="text-sm text-muted-foreground mt-1"> <span class="waline-pageview-count" data-path="/blog/python2"></span> views
+<a href="#waline">
+| <span class="waline-comment-count" data-path="/blog/python2"></span> comments
+</a> </div> </div> </div>  <div class="mt-4 w-1/2 border-t max-lg:mx-auto sm:mt-6 sm:w-1/3"></div> <script type="module">const o=window.innerHeight,s=o/9,i=o*2/9,l=o*3/9,e=document.getElementById("blurImage");e&&window.addEventListener("scroll",()=>{const t=window.scrollY;t>=l?e.style.opacity="0.15":t>=i?e.style.opacity="0.3":t>=s&&(e.style.opacity="0.45")});</script> </div>  <div id="content" class="max-w-none animate mt-8 md:min-w-[45ch] break-words prose prose-axi dark:prose-invert dark:prose-axi prose-headings:font-medium">  <h2 id="5-异常处理">5. 异常处理<a class="anchor" href="#5-异常处理">#</a></h2>
+<ul>
+<li>在编写代码时，可能会遇到各种错误和异常。为了确保程序能够优雅地处理这些错误，Python 提供了异常处理机制。我们将详细介绍如何使用 <code>try</code>、<code>except</code>、<code>else</code> 和 <code>finally</code> 块来处理异常。</li>
+</ul>
+<h3 id="基本的异常处理">基本的异常处理<a class="anchor" href="#基本的异常处理">#</a></h3>
+<ul>
+<li>使用 <code>try</code> 和 <code>except</code> 块可以捕获和处理异常。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    x </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">input</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"请输入一个数字: "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    y </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span><span style="color:#D73A49;--shiki-dark:#F97583"> /</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"10 除以 </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">x</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 的结果是 </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">y</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ZeroDivisionError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"除零错误！不能用零作为除数。"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"输入错误！请输入一个有效的数字。"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+try:
+    x = int(input(&#x22;请输入一个数字: &#x22;))
+    y = 10 / x
+    print(f&#x22;10 除以 {x} 的结果是 {y}&#x22;)
+except ZeroDivisionError:
+    print(&#x22;除零错误！不能用零作为除数。&#x22;)
+except ValueError:
+    print(&#x22;输入错误！请输入一个有效的数字。&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，<code>try</code> 块包含可能引发异常的代码。如果发生 <code>ZeroDivisionError</code> 或 <code>ValueError</code>，相应的 <code>except</code> 块将捕获并处理异常。</li>
+</ul>
+<h3 id="else-和-finally-块"><code>else</code> 和 <code>finally</code> 块<a class="anchor" href="#else-和-finally-块">#</a></h3>
+<ul>
+<li><code>else</code> 块在没有发生异常时执行，<code>finally</code> 块无论是否发生异常都会执行。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    x </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">input</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"请输入一个数字: "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    y </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span><span style="color:#D73A49;--shiki-dark:#F97583"> /</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ZeroDivisionError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"除零错误！不能用零作为除数。"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"输入错误！请输入一个有效的数字。"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">else</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"10 除以 </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">x</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 的结果是 </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">y</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">finally</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"执行结束。"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+try:
+    x = int(input(&#x22;请输入一个数字: &#x22;))
+    y = 10 / x
+except ZeroDivisionError:
+    print(&#x22;除零错误！不能用零作为除数。&#x22;)
+except ValueError:
+    print(&#x22;输入错误！请输入一个有效的数字。&#x22;)
+else:
+    print(f&#x22;10 除以 {x} 的结果是 {y}&#x22;)
+finally:
+    print(&#x22;执行结束。&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，如果没有发生异常，<code>else</code> 块中的代码将执行。不论是否发生异常，<code>finally</code> 块中的代码都会执行。</li>
+</ul>
+<h3 id="自定义异常">自定义异常<a class="anchor" href="#自定义异常">#</a></h3>
+<ul>
+<li>可以定义自己的异常类，以便更好地描述特定错误。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 自定义异常类</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> NegativeNumberError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">Exception</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    pass</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> check_positive</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(number):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> number </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        raise</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> NegativeNumberError(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"数字不能为负数！"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用自定义异常</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    num </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">input</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"请输入一个正数: "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    check_positive(num)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> NegativeNumberError </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(e)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 自定义异常类
+class NegativeNumberError(Exception):
+    pass
+
+def check_positive(number):
+    if number < 0:
+        raise NegativeNumberError(&#x22;数字不能为负数！&#x22;)
+
+# 使用自定义异常
+try:
+    num = int(input(&#x22;请输入一个正数: &#x22;))
+    check_positive(num)
+except NegativeNumberError as e:
+    print(e)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，定义了一个自定义异常 <code>NegativeNumberError</code>，并在 <code>check_positive</code> 函数中使用。</li>
+</ul>
+<h3 id="捕获所有异常">捕获所有异常<a class="anchor" href="#捕获所有异常">#</a></h3>
+<ul>
+<li>可以使用通用的 <code>except</code> 块来捕获所有异常。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    x </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">input</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"请输入一个数字: "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    y </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 10</span><span style="color:#D73A49;--shiki-dark:#F97583"> /</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> x</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> Exception</span><span style="color:#D73A49;--shiki-dark:#F97583"> as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"发生异常: </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">e</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+try:
+    x = int(input(&#x22;请输入一个数字: &#x22;))
+    y = 10 / x
+except Exception as e:
+    print(f&#x22;发生异常: {e}&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<ul>
+<li>在这个示例中，<code>except Exception</code> 捕获所有类型的异常，并输出异常信息。</li>
+</ul>
+<p>通过异常处理机制，我们可以确保程序在遇到错误时能够优雅地处理，而不会导致崩溃。掌握异常处理是编写健壮和可靠代码的重要技能。</p>
+<h2 id="抛出异常">抛出异常<a class="anchor" href="#抛出异常">#</a></h2>
+<h3 id="assert">assert<a class="anchor" href="#assert">#</a></h3>
+<ul>
+<li>assert语句用于断言，如果断言失败，程序会抛出AssertionError异常。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例代码</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> divide_numbers</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(a, b):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    assert</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> b </span><span style="color:#D73A49;--shiki-dark:#F97583">!=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"除数不能为零"</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> a </span><span style="color:#D73A49;--shiki-dark:#F97583">/</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> b</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用示例</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    result </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> divide_numbers(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">10</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> AssertionError</span><span style="color:#D73A49;--shiki-dark:#F97583"> as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"断言错误：</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">e</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 示例代码
+def divide_numbers(a, b):
+    assert b != 0, &#x22;除数不能为零&#x22;
+    return a / b
+
+# 使用示例
+try:
+    result = divide_numbers(10, 0)
+except AssertionError as e:
+    print(f&#x22;断言错误：{e}&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="raise">raise<a class="anchor" href="#raise">#</a></h3>
+<ul>
+<li>使用raise语句可以主动抛出异常</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 基本用法</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> check_age</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(age):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> age </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"年龄不能为负数"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> age </span><span style="color:#D73A49;--shiki-dark:#F97583">></span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 150</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"年龄不能超过150岁"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> True</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 重新抛出异常</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> process_age</span><span style="color:#24292E;--shiki-dark:#E1E4E8">():</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        age </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">input</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"请输入年龄："</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        check_age(age)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#D73A49;--shiki-dark:#F97583"> as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"处理异常..."</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        raise</span><span style="color:#6A737D;--shiki-dark:#6A737D">  # 重新抛出当前异常</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 基本用法
+def check_age(age):
+    if age < 0:
+        raise ValueError(&#x22;年龄不能为负数&#x22;)
+    if age > 150:
+        raise ValueError(&#x22;年龄不能超过150岁&#x22;)
+    return True
+
+# 重新抛出异常
+def process_age():
+    try:
+        age = int(input(&#x22;请输入年龄：&#x22;))
+        check_age(age)
+    except ValueError as e:
+        print(&#x22;处理异常...&#x22;)
+        raise  # 重新抛出当前异常" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="异常链">异常链<a class="anchor" href="#异常链">#</a></h3>
+<ul>
+<li>使用<code>raise from</code>可以在抛出新异常时保留原始异常信息</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> convert_to_int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(text):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> int</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(text)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#D73A49;--shiki-dark:#F97583"> as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        raise</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"输入必须是数字"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用示例</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">try</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    number </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> convert_to_int(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"abc"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">except</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> ValueError</span><span style="color:#D73A49;--shiki-dark:#F97583"> as</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> e:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"错误：</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">e</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"原始错误：</span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">e.__cause__</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="def convert_to_int(text):
+    try:
+        return int(text)
+    except ValueError as e:
+        raise ValueError(&#x22;输入必须是数字&#x22;) from e
+
+# 使用示例
+try:
+    number = convert_to_int(&#x22;abc&#x22;)
+except ValueError as e:
+    print(f&#x22;错误：{e}&#x22;)
+    print(f&#x22;原始错误：{e.__cause__}&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>这些抛出异常的方法让我们能够：</p>
+<ul>
+<li>使用assert进行调试和验证</li>
+<li>使用raise主动抛出异常</li>
+<li>通过异常链追踪异常的来源和传播过程</li>
+</ul>
+<h2 id="6-模块和包">6. 模块和包<a class="anchor" href="#6-模块和包">#</a></h2>
+<p>在编写较大程序时，将代码组织成模块和包有助于提高代码的可维护性和重用性。Python 提供了强大的模块和包机制。我们将详细介绍以下内容：</p>
+<h3 id="模块">模块<a class="anchor" href="#模块">#</a></h3>
+<p>模块是一个包含 Python 代码的文件，可以包含变量、函数和类。通过 <code>import</code> 语句可以在其他代码中使用模块。</p>
+<p><strong>创建和使用模块：</strong></p>
+<p>假设有一个名为 <code>mymodule.py</code> 的文件，内容如下：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># mymodule.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> greet</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(name):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#D73A49;--shiki-dark:#F97583"> f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">!"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# mymodule.py
+def greet(name):
+    return f&#x22;Hello, {name}!&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>可以在另一个 Python 文件中导入并使用这个模块：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># main.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> mymodule</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(mymodule.greet(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Alice"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Hello, Alice!"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# main.py
+import mymodule
+
+print(mymodule.greet(&#x22;Alice&#x22;))  # 输出 &#x22;Hello, Alice!&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>也可以使用 <code>from ... import ...</code> 语句导入模块中的特定部分：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># main.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> mymodule </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> greet</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(greet(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Bob"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 "Hello, Bob!"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# main.py
+from mymodule import greet
+
+print(greet(&#x22;Bob&#x22;))  # 输出 &#x22;Hello, Bob!&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<blockquote>
+<p><strong>注意</strong>
+(不推荐)我们也可以使用<code>from whichmodule import</code>来导入模块中的所有内容，但是这样导入存在风险。倘若该模块中定义的对象与其他模块或python标准包存在<strong>冲突</strong>，可能导致不可预估的错误！</p>
+</blockquote>
+<h3 id="包">包<a class="anchor" href="#包">#</a></h3>
+<p>包是一个包含多个模块的目录，其中包含一个特殊的 <code>__init__.py</code> 文件，该文件可以是空的，也可以包含包的初始化代码。</p>
+<p><strong>创建和使用包：</strong></p>
+<p>假设有一个名为 <code>mypackage</code> 的目录，结构如下：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><pre><code><span class="line"><span>mypackage/</span></span>
+<span class="line"><span>    __init__.py</span></span>
+<span class="line"><span>    module1.py</span></span>
+<span class="line"><span>    module2.py</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">plaintext</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="mypackage/
+    __init__.py
+    module1.py
+    module2.py" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p><code>module1.py</code> 的内容如下：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># module1.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> add</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(a, b):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> a </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> b</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# module1.py
+def add(a, b):
+    return a + b" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p><code>module2.py</code> 的内容如下：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># module2.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> subtract</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(a, b):</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> a </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> b</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# module2.py
+def subtract(a, b):
+    return a - b" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>可以在另一个 Python 文件中导入并使用这个包：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># main.py</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">from</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> mypackage </span><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> module1, module2</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(module1.add(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))        </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 8</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(module2.subtract(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))   </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 2</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# main.py
+from mypackage import module1, module2
+
+print(module1.add(5, 3))        # 输出 8
+print(module2.subtract(5, 3))   # 输出 2" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="使用标准库">使用标准库<a class="anchor" href="#使用标准库">#</a></h3>
+<p>Python 附带了一个丰富的标准库，提供了大量有用的模块，可以直接导入和使用。例如，使用 <code>math</code> 模块进行数学运算：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> math</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(math.sqrt(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">16</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 4.0</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import math
+
+print(math.sqrt(16))  # 输出 4.0" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="安装第三方包">安装第三方包<a class="anchor" href="#安装第三方包">#</a></h3>
+<p>可以使用 <code>pip</code> 安装第三方包。例如，安装和使用 <code>requests</code> 包来发送 HTTP 请求：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><pre><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">pip</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> install</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> requests</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">bash</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="pip install requests" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>安装后，可以在代码中导入并使用 <code>requests</code> 包：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> requests</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">response </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> requests.get(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"https://api.github.com"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(response.status_code)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 200</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import requests
+
+response = requests.get(&#x22;https://api.github.com&#x22;)
+print(response.status_code)  # 输出 200" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>模块和包使得代码更加模块化和可重用，有助于组织和管理大型项目。</p>
+<h3 id="wheel">wheel<a class="anchor" href="#wheel">#</a></h3>
+<p>尽管我们可以通过pip安装第三方包，但有些包并不在pypi上，这时候就需要使用wheel文件来安装。</p>
+<p>wheel文件是python的二进制包格式，通常用于分发和安装Python包。与源代码包不同，wheel包已经编译为二进制形式，可以直接在目标系统上安装，而无需编译源代码。</p>
+<p>wheel文件通常以.whl为扩展名，例如requests-2.28.2-py3-none-any.whl。</p>
+<p>使用wheel安装第三方包的方法如下:</p>
+<ol>
+<li>从镜像平台其他途径获取wheel包</li>
+<li>使用pip在自己环境中安装wheel包</li>
+</ol>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><pre><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">pip</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> install</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> requests-2.28.2-py3-none-any.whl</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">bash</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="pip install requests-2.28.2-py3-none-any.whl" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="镜像">镜像<a class="anchor" href="#镜像">#</a></h3>
+<p>由于某些神秘力量，国内访问pypi的速度很慢，这时候就需要使用镜像来加速下载。
+常用的镜像源有：</p>
+<ul>
+<li>清华：<a href="https://pypi.tuna.tsinghua.edu.cn/simple" rel="nofollow noopener noreferrer" target="_blank">https://pypi.tuna.tsinghua.edu.cn/simple<span> ↗</span></a></li>
+<li>阿里云：<a href="http://mirrors.aliyun.com/pypi/simple/" rel="nofollow noopener noreferrer" target="_blank">http://mirrors.aliyun.com/pypi/simple/<span> ↗</span></a></li>
+<li>ustc: <a href="https://pypi.mirrors.ustc.edu.cn/simple/" rel="nofollow noopener noreferrer" target="_blank">https://pypi.mirrors.ustc.edu.cn/simple/<span> ↗</span></a></li>
+<li>hust：<a href="http://pypi.hustunique.com/" rel="nofollow noopener noreferrer" target="_blank">http://pypi.hustunique.com/<span> ↗</span></a></li>
+<li>sdut：<a href="http://pypi.sdutlinux.org/" rel="nofollow noopener noreferrer" target="_blank">http://pypi.sdutlinux.org/<span> ↗</span></a></li>
+<li>豆瓣：<a href="http://pypi.douban.com/simple/" rel="nofollow noopener noreferrer" target="_blank">http://pypi.douban.com/simple/<span> ↗</span></a></li>
+</ul>
+<p><em>如何配置镜像源？</em></p>
+<h4 id="1-永久配置镜像源">1. 永久配置镜像源<a class="anchor" href="#1-永久配置镜像源">#</a></h4>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><pre><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">pip</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> config</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> set</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> global.index-url</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> https://pypi.tuna.tsinghua.edu.cn/simple/</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">pip</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> config</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> set</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> install.trusted-host</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> pypi.tuna.tsinghua.edu.cn</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">bash</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple/
+pip config set install.trusted-host pypi.tuna.tsinghua.edu.cn" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h4 id="2-临时使用镜像源">2. 临时使用镜像源<a class="anchor" href="#2-临时使用镜像源">#</a></h4>
+<p>使用<code>-i</code></p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><pre><code><span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">pip</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> install</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> pandas</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> -i</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> https://pypi.tuna.tsinghua.edu.cn/simple</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">bash</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="pip install pandas -i https://pypi.tuna.tsinghua.edu.cn/simple" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="参考资料">参考资料<a class="anchor" href="#参考资料">#</a></h3>
+<ul>
+<li><a href="https://www.cnblogs.com/chenjo/p/14071864.html" rel="nofollow noopener noreferrer" target="_blank">https://www.cnblogs.com/chenjo/p/14071864.html<span> ↗</span></a></li>
+<li><a href="https://blog.csdn.net/qq_53141117/article/details/132744428" rel="nofollow noopener noreferrer" target="_blank">https://blog.csdn.net/qq_53141117/article/details/132744428<span> ↗</span></a></li>
+</ul>
+<h2 id="7-字符串处理">7. 字符串处理<a class="anchor" href="#7-字符串处理">#</a></h2>
+<p>字符串是Python中最常用的数据类型之一。理解和掌握字符串处理方法是编写高效Python代码的基础。</p>
+<h3 id="1-字符串创建与基本操作">1. 字符串创建与基本操作<a class="anchor" href="#1-字符串创建与基本操作">#</a></h3>
+<ul>
+<li>字符串可以使用单引号、双引号或三引号创建。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建字符串</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">str1 </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> 'Hello'</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">str2 </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "World"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">str3 </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> '''This is</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">a multiline</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">string'''</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(str1)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 Hello</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(str2)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 World</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(str3)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 This is\n a multiline\n string</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 创建字符串
+str1 = &#x27;Hello&#x27;
+str2 = &#x22;World&#x22;
+str3 = &#x27;&#x27;&#x27;This is
+a multiline
+string&#x27;&#x27;&#x27;
+
+print(str1)  # 输出 Hello
+print(str2)  # 输出 World
+print(str3)  # 输出 This is\n a multiline\n string" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="2-字符串拼接">2. 字符串拼接<a class="anchor" href="#2-字符串拼接">#</a></h3>
+<ul>
+<li>可以使用加号（<code>+</code>）拼接字符串，使用乘号（<code>*</code>）重复字符串。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 字符串拼接</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">greeting </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> str1 </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> ' '</span><span style="color:#D73A49;--shiki-dark:#F97583"> +</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> str2</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(greeting)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 Hello World</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 字符串重复</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">repeat_str </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> str1 </span><span style="color:#D73A49;--shiki-dark:#F97583">*</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 3</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(repeat_str)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 HelloHelloHello</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 字符串拼接
+greeting = str1 + &#x27; &#x27; + str2
+print(greeting)  # 输出 Hello World
+
+# 字符串重复
+repeat_str = str1 * 3
+print(repeat_str)  # 输出 HelloHelloHello" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<blockquote>
+<p><strong>注意</strong>
+使用<code>*</code>重复数据的操作在其他数据类型同样可以使用。但是请注意，<code>*</code> 在Python中的逻辑是引用复制，即重复使用同一对象。这可能会导致用户在数值计算等可能出现引用类型套引用类型的情况下出现容易忽视的灾难性错误：</p>
+</blockquote>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="bash"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#6F42C1;--shiki-dark:#B392F0">array</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> =</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> []</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#6F42C1;--shiki-dark:#B392F0">array.append([[1,1,1,1]]*2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">array</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">[[[1, 1, 1, 1], [1, 1, 1, 1]]]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#6F42C1;--shiki-dark:#B392F0">array[0][0][0]</span></span>
+<span class="line"><span style="color:#6F42C1;--shiki-dark:#B392F0">1</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#6F42C1;--shiki-dark:#B392F0">array[0][0][0]</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> *</span><span style="color:#032F62;--shiki-dark:#9ECBFF">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 2</span><span style="color:#6A737D;--shiki-dark:#6A737D"> # 使用 array[0][0][0] = array[0][0][0] * 2 结果相同</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">>>> </span><span style="color:#6F42C1;--shiki-dark:#B392F0">array</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">[[[2, 1, 1, 1], [2, 1, 1, 1]]]</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">bash</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code=">>> array = []
+>>> array.append([[1,1,1,1]]*2)
+>>> print(array)
+[[[1, 1, 1, 1], [1, 1, 1, 1]]]
+>>> array[0][0][0]
+1
+>>> array[0][0][0] *= 2 # 使用 array[0][0][0] = array[0][0][0] * 2 结果相同
+>>> array
+[[[2, 1, 1, 1], [2, 1, 1, 1]]]" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>明明只修改了<code>array[0][0][0]</code>, 但<code>array[0][1][0]</code>的值也被修改了！
+这提醒我们在使用<code>*</code>时，应当注意不要对存在<strong>引用共享</strong>的数据进行操作。</p>
+<h3 id="3-字符串格式化">3. 字符串格式化<a class="anchor" href="#3-字符串格式化">#</a></h3>
+<ul>
+<li>Python提供了多种字符串格式化方法，包括百分号格式化、<code>str.format()</code>方法和f字符串（格式化字符串字面量）。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">name </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "Alice"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">age </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 25</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 百分号格式化</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">%s</span><span style="color:#032F62;--shiki-dark:#9ECBFF">. You are </span><span style="color:#005CC5;--shiki-dark:#79B8FF">%d</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> years old."</span><span style="color:#D73A49;--shiki-dark:#F97583"> %</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> (name, age))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># str.format()方法</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">. You are </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> years old."</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.format(name, age))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># f字符串（Python 3.6及以上）</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#D73A49;--shiki-dark:#F97583">f</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">name</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF">. You are </span><span style="color:#005CC5;--shiki-dark:#79B8FF">{</span><span style="color:#24292E;--shiki-dark:#E1E4E8">age</span><span style="color:#005CC5;--shiki-dark:#79B8FF">}</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> years old."</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="name = &#x22;Alice&#x22;
+age = 25
+
+# 百分号格式化
+print(&#x22;Hello, %s. You are %d years old.&#x22; % (name, age))
+
+# str.format()方法
+print(&#x22;Hello, {}. You are {} years old.&#x22;.format(name, age))
+
+# f字符串（Python 3.6及以上）
+print(f&#x22;Hello, {name}. You are {age} years old.&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>Python中，字符串格式化不仅可以将变量嵌入字符串中，还可以通过在格式化占位符中指定格式来控制显示效果。对于<code>str.format()</code>方法和f字符串<code>f"..."</code>，你可以指定显示的精度、对齐方式、填充字符、宽度等。
+下面是一个简单的表格，用于展示不同字符串格式化方法的对比和一些常见用法：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<table><thead><tr><th><strong>格式化方法</strong></th><th><strong>语法</strong></th><th><strong>说明</strong></th><th><strong>示例</strong></th></tr></thead><tbody><tr><td><strong>百分号格式化</strong></td><td><code>"Hello, %s. You are %d years old." % (name, age)</code></td><td>使用 <code>%</code> 占位符格式化，类似 C 语言中的 <code>printf</code></td><td><code>print("Hello, %s. You are %d years old." % ("Alice", 25))</code></td></tr><tr><td><strong><code>str.format()</code></strong></td><td><code>"Hello, {}. You are {} years old.".format(name, age)</code></td><td>使用 <code>{}</code> 占位符并通过 <code>format()</code> 方法传递参数</td><td><code>print("Hello, {}. You are {} years old.".format("Alice", 25))</code></td></tr><tr><td><strong>f字符串（Python 3.6+）</strong></td><td><code>f"Hello, {name}. You are {age} years old."</code></td><td>在字符串前加 <code>f</code>，直接在 <code>{}</code> 中插入变量或表达式</td><td><code>print(f"Hello, {name}. You are {age} years old.")</code></td></tr><tr><td><strong>对齐与宽度控制</strong></td><td><code>"{:&#x3C;10}".format(name)</code>, <code>"{:>10}".format(name)</code></td><td>设置最小宽度并指定对齐方式（<code>&#x3C;</code> 左对齐，<code>></code> 右对齐）</td><td><code>print("{:&#x3C;10} is {} years old.".format("Alice", 25))</code></td></tr><tr><td><strong>填充字符</strong></td><td><code>"{:*^10}".format("hello")</code></td><td>使用填充字符进行对齐（例如 <code>*</code> 填充）</td><td><code>print("{:*^10}".format("hello"))</code></td></tr><tr><td><strong>浮动点精度控制</strong></td><td><code>"{:.2f}".format(pi)</code></td><td>设置小数位数精度</td><td><code>print("{:.2f}".format(3.141592653589793))</code></td></tr><tr><td><strong>科学计数法</strong></td><td><code>"{:.2e}".format(pi)</code></td><td>使用科学计数法表示数字</td><td><code>print("{:.2e}".format(3.141592653589793))</code></td></tr><tr><td><strong>列表和字典格式化</strong></td><td><code>"{name}, {age}".format(name="Alice", age=25)</code></td><td>可以通过命名字段来传递字典中的值</td><td><code>print("{name} is {age} years old.".format(name="Alice", age=25))</code></td></tr><tr><td><strong>表达式计算</strong></td><td><code>f"2 + 2 = {2 + 2}"</code></td><td>f字符串支持嵌入表达式并计算</td><td><code>print(f"2 + 2 = {2 + 2}")</code></td></tr></tbody></table>
+<h3 id="4-字符串索引切片">4. 字符串索引&#x26;切片<a class="anchor" href="#4-字符串索引切片">#</a></h3>
+<ul>
+<li>可以使用索引访问字符串中的单个字符，使用切片获取子字符串。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 字符串索引</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "Python"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s[</span><span style="color:#005CC5;--shiki-dark:#79B8FF">0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 P</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s[</span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#005CC5;--shiki-dark:#79B8FF">1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 n</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 字符串切片</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s[</span><span style="color:#005CC5;--shiki-dark:#79B8FF">1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span><span style="color:#005CC5;--shiki-dark:#79B8FF">4</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 yth</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s[:</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">])  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 Pyt</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s[</span><span style="color:#005CC5;--shiki-dark:#79B8FF">3</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:])  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hon</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 字符串索引
+s = &#x22;Python&#x22;
+print(s[0])  # 输出 P
+print(s[-1])  # 输出 n
+
+# 字符串切片
+print(s[1:4])  # 输出 yth
+print(s[:3])  # 输出 Pyt
+print(s[3:])  # 输出 hon" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="5-常用字符串方法">5. 常用字符串方法<a class="anchor" href="#5-常用字符串方法">#</a></h3>
+<ul>
+<li>Python提供了许多内置的字符串方法，用于各种字符串操作。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "hello, world"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 大小写转换</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.upper())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 HELLO, WORLD</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.lower())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello, world</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.capitalize())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 Hello, world</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.title())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 Hello, World</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 去除空白字符</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s2 </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "  hello  "</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s2.strip())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s2.lstrip())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s2.rstrip())  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出   hello</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 查找和替换</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.find(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"world"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 7</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s.replace(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"world"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Python"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello, Python</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 拆分和连接</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">words </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> s.split(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">", "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(words)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 ['hello', 'world']</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">", "</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.join(words))  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello, world</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="s = &#x22;hello, world&#x22;
+
+# 大小写转换
+print(s.upper())  # 输出 HELLO, WORLD
+print(s.lower())  # 输出 hello, world
+print(s.capitalize())  # 输出 Hello, world
+print(s.title())  # 输出 Hello, World
+
+# 去除空白字符
+s2 = &#x22;  hello  &#x22;
+print(s2.strip())  # 输出 hello
+print(s2.lstrip())  # 输出 hello
+print(s2.rstrip())  # 输出   hello
+
+# 查找和替换
+print(s.find(&#x22;world&#x22;))  # 输出 7
+print(s.replace(&#x22;world&#x22;, &#x22;Python&#x22;))  # 输出 hello, Python
+
+# 拆分和连接
+words = s.split(&#x22;, &#x22;)
+print(words)  # 输出 [&#x27;hello&#x27;, &#x27;world&#x27;]
+print(&#x22;, &#x22;.join(words))  # 输出 hello, world" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="6-字符串的不可变性">6. 字符串的不可变性<a class="anchor" href="#6-字符串的不可变性">#</a></h3>
+<ul>
+<li>字符串在Python中是不可变的，一旦创建，就不能修改其内容。任何对字符串的操作都会创建一个新字符串。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "hello"</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># s[0] = 'y' 错误！</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> s.replace(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"h"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"y"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 yello</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="s = &#x22;hello&#x22;
+# s[0] = &#x27;y&#x27; 错误！
+s = s.replace(&#x22;h&#x22;, &#x22;y&#x22;)
+print(s)  # 输出 yello" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="7-字符串的编码和解码">7. 字符串的编码和解码<a class="anchor" href="#7-字符串的编码和解码">#</a></h3>
+<ul>
+<li>可以使用<code>encode()</code>方法将字符串编码为字节，使用<code>decode()</code>方法将字节解码为字符串。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 编码</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "hello"</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">b </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> s.encode(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"utf-8"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(b)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 b'hello'</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 解码</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">s2 </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> b.decode(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"utf-8"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(s2)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 hello</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 编码
+s = &#x22;hello&#x22;
+b = s.encode(&#x22;utf-8&#x22;)
+print(b)  # 输出 b&#x27;hello&#x27;
+
+# 解码
+s2 = b.decode(&#x22;utf-8&#x22;)
+print(s2)  # 输出 hello" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="8-多行字符串和转义字符">8. 多行字符串和转义字符<a class="anchor" href="#8-多行字符串和转义字符">#</a></h3>
+<ul>
+<li>多行字符串可以使用三引号创建，转义字符用于表示特殊字符。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 多行字符串</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">multi_line_str </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> """This is a</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">multiline</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">string"""</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(multi_line_str)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 转义字符</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">escaped_str </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "He said, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="color:#032F62;--shiki-dark:#9ECBFF">Hello!</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\"</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(escaped_str)  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 输出 He said, "Hello!"</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 多行字符串
+multi_line_str = &#x22;&#x22;&#x22;This is a
+multiline
+string&#x22;&#x22;&#x22;
+print(multi_line_str)
+
+# 转义字符
+escaped_str = &#x22;He said, \&#x22;Hello!\&#x22;&#x22;
+print(escaped_str)  # 输出 He said, &#x22;Hello!&#x22;" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h2 id="8-文件处理">8. 文件处理<a class="anchor" href="#8-文件处理">#</a></h2>
+<p>在实际编程中，经常需要读取和写入文件。Python 提供了强大的文件处理功能，允许我们轻松地操作文件。</p>
+<h3 id="打开和关闭文件">打开和关闭文件<a class="anchor" href="#打开和关闭文件">#</a></h3>
+<ul>
+<li>可以使用 <code>open</code> 函数打开文件，使用 <code>close</code> 方法关闭文件。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 打开文件</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">file</span><span style="color:#D73A49;--shiki-dark:#F97583"> =</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 读取文件内容</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">content </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.read()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(content)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 关闭文件</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.close()</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 打开文件
+file = open(&#x22;example.txt&#x22;, &#x22;r&#x22;)
+
+# 读取文件内容
+content = file.read()
+print(content)
+
+# 关闭文件
+file.close()" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="使用-with-语句">使用 <code>with</code> 语句<a class="anchor" href="#使用-with-语句">#</a></h3>
+<ul>
+<li><code>with</code> 语句可以自动处理文件的打开和关闭，确保文件在使用完后正确关闭。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 使用 with 语句打开文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    content </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.read()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(content)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 使用 with 语句打开文件
+with open(&#x22;example.txt&#x22;, &#x22;r&#x22;) as file:
+    content = file.read()
+    print(content)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="读取文件">读取文件<a class="anchor" href="#读取文件">#</a></h3>
+<ul>
+<li>可以使用 <code>read</code>、<code>readline</code> 和 <code>readlines</code> 方法读取文件内容。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 读取整个文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    content </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.read()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(content)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 逐行读取文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> line </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(line.strip())</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 读取一行</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    line </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.readline()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(line)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 读取所有行并返回列表</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"r"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    lines </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.readlines()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(lines)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 读取整个文件
+with open(&#x22;example.txt&#x22;, &#x22;r&#x22;) as file:
+    content = file.read()
+    print(content)
+
+# 逐行读取文件
+with open(&#x22;example.txt&#x22;, &#x22;r&#x22;) as file:
+    for line in file:
+        print(line.strip())
+
+# 读取一行
+with open(&#x22;example.txt&#x22;, &#x22;r&#x22;) as file:
+    line = file.readline()
+    print(line)
+
+# 读取所有行并返回列表
+with open(&#x22;example.txt&#x22;, &#x22;r&#x22;) as file:
+    lines = file.readlines()
+    print(lines)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="写入文件">写入文件<a class="anchor" href="#写入文件">#</a></h3>
+<ul>
+<li>可以使用 <code>write</code> 和 <code>writelines</code> 方法写入文件内容。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 写入文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"w"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">    file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.write(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Hello, World!</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">    file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.write(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"This is a new line.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 写入多行</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">lines </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"First line.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Second line.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"Third line.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"w"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">    file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.writelines(lines)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 写入文件
+with open(&#x22;example.txt&#x22;, &#x22;w&#x22;) as file:
+    file.write(&#x22;Hello, World!\n&#x22;)
+    file.write(&#x22;This is a new line.\n&#x22;)
+
+# 写入多行
+lines = [&#x22;First line.\n&#x22;, &#x22;Second line.\n&#x22;, &#x22;Third line.\n&#x22;]
+with open(&#x22;example.txt&#x22;, &#x22;w&#x22;) as file:
+    file.writelines(lines)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="文件模式">文件模式<a class="anchor" href="#文件模式">#</a></h3>
+<p>可以使用不同的模式打开文件：</p>
+<ul>
+<li><code>'r'</code>：读取（默认模式）</li>
+<li><code>'w'</code>：写入（会覆盖文件）</li>
+<li><code>'a'</code>：追加（在文件末尾添加内容）</li>
+<li><code>'b'</code>：二进制模式（用于非文本文件）</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 以追加模式打开文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"a"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#E36209;--shiki-dark:#FFAB70">    file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.write(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"This line is appended.</span><span style="color:#005CC5;--shiki-dark:#79B8FF">\n</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 以二进制模式读取文件</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">with</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> open</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.jpg"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"rb"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">as</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    content </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#E36209;--shiki-dark:#FFAB70"> file</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.read()</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(content)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="# 以追加模式打开文件
+with open(&#x22;example.txt&#x22;, &#x22;a&#x22;) as file:
+    file.write(&#x22;This line is appended.\n&#x22;)
+
+# 以二进制模式读取文件
+with open(&#x22;example.jpg&#x22;, &#x22;rb&#x22;) as file:
+    content = file.read()
+    print(content)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="文件和目录操作">文件和目录操作<a class="anchor" href="#文件和目录操作">#</a></h3>
+<ul>
+<li>使用 <code>os</code> 模块可以进行文件和目录操作。</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">import</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> os</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 检查文件是否存在</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(os.path.exists(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 获取文件大小</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(os.path.getsize(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 重命名文件</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">os.rename(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"new_example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 删除文件</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">os.remove(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"new_example.txt"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 创建目录</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">os.mkdir(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example_dir"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 删除目录</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">os.rmdir(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"example_dir"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="import os
+
+# 检查文件是否存在
+print(os.path.exists(&#x22;example.txt&#x22;))
+
+# 获取文件大小
+print(os.path.getsize(&#x22;example.txt&#x22;))
+
+# 重命名文件
+os.rename(&#x22;example.txt&#x22;, &#x22;new_example.txt&#x22;)
+
+# 删除文件
+os.remove(&#x22;new_example.txt&#x22;)
+
+# 创建目录
+os.mkdir(&#x22;example_dir&#x22;)
+
+# 删除目录
+os.rmdir(&#x22;example_dir&#x22;)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>    </div> </article> </main> <div class="mt-6 items-start gap-x-10 md:flex">  <div class="mt-8 flex-1 text-muted-foreground md:min-w-[50ch]"> <div class="relative flex flex-col gap-y-2 rounded-xl border px-3 sm:px-4 py-2 sm:py-3 astro-tju7bdtj"> <svg aria-hidden="true" class="absolute end-4 top-4 size-20 opacity-10 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 3a5 5 0 0 1 3.75 1.692a1 1 0 1 1-1.5 1.324a3 3 0 1 0 0 3.968a1 1 0 1 1 1.5 1.324A5 5 0 1 1 12 7"/></g></svg>  <div class="absolute bottom-2 right-2 w-20 h-10 signature-container astro-tju7bdtj"> <svg viewBox="0 -1 163.403 90.305" xmlns="http://www.w3.org/2000/svg" class="w-full h-full signature-svg astro-tju7bdtj"> <g stroke-linecap="round" fill-rule="evenodd" stroke="currentColor" stroke-width="0.3mm" fill="currentColor" class="astro-tju7bdtj"> <path class="signature-path astro-tju7bdtj" d="M 24.402 85.301 Q 17.502 85.301 11.952 81.901 Q 6.402 78.501 3.202 72.051 Q 0.002 65.601 0.002 56.801 Q 0.002 41.601 6.502 28.651 Q 13.002 15.701 25.702 7.851 Q 38.402 0.001 56.202 0.001 Q 60.802 0.001 66.052 0.701 Q 71.302 1.401 75.602 2.801 Q 78.402 3.601 78.402 6.801 Q 78.402 9.401 76.452 11.701 Q 74.502 14.001 71.902 14.001 Q 71.102 14.001 70.702 13.901 Q 65.502 12.701 61.802 12.151 Q 58.102 11.601 54.002 11.601 Q 41.302 11.601 32.402 17.751 Q 23.502 23.901 19.102 34.001 Q 14.702 44.101 14.702 55.801 Q 14.702 64.301 18.052 68.951 Q 21.402 73.601 26.802 73.601 Q 32.902 73.601 37.502 68.601 Q 42.102 63.601 45.902 52.401 Q 49.702 41.201 53.402 22.001 Q 54.002 19.201 55.802 18.201 Q 57.602 17.201 60.602 17.201 Q 67.702 17.201 67.702 21.801 Q 67.702 22.601 67.402 23.801 Q 64.802 33.501 62.652 45.251 Q 60.502 57.001 60.502 63.101 Q 60.502 68.501 62.102 70.951 Q 63.702 73.401 67.002 73.401 Q 70.202 73.401 73.102 71.251 A 23.845 23.845 0 0 0 74.956 69.705 A 43.109 43.109 0 0 0 75.125 69.55 A 12.009 12.009 0 0 1 76.332 66.429 A 10.164 10.164 0 0 1 77.002 65.401 Q 79.302 62.301 83.502 62.301 Q 87.102 62.301 87.102 65.001 Q 87.102 65.701 86.902 67.501 Q 86.602 71.101 86.602 71.601 Q 86.602 74.601 89.202 74.601 Q 91.102 74.601 92.852 72.351 Q 94.602 70.101 95.752 66.201 Q 96.902 62.301 96.902 57.601 Q 96.902 54.001 96.002 51.551 Q 95.102 49.101 93.802 49.101 Q 92.702 49.101 92.202 49.651 Q 91.702 50.201 91.202 51.501 Q 90.602 53.101 89.602 54.051 Q 88.602 55.001 86.102 55.001 Q 83.902 55.001 82.602 53.451 Q 81.302 51.901 81.302 48.701 Q 81.302 43.601 84.402 40.701 Q 87.502 37.801 92.402 37.801 Q 96.602 37.801 100.002 39.851 Q 103.402 41.901 105.202 45.801 Q 108.202 41.801 111.952 39.801 Q 115.702 37.801 119.302 37.801 Q 123.202 37.801 125.252 39.601 Q 127.302 41.401 127.302 45.401 Q 127.302 49.901 125.602 52.451 Q 123.902 55.001 121.502 55.001 Q 119.302 55.001 118.502 54.101 Q 117.702 53.201 117.302 51.501 Q 117.102 50.301 116.702 49.701 Q 116.302 49.101 115.302 49.101 Q 114.102 49.101 112.752 51.351 Q 111.402 53.601 110.452 57.301 Q 109.502 61.001 109.502 65.001 Q 109.502 69.701 111.752 72.251 Q 114.002 74.801 117.902 74.801 Q 121.802 74.801 125.252 72.151 Q 127.442 70.468 130.096 67.598 A 81.726 81.726 0 0 0 130.631 67.01 A 46.575 46.575 0 0 1 130.738 65.106 Q 130.998 61.577 131.752 56.951 Q 132.902 49.901 134.702 43.801 Q 135.602 40.601 137.102 39.401 Q 138.602 38.201 141.902 38.201 Q 147.002 38.201 147.002 41.601 Q 147.002 44.101 145.102 53.201 Q 142.702 64.201 142.702 68.101 Q 142.702 71.101 143.502 72.701 Q 144.302 74.301 146.202 74.301 Q 148.002 74.301 150.702 71.801 Q 153.402 69.301 157.902 63.901 Q 159.102 62.501 160.602 62.501 Q 161.902 62.501 162.652 63.701 Q 163.402 64.901 163.402 67.001 Q 163.402 71.001 161.502 73.201 Q 151.602 85.301 143.002 85.301 Q 136.502 85.301 133.552 80.701 A 17.114 17.114 0 0 1 132.192 78.047 A 46.504 46.504 0 0 1 129.824 80.016 A 41.632 41.632 0 0 1 127.252 81.851 Q 122.002 85.301 115.402 85.301 Q 110.302 85.301 106.352 83.401 Q 102.402 81.501 100.102 78.001 Q 94.402 85.201 86.602 85.201 Q 81.102 85.201 77.902 82.001 A 10.732 10.732 0 0 1 76.686 80.537 A 42.127 42.127 0 0 1 76.431 80.739 A 31.425 31.425 0 0 1 74.402 82.201 Q 69.702 85.301 62.902 85.301 Q 55.902 85.301 51.602 81.251 Q 47.302 77.201 46.202 69.801 Q 38.802 85.301 24.402 85.301 Z M 143.802 31.601 Q 139.602 31.601 137.502 29.651 Q 135.402 27.701 135.402 24.201 Q 135.402 20.701 138.152 18.351 Q 140.902 16.001 145.002 16.001 Q 148.702 16.001 151.002 17.801 Q 153.302 19.601 153.302 22.901 Q 153.302 26.901 150.702 29.251 Q 148.102 31.601 143.802 31.601 Z" vector-effect="non-scaling-stroke"></path> </g> </svg> </div>  <div class="flex flex-col astro-tju7bdtj"> <div class="font-medium text-foreground astro-tju7bdtj">python入门（下）</div> <div class="text-sm astro-tju7bdtj">https://kioshiroi.github.io/blog/python2</div> </div>  <div class="flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8 astro-tju7bdtj"> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Author</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj">KIOSHIROI</span> </div> <div class="flex gap-x-2 sm:min-w-16 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Published at</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj"> 2024年5月15日 </span> </div> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Copyright</span> <a class="text-sm text-foreground max-sm:place-self-center underline decoration-muted-foreground/50 underline-offset-2 rounded px-1 -mx-1 transition-all duration-200 hover:no-underline hover:bg-foreground hover:text-background astro-tju7bdtj" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+CC BY-NC-SA 4.0
+</a> </div> </div>  <div class="relative astro-tju7bdtj"> <div class="flex flex-row gap-3 astro-tju7bdtj"> <button id="copy-link" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16.243 9.878a1 1 0 0 1 1.32-.083l.094.083L19.778 12a5.5 5.5 0 0 1-7.596 7.952L12 19.778l-2.121-2.121a1 1 0 0 1 1.32-1.498l.094.083l2.121 2.122a3.5 3.5 0 0 0 5.091-4.8l-.141-.15l-2.121-2.121a1 1 0 0 1 0-1.415M9.17 9.171a1 1 0 0 1 1.32-.083l.095.083l4.242 4.243a1 1 0 0 1-1.32 1.497l-.094-.083l-4.243-4.242a1 1 0 0 1 0-1.415m-4.95-4.95a5.5 5.5 0 0 1 7.597-.173l.182.174l2.121 2.12A1 1 0 0 1 12.8 7.84l-.094-.083l-2.121-2.121a3.5 3.5 0 0 0-5.091 4.8l.141.15l2.121 2.12a1 1 0 0 1-1.32 1.498l-.094-.083L4.222 12a5.5 5.5 0 0 1 0-7.778Z"/></g></svg>  </button> <button id="get-qrcode" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11 3a2 2 0 0 1 1.995 1.85L13 5v6a2 2 0 0 1-1.85 1.995L11 13H5a2 2 0 0 1-1.995-1.85L3 11V5a2 2 0 0 1 1.85-1.995L5 3zm0 2H5v6h6zM8.5 7a.5.5 0 0 1 .492.41L9 7.5v1a.5.5 0 0 1-.41.492L8.5 9h-1a.5.5 0 0 1-.492-.41L7 8.5v-1a.5.5 0 0 1 .41-.492L7.5 7zM21 5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zM7 15a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2zm0 2H5v2h2zm14 0a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zm-2-5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1m-2 4a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0z"/></g></svg>  </button>  </div> <div id="qrcode-container" class="absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out aria-expanded:max-h-44 aria-expanded:translate-y-4 aria-expanded:opacity-100 astro-tju7bdtj" aria-expanded="false"></div> <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script> <script>(function(){const content = undefined;
+
+  const renderContent = content ?? window.location.href
+  // Load qrcode
+  function loadqrcode(qrcodeContainer) {
+    if (!qrcodeContainer) throw new Error('qrcode container not found')
+    if (qrcodeContainer.innerHTML !== '') return
+    new QRCode(qrcodeContainer, renderContent)
+  }
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  if (!qrcodeContainer) throw new Error('qrcode container not found')
+  loadqrcode(qrcodeContainer)
+})();</script> </div> </div> <div class="mx-6 rounded-b-xl border border-t-0 px-3 pb-1.5 pt-1 sm:mx-8 sm:px-4 astro-tju7bdtj"> <a href="/projects#sponsorship" class="flex items-center justify-between text-muted-foreground no-underline astro-tju7bdtj"> <span class="astro-tju7bdtj">Buy me a cup of coffee ☕.</span> <svg aria-hidden="true" class="box-content size-5 p-1 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M17 2a3 3 0 0 1 3 3v12a1 1 0 0 1 .351 1.936l-8 3a1 1 0 0 1-.702 0l-8-3A1 1 0 0 1 4 17V5a3 3 0 0 1 3-3zm0 2H7a1 1 0 0 0-.993.883L6 5v12.682l6 2.25l6-2.25V5a1 1 0 0 0-.883-.993zm-5 1a1 1 0 0 1 .993.883L13 6v1h2a1 1 0 0 1 .117 1.993L15 9h-5a.5.5 0 0 0-.09.992L10 10h4a2.5 2.5 0 0 1 .164 4.995L14 15h-1v1a1 1 0 0 1-1.993.117L11 16v-1H9a1 1 0 0 1-.117-1.993L9 13h5a.5.5 0 0 0 .09-.992L14 12h-4a2.5 2.5 0 0 1-.164-4.995L10 7h1V6a1 1 0 0 1 1-1"/></g></svg>  </a> </div>  <script type="module" src="/_astro/Copyright.astro_astro_type_script_index_0_lang.CQ7TF57l.js"></script> <div class="flex max-sm:flex-col sm:justify-between gap-2 mt-3 sm:mt-6"> <span class="min-w-0"> <a href="/blog/python" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 hover:bg-muted max-sm:max-w-[80%] sm:flex"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 rotate-180 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> <p class="truncate font-medium transition-colors">python入门（上）</p> </a> </span> <span class="min-w-0"> <a href="/blog/my-first-github-blog" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 text-right no-underline transition-colors duration-300 hover:bg-muted max-sm:float-end max-sm:max-w-[80%] sm:flex"> <p class="truncate font-medium transition-colors">第一篇Github Blog</p> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> </a> </span> </div> <comment-component class="astro-w2uxdene"><div id="waline" class="not-prose mt-3 sm:mt-6 astro-w2uxdene">
+Comment seems to stuck. Try to refresh?✨
+</div></comment-component><script type="module" src="/_astro/Comment.astro_astro_type_script_index_0_lang.CoJ8wWoz.js"></script> </div> <div class="min-w-48 basis-60">  </div> </div> <button aria-label="Back to Top" class="z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12" data-show="false" id="to-top-btn"> <div class="absolute bottom-0 end-0 start-0 top-0 flex items-center justify-center transition-opacity group-hover:opacity-0 group-[.ended]:opacity-0"> <span class="text">10</span> <span class="text-xs">%</span> </div> <svg aria-hidden="true" class="opacity-0 transition-opacity group-hover:opacity-100 group-[.ended]:opacity-100 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11.293 8.293a1 1 0 0 1 1.414 0l5.657 5.657a1 1 0 0 1-1.414 1.414L12 10.414l-4.95 4.95a1 1 0 0 1-1.414-1.414z"/></g></svg>  </button> <script>(function(){const headerName = "content-header";
+const contentName = "content";
+const needPercent = true;
+
+  const scrollBtn = document.getElementById('to-top-btn')
+  const scrollPercentEl = scrollBtn.children[0].children[0]
+  const targetHeader = document.getElementById(headerName)
+  const articleElement = document.getElementById(contentName)
+
+  // scroll to top
+  function callback(entries) {
+    entries.forEach((entry) => {
+      // only show the scroll to top button when the heading is out of view
+      scrollBtn.dataset.show = (!entry.isIntersecting).toString()
+    })
+  }
+  scrollBtn.addEventListener('click', () => {
+    document.documentElement.scrollTo({ behavior: 'smooth', top: 0 })
+  })
+  if (targetHeader) {
+    const observer = new IntersectionObserver(callback)
+    observer.observe(targetHeader)
+  } else {
+    console.error(`Element with ID ${headerName} not found.`)
+  }
+
+  if (needPercent) {
+    // scroll percentage
+    let scrollHeight = articleElement.scrollHeight // total height
+    let articleTop = articleElement.offsetTop // article top
+    const clientHeight = document.documentElement.clientHeight // client height
+
+    function recalculateHeights() {
+      scrollHeight = articleElement.scrollHeight
+      articleTop = articleElement.offsetTop
+    }
+
+    const images = articleElement.querySelectorAll('img')
+    let loadedImagesCount = 0
+    const totalImages = images.length
+
+    if (totalImages > 0) {
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedImagesCount++
+        } else {
+          img.addEventListener('load', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+          img.addEventListener('error', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+        }
+      })
+      if (loadedImagesCount === totalImages) {
+        recalculateHeights()
+      }
+    }
+
+    function calculateScrollPercent() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop < articleTop) return
+      
+      const scrollableHeight = Math.max(scrollHeight - clientHeight, 1)
+      const scrolledAmount = scrollTop - articleTop
+      
+      const percent = Math.round((scrolledAmount / scrollableHeight) * 100)
+      return Math.max(0, Math.min(100, percent))
+    }
+
+    document.addEventListener('scroll', () => {
+      const scrollPercent = calculateScrollPercent()
+      if (scrollPercent === undefined) return
+      scrollPercentEl.innerText = scrollPercent.toString()
+
+      // If percent is 100, percent won't need to show
+      scrollBtn.classList.toggle('ended', scrollPercent >= 100)
+    })
+
+    window.addEventListener('resize', recalculateHeights)
+  } else {
+    scrollBtn.classList.add('ended')
+  }
+})();</script>  <footer class="mx-auto mb-5 mt-16"> <div class="border-t border-border pt-5"> <div class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0"> <div class="flex items-center gap-x-4 gap-y-2 text-muted-foreground max-sm:flex-col [&_a:hover]:text-primary [&_a]:text-foreground"> <a class="text-xs" style="color:hsl(var(--muted-foreground)/var(--tw-text-opacity,1))" href target="_blank">  </a> <span>
+© 2026 KIOSHIROI &
+<a href="/terms/list">Site policy</a> </span> <span class="text-muted-foreground [&_a:hover]:text-primary [&_a]:text-foreground"> <a href="https://github.com/withastro/astro" target="_blank">
+Astro
+</a> 
+theme powered
+</span> </div>  <div class="flex items-center gap-x-4"> <a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="https://github.com/KIOSHIROI" aria-label="github"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M6.315 6.176c-.25-.638-.24-1.367-.129-2.034a6.8 6.8 0 0 1 2.12 1.07c.28.214.647.283.989.18A9.3 9.3 0 0 1 12 5c.961 0 1.874.14 2.703.391c.342.104.709.034.988-.18a6.8 6.8 0 0 1 2.119-1.07c.111.667.12 1.396-.128 2.033c-.15.384-.075.826.208 1.14C18.614 8.117 19 9.04 19 10c0 2.114-1.97 4.187-5.134 4.818c-.792.158-1.101 1.155-.495 1.726c.389.366.629.882.629 1.456v3a1 1 0 0 0 2 0v-3c0-.57-.12-1.112-.334-1.603C18.683 15.35 21 12.993 21 10c0-1.347-.484-2.585-1.287-3.622c.21-.82.191-1.646.111-2.28c-.071-.568-.17-1.312-.57-1.756c-.595-.659-1.58-.271-2.28-.032a9 9 0 0 0-2.125 1.045A11.4 11.4 0 0 0 12 3c-.994 0-1.953.125-2.851.356a9 9 0 0 0-2.125-1.045c-.7-.24-1.686-.628-2.281.031c-.408.452-.493 1.137-.566 1.719l-.005.038c-.08.635-.098 1.462.112 2.283C3.484 7.418 3 8.654 3 10c0 2.992 2.317 5.35 5.334 6.397A4 4 0 0 0 8 17.98l-.168.034c-.717.099-1.176.01-1.488-.122c-.76-.322-1.152-1.133-1.63-1.753c-.298-.385-.732-.866-1.398-1.088a1 1 0 0 0-.632 1.898c.558.186.944 1.142 1.298 1.566c.373.448.869.916 1.58 1.218c.682.29 1.483.393 2.438.276V21a1 1 0 0 0 2 0v-3c0-.574.24-1.09.629-1.456c.607-.572.297-1.568-.495-1.726C6.969 14.187 5 12.114 5 10c0-.958.385-1.881 1.108-2.684c.283-.314.357-.756.207-1.14"/></g></svg>  </a><a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="/rss.xml" aria-label="rss"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5.5 17a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3m0-14C14.06 3 21 9.94 21 18.5q0 .268-.009.534a1 1 0 0 1-1.999-.068Q19 18.734 19 18.5C19 11.044 12.956 5 5.5 5q-.234 0-.466.008a1 1 0 0 1-.068-1.999Q5.231 3 5.5 3m0 7a8.5 8.5 0 0 1 8.482 9.066a1 1 0 0 1-1.996-.132a6.5 6.5 0 0 0-6.92-6.92a1 1 0 1 1-.132-1.995q.28-.02.566-.019"/></g></svg>  </a> </div> </div> </div> </footer> </div> <script>(function(){const live2dAutoloadSrc = "/live2d-autoload.js?v=20260612b";
+const live2dCdnPath = "/live2d-api/";
+
+      (() => {
+        const LIVE2D_AUTOLOAD_SRC = live2dAutoloadSrc
+        const LIVE2D_FLAG_KEY = '__live2d_autoload_injected__'
+        const LIVE2D_SCHEDULED_KEY = '__live2d_autoload_scheduled__'
+
+        window.__LIVE2D_CDN_PATH__ = live2dCdnPath
+
+        function injectLive2D() {
+          if (window[LIVE2D_FLAG_KEY]) return
+          window[LIVE2D_FLAG_KEY] = true
+
+          const script = document.createElement('script')
+          script.src = LIVE2D_AUTOLOAD_SRC
+          script.async = true
+          script.defer = true
+          script.crossOrigin = 'anonymous'
+          document.body.appendChild(script)
+        }
+
+        function scheduleLive2DLoad() {
+          if (window[LIVE2D_SCHEDULED_KEY]) return
+          window[LIVE2D_SCHEDULED_KEY] = true
+
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => injectLive2D(), { timeout: 3000 })
+          } else {
+            setTimeout(injectLive2D, 1200)
+          }
+        }
+
+        if (document.readyState !== 'loading') {
+          scheduleLive2DLoad()
+        } else {
+          document.addEventListener('DOMContentLoaded', scheduleLive2DLoad, { once: true })
+          window.addEventListener('load', scheduleLive2DLoad, { once: true })
+        }
+
+        document.addEventListener('astro:page-load', scheduleLive2DLoad)
+      })()
+    })();</script> <script>
+      (() => {
+        const OBSERVER_KEY = '__deferred_image_observer__'
+
+        function revealDeferredImage(img) {
+          const source = img.getAttribute('data-src')
+          if (!source) return
+          img.setAttribute('src', source)
+          img.removeAttribute('data-src')
+          img.removeAttribute('data-deferred-image')
+        }
+
+        function getObserver() {
+          if (!('IntersectionObserver' in window)) return null
+          if (!window[OBSERVER_KEY]) {
+            window[OBSERVER_KEY] = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return
+                  const image = entry.target
+                  revealDeferredImage(image)
+                  window[OBSERVER_KEY].unobserve(image)
+                })
+              },
+              {
+                rootMargin: '320px 0px'
+              }
+            )
+          }
+          return window[OBSERVER_KEY]
+        }
+
+        function bindDeferredImages(root = document) {
+          const deferredImages = root.querySelectorAll('img[data-deferred-image="true"][data-src]')
+          if (!deferredImages.length) return
+
+          const observer = getObserver()
+
+          deferredImages.forEach((img) => {
+            if (img.hasAttribute('data-deferred-bound')) return
+            img.setAttribute('data-deferred-bound', 'true')
+
+            if (observer) {
+              observer.observe(img)
+            } else {
+              revealDeferredImage(img)
+            }
+          })
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => bindDeferredImages(), { once: true })
+        } else {
+          bindDeferredImages()
+        }
+
+        document.addEventListener('astro:page-load', () => bindDeferredImages())
+      })()
+    </script>   <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BK0m7-AI.js"></script> <!-- <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const originalTitle = document.title
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+          } else {
+            document.title = originalTitle
+          }
+        })
+        window.addEventListener('blur', () => {
+          document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+        })
+        window.addEventListener('focus', () => {
+          document.title = originalTitle
+        })
+      })
+    </script> --> <script type="module">document.addEventListener("DOMContentLoaded",()=>{function s(n,i,a,e,o){const t=document.createElement("div");t.className=`click-particle color-${o}`;const c=Math.cos(a)*e,l=Math.sin(a)*e;t.style.setProperty("--dx",c+"px"),t.style.setProperty("--dy",l+"px"),t.style.left=n+"px",t.style.top=i+"px";const d=Math.random()*6+8;t.style.width=d+"px",t.style.height=d+"px",document.body.appendChild(t),setTimeout(()=>{t.parentNode&&t.parentNode.removeChild(t)},1100)}document.addEventListener("click",n=>{for(let e=0;e<10;e++){const o=Math.PI*2/10*e,t=18+Math.random()*8,c=e%10+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},e*12)}for(let e=0;e<4;e++){const o=Math.random()*Math.PI*2,t=18+Math.random()*10,c=Math.floor(Math.random()*10)+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},(10+e)*12)}})});</script> <script type="module">document.addEventListener("DOMContentLoaded",()=>{document.addEventListener("click",n=>{const e=n.target.closest('a[href^="#"]');if(!e||e.closest("toc-heading"))return;const t=e.getAttribute("href");if(!t||t==="#")return;const o=t.substring(1),r=document.getElementById(o);r&&(n.preventDefault(),history.pushState(null,"",t),r.scrollIntoView({behavior:"smooth",block:"start"}))})});</script> </body> </html> <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script> <script>(function(){const selector = ".prose .zoomable";
+const background = "hsl(var(--background) / 0.8)";
+
+  if (typeof mediumZoom !== 'undefined') {
+    mediumZoom(selector, { background })
+  }
+})();</script> 

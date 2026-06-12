@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live2D Test v5 — Image Hook Fix + State Trace</title>
+  <style>
+    body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
+    #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; }
+    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; }
+    #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
+  </style>
+</head>
+<body>
+  <h2>Live2D Test v5 — Image Hook Fix + State Trace + GL Error Skip</h2>
+  <div id="log">Loading...</div>
+
+  <script>
+    const _origLog = console.log.bind(console);
+    const _origError = console.error.bind(console);
+    const _origWarn = console.warn.bind(console);
+
+    const logEl = document.getElementById('log');
+    let logLines = 0;
+    function log(msg, cls) {
+      if (++logLines > 800) {
+        const lines = logEl.innerHTML.split('\n');
+        logEl.innerHTML = lines.slice(-300).join('\n');
+      }
+      const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      logEl.innerHTML += `<span class="${cls || 'ok'}">[${new Date().toISOString().slice(11,23)}] ${safe}</span>\n`;
+      _origLog(msg);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
+    console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
+
+    // ===== Fetch interceptor =====
+    const _origFetch = window.fetch;
+    window.fetch = function(url, opts) {
+      let urlStr = (url instanceof Request) ? url.url : String(url);
+      if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('motion3') || urlStr.includes('exp3') || urlStr.includes('texture_') || urlStr.includes('physics3')) {
+        let start = Date.now();
+        return _origFetch.call(window, url, opts).then(resp => {
+          const cl = resp.headers.get('content-length') || '?';
+          log('FETCH [' + resp.status + ' ' + cl + 'B ' + (Date.now()-start) + 'ms] ' + urlStr.split('/').pop(), resp.ok ? 'ok' : 'err');
+          return resp;
+        }).catch(err => { log('FETCH ERR: ' + err.message, 'err'); throw err; });
+      }
+      return _origFetch.call(window, url, opts);
+    };
+
+    // ===== Image loading interceptor — FIXED: hook Image constructor instead of addEventListener =====
+    let textureLoadCount = 0;
+    let textureErrorCount = 0;
+    const textureFiles = [];
+
+    const _origImage = window.Image;
+    window.Image = function() {
+      const img = new _origImage();
+      const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
+      let srcValue = '';
+
+      // Override src property setter
+      Object.defineProperty(img, 'src', {
+        get: function() { return srcValue; },
+        set: function(val) {
+          srcValue = val;
+          if (val && (val.includes('texture_') || val.includes('.png'))) {
+            const fname = val.split('/').pop();
+            const _addEL = img.addEventListener.bind(img);
+            img.addEventListener = function(evt, fn, opts) {
+              if (evt === 'load') {
+                const origFn = fn;
+                fn = function(e) {
+                  textureLoadCount++;
+                  const dims = img.naturalWidth + 'x' + img.naturalHeight;
+                  textureFiles.push(fname + ' ' + dims);
+                  log('TEX_IMG loaded #' + textureLoadCount + ': ' + fname + ' (' + dims + ')');
+                  return origFn.call(this, e);
+                };
+              }
+              if (evt === 'error') {
+                const origFn = fn;
+                fn = function(e) {
+                  textureErrorCount++;
+                  log('!!! TEX_IMG ERROR #' + textureErrorCount + ': ' + fname, 'err');
+                  return origFn.call(this, e);
+                };
+              }
+              return _addEL.call(this, evt, fn, opts);
+            };
+          }
+          _origSetSrc.set.call(this, val);
+        },
+        configurable: true,
+        enumerable: true
+      });
+      return img;
+    };
+
+    // ===== GL OP COUNTERS =====
+    let glOps = { texImage2D: 0, drawElements: 0, drawArrays: 0, clear: 0, uniformMatrix4fv: 0, useProgram: 0, createTexture: 0, bindFramebuffer: 0, bindTexture: 0, bufferData: 0, enableVertexAttribArray: 0, viewport: 0 };
+    let lastFB = '(none)';
+    let fbHistory = [];
+    let lastViewport = [0,0,0,0];
+    let glHooked = false;
+    let glRef = null;
+
+    // ===== getContext interceptor =====
+    const origGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+      if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
+        attrs = attrs || {};
+        attrs.preserveDrawingBuffer = true;
+        log('FORCING preserveDrawingBuffer=true on #live2d');
+      }
+      const ctx = origGetContext.call(this, type, attrs);
+      if (this.id === 'live2d' && ctx && !glHooked) {
+        glHooked = true;
+        glRef = ctx;
+        log('=== Hooking GL on #live2d ===', 'section');
+        const gl = ctx;
+
+        const origFns = {};
+        for (const name of ['texImage2D','drawElements','drawArrays','clear','useProgram','uniformMatrix4fv','bufferData','enableVertexAttribArray']) {
+          origFns[name] = gl[name].bind(gl);
+          gl[name] = function() {
+            glOps[name] = (glOps[name] || 0) + 1;
+            return origFns[name].apply(gl, arguments);
+          };
+        }
+        origFns.bindFramebuffer = gl.bindFramebuffer.bind(gl);
+        gl.bindFramebuffer = function(target, fb) {
+          glOps.bindFramebuffer++;
+          lastFB = fb === null ? 'null(default)' : 'FBO';
+          if (fbHistory.length < 30) fbHistory.push(lastFB);
+          return origFns.bindFramebuffer.call(gl, target, fb);
+        };
+        origFns.createTexture = gl.createTexture.bind(gl);
+        gl.createTexture = function() {
+          glOps.createTexture++;
+          return origFns.createTexture();
+        };
+        origFns.bindTexture = gl.bindTexture.bind(gl);
+        gl.bindTexture = function() {
+          glOps.bindTexture++;
+          return origFns.bindTexture.apply(gl, arguments);
+        };
+        origFns.viewport = gl.viewport.bind(gl);
+        gl.viewport = function(x,y,w,h) {
+          glOps.viewport++;
+          lastViewport = [x,y,w,h];
+          return origFns.viewport.call(gl, x,y,w,h);
+        };
+
+        // GL error polling — with filter
+        setInterval(() => {
+          if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
+          const err = gl.getError();
+          if (err !== gl.NO_ERROR && err !== 0) {
+            const names = { 1280: 'INVALID_ENUM', 1281: 'INVALID_VALUE', 1282: 'INVALID_OPERATION', 1285: 'OUT_OF_MEMORY', 1286: 'INVALID_FRAMEBUFFER_OPERATION' };
+            log('GL Error: ' + (names[err] || err), 'warn');
+          }
+        }, 2000);
+
+        log('GL hooks installed ✓');
+      }
+      return ctx;
+    };
+
+    // ===== rAF sync pixel reader =====
+    let syncPixelChecked = false;
+    const origRAF = window.requestAnimationFrame;
+    let rafCount = 0;
+
+    window.requestAnimationFrame = function(cb) {
+      const wrappedCb = function(ts) {
+        cb(ts);
+        rafCount++;
+        if (!syncPixelChecked && rafCount > 10 && lastFB === 'null(default)' && glRef) {
+          const canvas = document.getElementById('live2d');
+          if (canvas && !glRef.isContextLost()) {
+            try {
+              glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
+              const px = new Uint8Array(4);
+              let found = false;
+              for (let sy = 0; sy < canvas.height && !found; sy += 30) {
+                for (let sx = 0; sx < canvas.width && !found; sx += 30) {
+                  glRef.readPixels(sx, sy, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
+                  if (px[0] || px[1] || px[2] || px[3]) {
+                    log('SYNC-PIXEL ✓ at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') [frame#' + rafCount + ']', 'ok');
+                    syncPixelChecked = true;
+                    found = true;
+                  }
+                }
+              }
+              if (!found && rafCount % 60 === 0) {
+                log('SYNC-PIXEL ❌ frame#' + rafCount + ' texLoad=' + textureLoadCount + ' drawE=' + glOps.drawElements, 'warn');
+              }
+            } catch(e) {
+              log('SYNC-PIXEL err: ' + e.message, 'err');
+            }
+          }
+        }
+      };
+      return origRAF.call(window, wrappedCb);
+    };
+
+    // ===== State tracking — poll model internals =====
+    let lastReportedState = -1;
+    function pollModelState() {
+      const interval = setInterval(() => {
+        try {
+          const l2d = window.live2d;
+          if (l2d && l2d._modelManager && l2d._modelManager._models) {
+            const mm = l2d._modelManager;
+            for (let i = 0; i < mm._models.getSize(); i++) {
+              const model = mm._models.at(i);
+              if (model && model._state !== undefined) {
+                const st = model._state;
+                if (st !== lastReportedState) {
+                  const tCount = model._textureCount;
+                  const modelT = model._modelSetting?.getTextureCount?.();
+                  log(`STATE: ${lastReportedState}→${st} [t=${tCount}/${modelT??'?'}]`, st === 22 ? 'ok' : (st >= 20 ? 'info' : ''));
+                  lastReportedState = st;
+                }
+              }
+            }
+          }
+        } catch(e) {
+          // Cannot access — expected if fields are truly private
+        }
+      }, 500);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        if (lastReportedState !== 22) {
+          log('STATE STUCK at ' + lastReportedState + ' after 25s', 'err');
+        }
+      }, 25000);
+    }
+
+    // ===== Periodic status log =====
+    function periodicStatus() {
+      log('STATUS @ +' + Math.round((Date.now() - startTime) / 1000) + 's: ' +
+        'state=' + lastReportedState +
+        ' drawE=' + glOps.drawElements +
+        ' createT=' + glOps.createTexture +
+        ' texImg=' + glOps.texImage2D +
+        ' clear=' + glOps.clear +
+        ' texLoad=' + textureLoadCount +
+        ' texErr=' + textureErrorCount, 'info');
+    }
+
+    let startTime;
+    function checkGLNoPreserveDB(label) {
+      const canvas = document.getElementById('live2d');
+      if (!canvas) { log(label + ': no canvas', 'err'); return; }
+      try {
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl) { log(label + ': no GL', 'err'); return; }
+        log(label + ': VP=' + gl.getParameter(gl.VIEWPORT).join('x') +
+          ' canvas=' + canvas.width + 'x' + canvas.height +
+          ' css=' + canvas.clientWidth + 'x' + canvas.clientHeight +
+          ' lost=' + gl.isContextLost() +
+          ' ops=' + JSON.stringify({texImg:glOps.texImage2D,drawE:glOps.drawElements,createT:glOps.createTexture,clear:glOps.clear}));
+      } catch(e) { log(label + ': err=' + e.message, 'err'); }
+    }
+
+    function fullCheckAsync(label) {
+      if (window._pixelFound) return;
+      const canvas = document.getElementById('live2d');
+      if (!canvas) return;
+      try {
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl || gl.isContextLost()) return;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        const px = new Uint8Array(4);
+        for (let sy = 0; sy < canvas.height; sy += 40) {
+          for (let sx = 0; sx < canvas.width; sx += 40) {
+            gl.readPixels(sx, sy, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            if (px[0] || px[1] || px[2] || px[3]) {
+              log(label + ': PIXEL at (' + sx + ',' + sy + ') RGBA(' + px.join(',') + ') ✓', 'ok');
+              window._pixelFound = true;
+              return;
+            }
+          }
+        }
+        log(label + ': ALL pixels zero ❌', 'err');
+      } catch(e) {
+        log(label + ': err=' + e.message, 'err');
+      }
+    }
+
+    // ===== MAIN =====
+    window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
+    const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
+
+    function loadExternalResource(url, type) {
+      return new Promise((resolve, reject) => {
+        let tag;
+        if (type === 'css') { tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url; }
+        else { tag = document.createElement('script'); tag.src = url; }
+        tag.onload = () => resolve(url);
+        tag.onerror = () => reject(new Error('Failed: ' + url));
+        document.head.appendChild(tag);
+      });
+    }
+
+    async function main() {
+      startTime = Date.now();
+      try {
+        log('=== Loading CDN ===', 'section');
+        await loadExternalResource(BASE + 'waifu.css', 'css');
+        await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
+        await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
+        log('SDK loaded ✓ live2d=' + typeof window.live2d);
+        await loadExternalResource(BASE + 'waifu-tips.js', 'js');
+        log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
+
+        log('=== Calling initWidget ===', 'section');
+        localStorage.setItem('modelId', '0');
+        localStorage.setItem('modelTexturesId', '0');
+
+        initWidget({
+          waifuPath: BASE + 'waifu-tips.json',
+          cdnPath: '/live2d-api/',
+          homePath: 'https://kioshiroi.github.io/',
+          tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
+          dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
+        });
+        log('initWidget() called ✓');
+
+        // Start state polling
+        setTimeout(() => pollModelState(), 2000);
+
+        // Periodic checks
+        setTimeout(() => checkGLNoPreserveDB('+4s'), 4000);
+        setTimeout(() => checkGLNoPreserveDB('+6s'), 6000);
+        setTimeout(() => { checkGLNoPreserveDB('+10s'); fullCheckAsync('+10s'); }, 10000);
+        setTimeout(() => periodicStatus(), 12000);
+        setTimeout(() => {
+          checkGLNoPreserveDB('+15s');
+          fullCheckAsync('+15s');
+          periodicStatus();
+          log('=== Final diagnostics ===', 'section');
+          log('State: ' + lastReportedState, lastReportedState === 22 ? 'ok' : 'err');
+          log('GL ops: ' + JSON.stringify(glOps), 'info');
+          log('FB history: ' + fbHistory.join(' → '), 'info');
+          log('Texture loads: ' + textureLoadCount + ' errors: ' + textureErrorCount, textureLoadCount === 5 ? 'ok' : 'err');
+          log('Loaded textures: ' + JSON.stringify(textureFiles), 'info');
+          const waifu = document.getElementById('waifu');
+          if (waifu) {
+            const s = getComputedStyle(waifu);
+            log('waifu: bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
+          }
+          log('--- If state<22: check why model loading stalled ---', 'section');
+          log('--- If state=22 but drawE=0: view.render() issue ---', 'section');
+        }, 15000);
+
+        // Extended check
+        setTimeout(() => {
+          periodicStatus();
+          checkGLNoPreserveDB('+30s');
+          fullCheckAsync('+30s');
+        }, 30000);
+
+      } catch(e) {
+        log('FATAL: ' + e.message + '\n' + e.stack, 'err');
+      }
+    }
+    main();
+  </script>
+</body>
+</html>

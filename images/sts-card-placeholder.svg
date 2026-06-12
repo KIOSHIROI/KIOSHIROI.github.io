@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="360" height="504" viewBox="0 0 360 504" role="img" aria-labelledby="title desc">
+  <title id="title">Slay the Spire card placeholder</title>
+  <desc id="desc">Placeholder image for Silent card review entry</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#0f172a"/>
+    </linearGradient>
+  </defs>
+  <rect x="0" y="0" width="360" height="504" rx="24" fill="url(#bg)"/>
+  <rect x="18" y="18" width="324" height="468" rx="18" fill="none" stroke="#64748b" stroke-width="3" stroke-dasharray="10 8"/>
+  <text x="180" y="218" text-anchor="middle" fill="#e2e8f0" font-size="28" font-family="ui-sans-serif, system-ui, sans-serif" font-weight="700">Silent Card</text>
+  <text x="180" y="256" text-anchor="middle" fill="#94a3b8" font-size="18" font-family="ui-sans-serif, system-ui, sans-serif">Image Placeholder</text>
+  <text x="180" y="438" text-anchor="middle" fill="#64748b" font-size="14" font-family="ui-sans-serif, system-ui, sans-serif">Replace with your own图床链接</text>
+</svg>

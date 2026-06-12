@@ -1,0 +1,1757 @@
+<!DOCTYPE html><html lang="zh" class="astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport"><meta content="IE=edge" http-equiv="X-UA-Compatible"><title>笔记：自然语言处理 • KIOSHIROI&#39;s CS-learning Road</title><link rel="apple-touch-icon" sizes="180x180" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon.ico"><link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon.ico"><link rel="manifest" href="/favicon/site.webmanifest"><link rel="preload" href="/fonts/Satoshi-Variable.ttf" as="font" type="font/ttf" crossorigin><link rel="preload" href="/fonts/Satoshi-VariableItalic.ttf" as="font" type="font/ttf" crossorigin><link rel="canonical" href="https://kioshiroi.github.io/blog/nlp"><meta content="笔记：自然语言处理 • KIOSHIROI's CS-learning Road" name="title"><meta content="自然语言处理课程笔记，涵盖绪论、词汇分析、句法分析、语义分析、语言模型、信息抽取、机器翻译、情感分析和文本摘要等。" name="description"><meta content="KIOSHIROI" name="author"><meta content="" name="theme-color"><meta content="article" property="og:type"><meta content="笔记：自然语言处理" property="og:title"><meta content="自然语言处理课程笔记，涵盖绪论、词汇分析、句法分析、语义分析、语言模型、信息抽取、机器翻译、情感分析和文本摘要等。" property="og:description"><meta content="https://kioshiroi.github.io/blog/nlp" property="og:url"><meta content="KIOSHIROI's CS-learning Road" property="og:site_name"><meta content="zh_CN" property="og:locale"><meta content="https://kioshiroi.github.io/images/social-card.png" property="og:image"><meta content="1200" property="og:image:width"><meta content="630" property="og:image:height"><meta content="KIOSHIROI" property="article:author"><meta content="2025-02-24T00:00:00.000Z" property="article:published_time"><meta content="summary_large_image" property="twitter:card"><meta content="https://kioshiroi.github.io/blog/nlp" property="twitter:url"><meta content="笔记：自然语言处理" property="twitter:title"><meta content="自然语言处理课程笔记，涵盖绪论、词汇分析、句法分析、语义分析、语言模型、信息抽取、机器翻译、情感分析和文本摘要等。" property="twitter:description"><meta content="https://kioshiroi.github.io/images/social-card.png" property="twitter:image"><link href="/sitemap-index.xml" rel="sitemap"><link rel="alternate" type="application/rss+xml" title="KIOSHIROI's CS-learning Road" href="https://kioshiroi.github.io/rss.xml"><meta content="Astro v5.16.4" name="generator"><link rel="stylesheet" href="/styles/global.css"><!-- <ClientRouter /> --><!-- <script is:inline>
+  const style = document.createElement('style')
+  style.textContent = `* { transition: none !important; }`
+  document.addEventListener('astro:after-swap', () => {
+    document.head.appendChild(style)
+    setTimeout(() => {
+      style.remove()
+    }, 100)
+  })
+</script> --><script type="module">console.log("%c Astro Theme Axi %c https://github.com/Axi404/","color:#fff;background:linear-gradient(90deg,#448bff,#44e9ff);padding:5px 0;","color:#000;background:linear-gradient(90deg,#44e9ff,#ffffff);padding:5px 10px 5px 0px;");</script><script>
+  function simpleSetTheme() {
+    let theme = localStorage.getItem('theme')
+    // If undefined or 'system', get from system
+    if (!theme || theme === 'system') {
+      theme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+    }
+    document.documentElement.classList.toggle('dark', theme === 'dark')
+    document
+      .querySelector('meta[name="theme-color"]')
+      ?.setAttribute('content', theme === 'dark' ? '#0B0B10' : '#FCFCFD')
+  }
+  simpleSetTheme()
+  document.addEventListener('astro:page-load', () => simpleSetTheme())
+</script><script type="module" src="/_astro/ThemeProvider.astro_astro_type_script_index_0_lang.8WG8SyMG.js"></script><!-- Google tag (gtag.js) --><script async src="https://www.googletagmanager.com/gtag/js?id=G-J4TR2R7BSM"></script><script>
+      window.dataLayer = window.dataLayer || []
+      function gtag() {
+        dataLayer.push(arguments)
+      }
+      gtag('js', new Date())
+
+      gtag('config', 'G-J4TR2R7BSM')
+    </script><link rel="stylesheet" href="/_astro/_id_.N4Rp9Ep2.css">
+<link rel="stylesheet" href="/_astro/_id_.lDyzrzz2.css">
+<link rel="stylesheet" href="/_astro/_id_.CVIgJ6KX.css">
+<style>svg:where(.astro-p7sajfz3){color:var(--sl-icon-color);font-size:var(--sl-icon-size, 1em);width:1.5em;height:1.5em}
+.expand-conetent:where(.astro-jvehtkjd){grid-template-rows:0fr}.expanded:where(.astro-jvehtkjd) .expand-conetent:where(.astro-jvehtkjd){grid-template-rows:1fr}
+.sl-steps{--bullet-size: 1.75rem ;--bullet-margin: .375rem;list-style:none!important;counter-reset:steps-counter var(--sl-steps-start, 0);padding-inline-start:0!important}.sl-steps>li{counter-increment:steps-counter;position:relative;padding-inline-start:calc(var(--bullet-size) + 1rem);padding-bottom:1px;min-height:calc(var(--bullet-size) + var(--bullet-margin))}.sl-steps>li+li{margin-top:0}.sl-steps>li:before{content:counter(steps-counter);position:absolute;top:0;inset-inline-start:0;width:var(--bullet-size);height:var(--bullet-size);line-height:var(--bullet-size);font-size:.8125rem;font-weight:600;text-align:center;color:hsl(var(--foreground) / var(--tw-text-opacity, 1));background-color:hsl(var(--primary-foreground) / var(--tw-bg-opacity, 1));border-radius:99rem;box-shadow:inset 0 0 0 1px hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li:after{--guide-width: 1px;content:"";position:absolute;top:calc(var(--bullet-size) + var(--bullet-margin));bottom:var(--bullet-margin);inset-inline-start:calc((var(--bullet-size) - var(--guide-width)) / 2);width:var(--guide-width);background-color:hsl(var(--border) / var(--tw-border-opacity, 1))}.sl-steps>li>:first-child{--lh: 1.75em ;--shift-y: calc(.5 * (var(--bullet-size) - var(--lh)));margin-top:0;transform:translateY(var(--shift-y));margin-bottom:var(--shift-y);color:hsl(var(--foreground) / var(--tw-text-opacity, 1))}.sl-steps>li>:first-child:where(h1,h2,h3,h4,h5,h6){--lh: 1.2em }
+</style><script type="module" src="/_astro/page.D1uwR3nK.js"></script></head> <body class="flex justify-center bg-background astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <!-- <div
+      id='gradient-background'
+      class='pointer-events-none fixed h-screen w-screen blur-2xl transition-opacity duration-1000'
+    >
+      <div
+        class='absolute right-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-90%] h-full w-[75%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute right-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[25%] top-[-85%] h-full w-[55%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-40 dark:opacity-25'
+      >
+      </div>
+      <div
+        class='absolute left-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-blue-300 via-pink-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute right-[-25%] top-[-75%] h-full w-[65%] rounded-full bg-gradient-to-b from-purple-300 via-blue-300 to-transparent opacity-30 dark:opacity-20'
+      >
+      </div>
+      <div
+        class='absolute left-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-indigo-300 via-orange-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+      <div
+        class='absolute right-[-30%] top-[-85%] h-full w-[85%] rounded-full bg-gradient-to-b from-orange-300 via-indigo-300 to-transparent opacity-60 dark:opacity-30'
+      >
+      </div>
+    </div> --> <div id="highlight-gradient" class="pointer-events-none absolute start-0 top-0 z-0 h-screen w-full opacity-25 astro-37fxchfa" style="background-image:linear-gradient(hsl(var(--primary) / var(--tw-text-opacity)),transparent); --highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"></div> <div class="w-full max-w-[70rem] px-4 sm:px-7 lg:px-10 astro-37fxchfa" style="--highlightColor: hsl(var(--primary) / var(--tw-text-opacity));"> <header-component class="group sticky top-4 z-30 mb-12 flex items-center justify-between rounded-xl border border-transparent max-sm:py-1 sm:rounded-2xl [&#38;.not-top]:border-border [&#38;.not-top]:bg-background/60 [&#38;.not-top]:px-1.5 [&#38;.not-top]:backdrop-blur-md dark:[&#38;.not-top]:bg-muted/60 astro-dpuuw7tv"> <!-- <div
+      class='absolute -left-4 -top-8 -z-10 box-content hidden h-20 w-[calc(100%+2rem)] !duration-0 max-sm:group-[.expanded]:block max-sm:group-[.expanded.not-top]:hidden max-sm:group-[.expanded]:bg-white dark:max-sm:group-[.expanded]:bg-muted'
+    >
+    </div> --> <a class="z-30 text-xl font-semibold group-[.not-top]:ms-2 sm:group-[.not-top]:ms-3 astro-dpuuw7tv" style="transition:margin-inline 0.3s" href="/" aria-label="Brand">KIOSHIROI&#39;s CS-learning Road</a> <div class="flex items-center gap-x-2 astro-dpuuw7tv">  <div id="headerExpandConetent" class="end-0 start-0 top-12 grid border border-transparent group-[.not-top]:rounded-xl group-[.expanded]:opacity-100 dark:group-[.expanded.not-top]:bg-muted/60 max-md:absolute max-md:opacity-0 max-md:pointer-events-none max-md:group-[.expanded]:pointer-events-auto max-md:group-[.not-top]:border-border max-md:group-[.expanded.not-top]:bg-background/60 max-md:group-[.expanded.not-top]:backdrop-blur-md max-md:group-[.not-top]:px-4 max-md:group-[.not-top]:py-2 md:grid-rows-1 astro-dpuuw7tv"> <div class="flex flex-col items-center justify-center md:flex-row astro-dpuuw7tv"> <div class="menu-item-with-dropdown relative w-full md:w-fit astro-dpuuw7tv" style="position: relative;"> <a href="/blog/research" class="blog-menu-link flex w-full flex-none items-center justify-end py-2 font-medium transition-none hover:text-primary md:px-3 md:justify-center astro-dpuuw7tv" aria-label="Nav menu item"> Blog <svg aria-hidden="true" class="chevron-icon ml-1 size-4 transition-transform astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.707 15.707a1 1 0 0 1-1.414 0L5.636 10.05A1 1 0 1 1 7.05 8.636l4.95 4.95l4.95-4.95a1 1 0 0 1 1.414 1.414z"/></g></svg>  </a>  <div class="dropdown-menu absolute right-0 top-full mt-0 w-48 rounded-xl border border-border bg-background/80 shadow-lg backdrop-blur-md dark:bg-muted/80 md:left-0 md:right-auto astro-dpuuw7tv" style="z-index: 9999;"> <div class="py-1 astro-dpuuw7tv"> <a href="/blog/research" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Research </a><a href="/blog/tech" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Technical </a><a href="/blog/daily" class="category-link block px-4 py-2 text-sm transition-colors hover:bg-background/60 hover:text-primary dark:hover:bg-muted/60 astro-dpuuw7tv"> Daily Life </a> </div> </div> </div><a href="/links" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> Links </a><a href="/about" class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" aria-label="Nav menu item"> About </a> <a class="w-full flex-none grow py-2 text-right font-medium transition-none hover:text-primary md:w-fit md:px-3 astro-dpuuw7tv" href="https://www.travellings.cn/go.html" title="Travellings" target="_blank" rel="noopener noreferrer"> <span class="sr-only astro-dpuuw7tv">Travellings</span> <span class="text-xl astro-dpuuw7tv">🚇</span> </a> <div class="flex w-full grow flex-row justify-end gap-x-3 md:w-fit md:gap-x-5 astro-dpuuw7tv"> <a class="px-1 py-2 transition-none md:px-2 astro-dpuuw7tv" href="/search" title="Search"> <span class="sr-only astro-dpuuw7tv">Search</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5 10a5 5 0 1 1 10 0a5 5 0 0 1-10 0m5-7a7 7 0 1 0 4.192 12.606l5.1 5.101a1 1 0 0 0 1.415-1.414l-5.1-5.1A7 7 0 0 0 10 3"/></g></svg>  </a> </div> </div> </div> <!-- buttons --> <div class="z-30 flex gap-x-4 group-[.not-top]:gap-x-2 astro-dpuuw7tv" style="transition:gap 0.3s"> <button id="toggleDarkMode" class="group/dark box-content size-5 rounded-md border p-1.5 transition-colors hover:bg-border md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Dark Theme</span> <svg aria-hidden="true" class="system size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" fill-rule="nonzero" d="M19 3a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2h-4v1h1a1 1 0 1 1 0 2H8a1 1 0 1 1 0-2h1v-1H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2Zm-6 15h-2v1h2zm6-13H5v11h14z"/></g></svg>  <svg aria-hidden="true" class="light hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 19a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0v-1a1 1 0 0 1 1-1m6.364-2.05l.707.707a1 1 0 0 1-1.414 1.414l-.707-.707a1 1 0 0 1 1.414-1.414m-12.728 0a1 1 0 0 1 1.497 1.32l-.083.094l-.707.707a1 1 0 0 1-1.497-1.32l.083-.094zM12 6a6 6 0 1 1 0 12a6 6 0 0 1 0-12m0 2a4 4 0 1 0 0 8a4 4 0 0 0 0-8m-8 3a1 1 0 0 1 .117 1.993L4 13H3a1 1 0 0 1-.117-1.993L3 11zm17 0a1 1 0 1 1 0 2h-1a1 1 0 1 1 0-2zM4.929 4.929a1 1 0 0 1 1.32-.083l.094.083l.707.707a1 1 0 0 1-1.32 1.497l-.094-.083l-.707-.707a1 1 0 0 1 0-1.414m14.142 0a1 1 0 0 1 0 1.414l-.707.707a1 1 0 1 1-1.414-1.414l.707-.707a1 1 0 0 1 1.414 0M12 2a1 1 0 0 1 1 1v1a1 1 0 1 1-2 0V3a1 1 0 0 1 1-1"/></g></svg>  <svg aria-hidden="true" class="dark hidden size-5 group-hover/dark:text-primary astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12.477 4.546a1.01 1.01 0 0 1 1.097-1.409A9 9 0 0 1 12 21c-4.434 0-8.118-3.206-8.863-7.426a1.01 1.01 0 0 1 1.409-1.097a6 6 0 0 0 7.931-7.931m2.404 1.072a8 8 0 0 1-9.263 9.263A7.002 7.002 0 0 0 19 12.001a7 7 0 0 0-4.12-6.383ZM5.565 7.716l.064.14a3.26 3.26 0 0 0 1.237 1.363l.1.059a.068.068 0 0 1 0 .118l-.1.058a3.26 3.26 0 0 0-1.237 1.364l-.064.14a.071.071 0 0 1-.13 0l-.064-.14a3.26 3.26 0 0 0-1.237-1.364l-.1-.058a.068.068 0 0 1 0-.118l.1-.059A3.26 3.26 0 0 0 5.37 7.855l.064-.14a.071.071 0 0 1 .13 0Zm2.832-4.859c.04-.09.166-.09.206 0l.102.222a5.2 5.2 0 0 0 1.97 2.172l.157.092a.108.108 0 0 1 0 .189l-.158.092a5.2 5.2 0 0 0-2.07 2.394a.113.113 0 0 1-.207 0l-.102-.222a5.2 5.2 0 0 0-1.97-2.172l-.158-.092a.108.108 0 0 1 0-.189l.158-.092a5.2 5.2 0 0 0 1.97-2.172z"/></g></svg>  </button> <button id="toggleMenu" class="rounded-md border p-1.5 transition-colors hover:bg-border md:hidden md:group-[.not-top]:rounded-xl astro-dpuuw7tv"> <span class="sr-only astro-dpuuw7tv">Menu</span> <svg aria-hidden="true" class="size-5 astro-dpuuw7tv astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M20 18a1 1 0 0 1 .117 1.993L20 20H4a1 1 0 0 1-.117-1.993L4 18zm0-7a1 1 0 1 1 0 2H4a1 1 0 1 1 0-2zm0-7a1 1 0 1 1 0 2H4a1 1 0 0 1 0-2z"/></g></svg>  </button> </div> </div> </header-component>  <script>
+  const toggleDarkModeElement = document.getElementById('toggleDarkMode')
+  if (toggleDarkModeElement) {
+    toggleDarkModeElement.dataset.theme = localStorage.getItem('theme') || 'system'
+  }
+</script> <script type="module" src="/_astro/Header.astro_astro_type_script_index_0_lang.2bVIXSyo.js"></script>   <main class="mt-6 items-start gap-x-10 md:flex">  <aside class="animate top-24 min-w-48 basis-60 overflow-y-scroll max-md:hidden md:sticky md:order-2 lg:shrink-0" style="height:calc(100vh - 8rem);" id="sidebar"> <toc-heading slot="sidebar"> <h2 class="font-semibold">TABLE OF CONTENTS</h2> <ul class="mt-4 text-card-foreground"> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 自然语言处理" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#自然语言处理">自然语言处理</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: Sequence-to-Sequence 方法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#sequence-to-sequence-方法">Sequence-to-Sequence 方法</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 自然语言处理的主要难点" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#自然语言处理的主要难点">自然语言处理的主要难点</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 困惑度" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#困惑度">困惑度</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 概念" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#概念">概念</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 计算过程" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#计算过程">计算过程</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 中文分词" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#中文分词">中文分词</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 基于最大匹配的中文分词" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#基于最大匹配的中文分词">基于最大匹配的中文分词</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 基于线性链条件随机场的中文分词" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#基于线性链条件随机场的中文分词">基于线性链条件随机场的中文分词</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: BPE算法（Byte Pair Encoding）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#bpe算法byte-pair-encoding">BPE算法（Byte Pair Encoding）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: WordPiece算法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#wordpiece算法">WordPiece算法</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 中文分词的评价" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#中文分词的评价">中文分词的评价</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 词性标注（不要求掌握具体怎么做）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#词性标注不要求掌握具体怎么做">词性标注（不要求掌握具体怎么做）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: CYK算法，基于动态规划思想和自底向上语法分析算法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#cyk算法基于动态规划思想和自底向上语法分析算法">CYK算法，基于动态规划思想和自底向上语法分析算法</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: PCFG算法（概率上下文无关文法）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#pcfg算法概率上下文无关文法">PCFG算法（概率上下文无关文法）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 实验课内容" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#实验课内容">实验课内容</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 关键字提取" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#关键字提取">关键字提取</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: TF-IDF（词频-逆文档频率）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#tf-idf词频-逆文档频率">TF-IDF（词频-逆文档频率）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: TextRank 算法" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#textrank-算法">TextRank 算法</a> </div>  </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 语义学概述" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#语义学概述">语义学概述</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 词汇语义学" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#词汇语义学">词汇语义学</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 句子语义学" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#句子语义学">句子语义学</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 语义表示" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#语义表示">语义表示</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 分布式表示" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#分布式表示">分布式表示</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 单词分布式表示" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#单词分布式表示">单词分布式表示</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 分布式表示的评价" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#分布式表示的评价">分布式表示的评价</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 句子分布式表示" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#句子分布式表示">句子分布式表示</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 篇章分布式表示" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#篇章分布式表示">篇章分布式表示</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 词义消歧" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#词义消歧">词义消歧</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 语义角色标注" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#语义角色标注">语义角色标注</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: XLNet" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#xlnet">XLNet</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 自回归模型与自编码模型" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#自回归模型与自编码模型">自回归模型与自编码模型</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: XLNet模型" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#xlnet模型">XLNet模型</a> </div>  </li> </ul> </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 语言模型的发展历程" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#语言模型的发展历程">语言模型的发展历程</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 命名实体识别" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#命名实体识别">命名实体识别</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 非嵌套命名实体识别-基于Transformer的命名实体识别" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#非嵌套命名实体识别-基于transformer的命名实体识别">非嵌套命名实体识别-基于Transformer的命名实体识别</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 关系抽取" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#关系抽取">关系抽取</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 有监督" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#有监督">有监督</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 远程监督" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#远程监督">远程监督</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 远程监督方法错误标注的根本原因" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#远程监督方法错误标注的根本原因">远程监督方法错误标注的根本原因</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 1. 共现≠关系" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#1-共现关系">1. 共现≠关系</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 2. 语义歧义性" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#2-语义歧义性">2. 语义歧义性</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 3. 数据稀疏性与长尾分布" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#3-数据稀疏性与长尾分布">3. 数据稀疏性与长尾分布</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 4. 上下文独立性假设不成立" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#4-上下文独立性假设不成立">4. 上下文独立性假设不成立</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 5. 对知识库覆盖范围的依赖" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#5-对知识库覆盖范围的依赖">5. 对知识库覆盖范围的依赖</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 总结" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#总结">总结</a> </div> <ul> <li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 多实例学习" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#多实例学习">多实例学习</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 注意力机制" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-10" href="#注意力机制">注意力机制</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 开放关系抽取" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted ps-7" href="#开放关系抽取">开放关系抽取</a> </div>  </li> </ul> </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 时间抽取" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#时间抽取">时间抽取</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 槽位填充（文本序列任务）" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#槽位填充文本序列任务">槽位填充（文本序列任务）</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 9.1.1 观点模型" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#911-观点模型">9.1.1 观点模型</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 9.1.2 情感分析主要任务" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#912-情感分析主要任务">9.1.2 情感分析主要任务</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: seq2seq" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#seq2seq">seq2seq</a> </div>  </li><li> <div class="relative"> <span class="absolute top-[5%] w-[2px] rounded transition-colors duration-300 [&.highlight-bg]:bg-primary [&.readed]:bg-input"></span> <a aria-label="Scroll to section: 抽取式摘要" class="line-clamp-2 px-3 py-1 ms-2 flex-1 text-foreground/75 transition-all hover:text-foreground [&#38;.highlight]:font-medium [&#38;.highlight]:text-primary [&#38;.readed]:text-input [&#38;.highlight-bg-translucent]:bg-muted" href="#抽取式摘要">抽取式摘要</a> </div>  </li> </ul> </toc-heading> <script type="module">class c extends HTMLElement{headings=[];tocLinks=[];headingProgress={};constructor(){super(),this.headings=Array.from(document.querySelectorAll("article h2, article h3, article h4, article h5, article h6")),this.tocLinks=Array.from(this.querySelectorAll('a[href^="#"]')).map(e=>({element:e,progressBar:e.previousElementSibling,slug:(e.getAttribute("href")||"").substring(1)}))}updatePositionAndStyle=()=>{const e=window.innerHeight,r=document.querySelector("#content"),o=r?.getBoundingClientRect().top+window.scrollY||0,h=(r?.offsetHeight||0)+o;this.headings.forEach((s,i)=>{const g=s.getBoundingClientRect().top+window.scrollY,n=this.headings[i+1]?this.headings[i+1].getBoundingClientRect().top+window.scrollY:h,t=[g-window.scrollY,n-window.scrollY-s.offsetHeight],l=(e-t[0])/(t[1]-t[0]);this.headingProgress[s.id]={inView:t[0]<e&&t[1]>0,progress:Math.max(0,Math.min(1,l))}}),this.tocLinks.forEach(({element:s,progressBar:i,slug:g},n)=>{const{inView:t,progress:l}=this.headingProgress[g];this.headingProgress[g]&&(s.classList.toggle("highlight",t),s.classList.toggle("highlight-bg-translucent",t),s.classList.toggle("rounded-t-2xl",t&&(n==0||!this.headingProgress[this.tocLinks[n-1]?.slug].inView)),s.classList.toggle("rounded-b-2xl",t&&(n==this.tocLinks.length-1||!this.headingProgress[this.tocLinks[n+1]?.slug].inView)),i.classList.toggle("readed",!t&&l==1),i.classList.toggle("highlight-bg",t),i.style.setProperty("height",`${l*90}%`))})};connectedCallback(){this.tocLinks.forEach(e=>{e.element.addEventListener("click",r=>{r.preventDefault();const o=this.headings.find(h=>h.id===e.slug);o?(history.pushState(null,o.textContent||"",e.element.getAttribute("href")),o.scrollIntoView({behavior:"smooth"})):console.warn(`No heading found for slug: ${e.slug}`)})}),setInterval(this.updatePositionAndStyle,100),window.addEventListener("scroll",this.updatePositionAndStyle)}}customElements.define("toc-heading",c);</script> </aside> <article class="min-w-0 grow">  <div id="content-header" class="animate"> <div class="article-info max-lg:mx-auto"> <div class="flex flex-wrap gap-x-4 gap-y-2 text-xs leading-6 text-muted-foreground">  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16 3a1 1 0 0 1 1 1v1h2a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h2V4a1 1 0 0 1 2 0v1h6V4a1 1 0 0 1 1-1M8 7H5v2h14V7h-3zm-3 4v8h14v-8zm2 2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H8a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H12a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2zm3-2a1 1 0 0 1 1-1h.01a1 1 0 1 1 0 2H16a1 1 0 0 1-1-1m1 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2z"/></g></svg>  <span class="text-muted-foreground font-sans"> <time datetime="2025-02-24T00:00:00.000Z"> 2025年2月24日 </time> </span>  </div>  <div class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 2a1 1 0 0 1 .993.883L13 7v4.586l2.707 2.707a1 1 0 0 1-1.32 1.497l-.094-.083l-3-3a1 1 0 0 1-.284-.576L11 12V7a1 1 0 0 1 1-1"/></g></svg>  39 min read </div>   <span class="flex items-center gap-1"> <svg aria-hidden="true" class="size-5 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M10.124 3.008a1 1 0 0 1 .868 1.116L10.508 8h3.984l.516-4.124a1 1 0 1 1 1.984.248L16.508 8H20a1 1 0 1 1 0 2h-3.742l-.5 4H19.5a1 1 0 1 1 0 2h-3.992l-.516 4.124a1 1 0 1 1-1.984-.248L13.492 16H9.508l-.516 4.124a1 1 0 1 1-1.984-.248L7.492 16H4.5a1 1 0 1 1 0-2h3.242l.5-4H5a1 1 0 0 1 0-2h3.492l.516-4.124a1 1 0 0 1 1.116-.868M13.742 14l.5-4h-3.984l-.5 4z"/></g></svg>  <div> <a aria-label="View more blogs with the tag course" class="hover:underline hover:underline-offset-4" data-pagefind-filter="tag" href="/tags/course"> course </a> / </div><div> <a aria-label="View more blogs with the tag nlp" class="hover:underline hover:underline-offset-4" data-pagefind-filter="tag" href="/tags/nlp"> nlp </a>  </div> </span> </div> <h1 class="mt-4 text-2xl font-medium sm:mb-2 sm:mt-6 sm:text-3xl"> 笔记：自然语言处理 </h1> <div class="mt-3 italic"> <blockquote class="text-sm text-muted-foreground"><q>自然语言处理课程笔记，涵盖绪论、词汇分析、句法分析、语义分析、语言模型、信息抽取、机器翻译、情感分析和文本摘要等。</q></blockquote> <div class="text-sm text-muted-foreground mt-1"> <span class="waline-pageview-count" data-path="/blog/nlp"></span> views
+<a href="#waline">
+| <span class="waline-comment-count" data-path="/blog/nlp"></span> comments
+</a> </div> </div> </div>  <div class="mt-4 w-1/2 border-t max-lg:mx-auto sm:mt-6 sm:w-1/3"></div> <script type="module">const o=window.innerHeight,s=o/9,i=o*2/9,l=o*3/9,e=document.getElementById("blurImage");e&&window.addEventListener("scroll",()=>{const t=window.scrollY;t>=l?e.style.opacity="0.15":t>=i?e.style.opacity="0.3":t>=s&&(e.style.opacity="0.45")});</script> </div>  <div id="content" class="max-w-none animate mt-8 md:min-w-[45ch] break-words prose prose-axi dark:prose-invert dark:prose-axi prose-headings:font-medium">  <h1 id="1-绪论">1. 绪论<a class="anchor" href="#1-绪论">#</a></h1>
+<h2 id="自然语言处理">自然语言处理<a class="anchor" href="#自然语言处理">#</a></h2>
+<ul>
+<li>能够理解自然语言的意义（NLU）</li>
+<li>能够生成自然语言（NLG）</li>
+</ul>
+<p>符号学派和随机学派</p>
+<blockquote>
+<p>ACL: CCF A</p>
+<h3 id="sequence-to-sequence-方法">Sequence-to-Sequence 方法<a class="anchor" href="#sequence-to-sequence-方法">#</a></h3>
+<p>自然语言处理中的S2S（Sequence-to-Sequence）方法是一种用于处理序列数据的深度学习技术，特别适用于自然语言处理任务，如机器翻译、文本摘要和对话生成。</p>
+<ol>
+<li><strong>基本概念</strong>：</li>
+</ol>
+<ul>
+<li>S2S方法由两个主要部分组成：编码器（Encoder）和解码器（Decoder）。</li>
+<li>编码器将输入序列转换为一个固定长度的上下文向量。</li>
+<li>解码器从该上下文向量生成输出序列。</li>
+</ul>
+<ol start="2">
+<li><strong>工作流程</strong>：</li>
+</ol>
+<ul>
+<li><strong>编码阶段</strong>：输入序列通过编码器，通常由RNN、LSTM或GRU组成，将信息压缩到上下文向量中。</li>
+<li><strong>解码阶段</strong>：解码器接收上下文向量，并逐步生成输出序列。</li>
+</ul>
+<ol start="3">
+<li><strong>注意力机制</strong>：</li>
+</ol>
+<ul>
+<li>注意力机制允许解码器在生成每个输出时，动态地关注输入序列的不同部分。</li>
+</ul>
+<ol start="4">
+<li><strong>应用场景</strong>：</li>
+</ol>
+<ul>
+<li><strong>机器翻译</strong>、<strong>文本摘要</strong>、<strong>对话生成</strong>等。</li>
+</ul>
+<ol start="5">
+<li><strong>优势与挑战</strong>：</li>
+</ol>
+<ul>
+<li><strong>优势</strong>：处理变长输入和输出，适应性强。</li>
+<li><strong>挑战</strong>：需要大量数据和计算资源，长序列处理具有挑战性。</li>
+</ul>
+</blockquote>
+<h2 id="自然语言处理的主要难点">自然语言处理的主要难点<a class="anchor" href="#自然语言处理的主要难点">#</a></h2>
+<ul>
+<li>语音歧义</li>
+<li>词语切分歧义</li>
+<li>语义歧义</li>
+<li>语用歧义</li>
+<li>结构歧义</li>
+<li>指代歧义</li>
+<li>省略歧义</li>
+</ul>
+<p>人工反馈式强化学习RLHF</p>
+<h2 id="困惑度">困惑度<a class="anchor" href="#困惑度">#</a></h2>
+<p>困惑度（Perplexity）是衡量语言模型性能的一个重要指标，反映了模型对文本数据的预测能力。困惑度越低，表示模型对数据的预测越准确。</p>
+<h3 id="概念">概念<a class="anchor" href="#概念">#</a></h3>
+<ul>
+<li>困惑度是语言模型对测试集的平均不确定性的一种度量。</li>
+<li>它是测试集上交叉熵的指数形式，表示模型在预测下一个词时的平均选择数。</li>
+</ul>
+<h3 id="计算过程">计算过程<a class="anchor" href="#计算过程">#</a></h3>
+<ul>
+<li>对于一个给定的语言模型，困惑度可以通过计算模型在测试集上的平均对数似然来得到。</li>
+<li>公式为：</li>
+</ul>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>Perplexity</mtext><mo>=</mo><msup><mn>2</mn><mrow><mo>−</mo><mfrac><mn>1</mn><mi>N</mi></mfrac><munderover><mo>∑</mo><mrow><mi>i</mi><mo>=</mo><mn>1</mn></mrow><mi>N</mi></munderover><msub><mrow><mi>log</mi><mo>⁡</mo></mrow><mn>2</mn></msub><mi>P</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>w</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>w</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow></msup></mrow><annotation encoding="application/x-tex">  \text{Perplexity} = 2^{-\frac{1}{N} \sum_{i=1}^{N} \log_2 P(w_i | w_1, w_2, ..., w_{i-1})}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord text"><span class="mord">Perplexity</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.0564em;"></span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:1.0564em;"><span style="top:-3.413em;margin-right:0.05em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mtight">−</span><span class="mord mtight"><span class="mopen nulldelimiter sizing reset-size3 size6"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.8443em;"><span style="top:-2.656em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span><span style="top:-3.2255em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line mtight" style="border-bottom-width:0.049em;"></span></span><span style="top:-3.384em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.344em;"><span></span></span></span></span></span><span class="mclose nulldelimiter sizing reset-size3 size6"></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mop mtight"><span class="mop op-symbol small-op mtight" style="position:relative;top:0em;">∑</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.9191em;"><span style="top:-2.1786em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mrel mtight">=</span><span class="mord mtight">1</span></span></span></span><span style="top:-2.931em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.109em;">N</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.3214em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mop mtight"><span class="mop mtight"><span class="mtight">l</span><span class="mtight">o</span><span class="mtight" style="margin-right:0.0139em;">g</span></span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span style="top:-2.2341em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2659em;"><span></span></span></span></span></span></span><span class="mspace mtight" style="margin-right:0.1952em;"></span><span class="mord mathnormal mtight" style="margin-right:0.1389em;">P</span><span class="mopen mtight">(</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.0269em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mord mtight">∣</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.0269em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mpunct mtight">,</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3173em;"><span style="top:-2.357em;margin-left:-0.0269em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.143em;"><span></span></span></span></span></span></span><span class="mpunct mtight">,</span><span class="mord mtight">...</span><span class="mpunct mtight">,</span><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3281em;"><span style="top:-2.357em;margin-left:-0.0269em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2025em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span></span></span></span></span></span></span></span></span></span></span></span></span>
+<p>其中，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>N</mi></mrow><annotation encoding="application/x-tex">N</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6833em;"></span><span class="mord mathnormal" style="margin-right:0.109em;">N</span></span></span></span> 是测试集中词的总数，<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><msub><mi>w</mi><mi>i</mi></msub><mi mathvariant="normal">∣</mi><msub><mi>w</mi><mn>1</mn></msub><mo separator="true">,</mo><msub><mi>w</mi><mn>2</mn></msub><mo separator="true">,</mo><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mi mathvariant="normal">.</mi><mo separator="true">,</mo><msub><mi>w</mi><mrow><mi>i</mi><mo>−</mo><mn>1</mn></mrow></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">P(w_i | w_1, w_2, ..., w_{i-1})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.1389em;">P</span><span class="mopen">(</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mord">∣</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">1</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">...</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight">i</span><span class="mbin mtight">−</span><span class="mord mtight">1</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2083em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> 是模型预测词 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>w</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">w_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5806em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0269em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> 的概率。</p>
+<p>检索增强RAG</p>
+<h1 id="2-词汇分析">2. 词汇分析<a class="anchor" href="#2-词汇分析">#</a></h1>
+<blockquote>
+<p>不在课堂小测和作业的内容不会以计算形式出现</p>
+</blockquote>
+<ul>
+<li>词是形式和意义相结合的单位，也是<strong>语言中能够独立运用的最小单位</strong>。</li>
+<li>掌握一个词汇意味着知道其读音和语义</li>
+<li>自然语言处理算法中<strong>词</strong>通常是基本单元</li>
+</ul>
+<blockquote>
+<p><strong>llm中token是基础单位</strong></p>
+</blockquote>
+<ul>
+<li>
+<p>词通常是由语素构成。</p>
+<ul>
+<li><strong>语素是语言中意义的最小单元</strong>。</li>
+<li>简单词、复杂词</li>
+<li>实义词（表达具体的意义）、功能词（为了满足语法功能需求，也称闭类词）</li>
+</ul>
+</li>
+<li>
+<p>词性（POS）也称词类</p>
+<ul>
+<li>名词
+<ul>
+<li>专有名词是我们自然语言处理中需要特别关注的词汇。</li>
+</ul>
+</li>
+<li>动词
+<ul>
+<li>句子这一类分析重点关注的词汇。</li>
+</ul>
+</li>
+<li>形容词
+<ul>
+<li>情感分析重点关注的词汇。</li>
+</ul>
+</li>
+<li>副词
+<ul>
+<li>阅读理解比较关注。作用不大。</li>
+</ul>
+</li>
+<li>数词
+<ul>
+<li>自然语言中最难的一类词。</li>
+</ul>
+</li>
+<li>代词
+<ul>
+<li>代词消解->人称代词、物主代词</li>
+</ul>
+</li>
+<li>冠词
+<ul>
+<li>语法改错，没人做了，打不过大模型。</li>
+</ul>
+</li>
+<li>介词
+<ul>
+<li>句法分析。</li>
+</ul>
+</li>
+<li>连词
+<ul>
+<li>but</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>词语规范化：将单词或词形转化为标准形式，针对由多种形式的单词使用一种单一的形式进行表示。</p>
+</li>
+<li>
+<p>词形（Token）指的是在一个特定文档中的某个能够表达语义含义的字符序列。</p>
+</li>
+<li>
+<p>词形还原：将一个词的多种形式还原为它们的基本形式。</p>
+</li>
+<li>
+<p>词形分析：将一个词分解成为语素的过程。</p>
+</li>
+<li>
+<p>词干提取</p>
+</li>
+</ul>
+<h2 id="中文分词">中文分词<a class="anchor" href="#中文分词">#</a></h2>
+<ul>
+<li>困难：
+<ul>
+<li>分词规范</li>
+<li>歧义切分
+<ul>
+<li>固有歧义</li>
+<li>真歧义</li>
+<li>交集歧义</li>
+</ul>
+</li>
+<li>未登录词识别</li>
+</ul>
+</li>
+</ul>
+<h3 id="基于最大匹配的中文分词">基于最大匹配的中文分词<a class="anchor" href="#基于最大匹配的中文分词">#</a></h3>
+<ul>
+<li>
+<p>前向最大匹配</p>
+</li>
+<li>
+<p>后向最大匹配</p>
+</li>
+<li>
+<p>根据给定的字典，利用贪心搜索策略找到分词方案。</p>
+</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> forward_max_match</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence, dictionary, max_len</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    """</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    前向最大匹配算法</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Args:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        sentence: 待分词的句子</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        dictionary: 词典（set类型）</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        max_len: 最大词长</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Returns:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        分词结果列表</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    """</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    words </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> []</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    start </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    while</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> start </span><span style="color:#D73A49;--shiki-dark:#F97583">&#x3C;</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> len</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> min</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(max_len, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">len</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence) </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> start)</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">        # 从最大长度开始尝试匹配</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        while</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">></span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">            word </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sentence[start:start </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len]</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> dictionary </span><span style="color:#D73A49;--shiki-dark:#F97583">or</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">==</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                words.append(word)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                break</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">            word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">-=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        start </span><span style="color:#D73A49;--shiki-dark:#F97583">+=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> words</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> backward_max_match</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence, dictionary, max_len</span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF">5</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    """</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    后向最大匹配算法</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Args:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        sentence: 待分词的句子</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        dictionary: 词典（set类型）</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        max_len: 最大词长</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    Returns:</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        分词结果列表</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">    """</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    words </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> []</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    end </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> len</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    while</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> end </span><span style="color:#D73A49;--shiki-dark:#F97583">></span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> min</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(max_len, end)</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">        # 从最大长度开始尝试匹配</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        while</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">></span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">            word </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sentence[end </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len:end]</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> dictionary </span><span style="color:#D73A49;--shiki-dark:#F97583">or</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">==</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                words.insert(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">0</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, word)</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                break</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">            word_len </span><span style="color:#D73A49;--shiki-dark:#F97583">-=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        end </span><span style="color:#D73A49;--shiki-dark:#F97583">-=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word_len</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> words</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D"># 示例使用</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">if</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __name__</span><span style="color:#D73A49;--shiki-dark:#F97583"> ==</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "__main__"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 示例词典</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    dictionary </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"我们"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"在"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"学习"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"自然"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"语言"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"处理"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"自然语言"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"自然语言处理"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 测试句子</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    sentence </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "我们在学习自然语言处理"</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 前向最大匹配</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    forward_result </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> forward_max_match(sentence, dictionary)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"前向最大匹配结果:"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"/"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.join(forward_result))</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 后向最大匹配</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    backward_result </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> backward_max_match(sentence, dictionary)</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">    print</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">"后向最大匹配结果:"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">"/"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.join(backward_result))</span></span>
+<span class="line"></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="def forward_max_match(sentence, dictionary, max_len=5):
+    &#x22;&#x22;&#x22;
+    前向最大匹配算法
+    Args:
+        sentence: 待分词的句子
+        dictionary: 词典（set类型）
+        max_len: 最大词长
+    Returns:
+        分词结果列表
+    &#x22;&#x22;&#x22;
+    words = []
+    start = 0
+    while start < len(sentence):
+        word_len = min(max_len, len(sentence) - start)
+        # 从最大长度开始尝试匹配
+        while word_len > 0:
+            word = sentence[start:start + word_len]
+            if word in dictionary or word_len == 1:
+                words.append(word)
+                break
+            word_len -= 1
+        start += word_len
+    return words
+
+def backward_max_match(sentence, dictionary, max_len=5):
+    &#x22;&#x22;&#x22;
+    后向最大匹配算法
+    Args:
+        sentence: 待分词的句子
+        dictionary: 词典（set类型）
+        max_len: 最大词长
+    Returns:
+        分词结果列表
+    &#x22;&#x22;&#x22;
+    words = []
+    end = len(sentence)
+    while end > 0:
+        word_len = min(max_len, end)
+        # 从最大长度开始尝试匹配
+        while word_len > 0:
+            word = sentence[end - word_len:end]
+            if word in dictionary or word_len == 1:
+                words.insert(0, word)
+                break
+            word_len -= 1
+        end -= word_len
+    return words
+
+# 示例使用
+if __name__ == &#x22;__main__&#x22;:
+    # 示例词典
+    dictionary = {&#x22;我们&#x22;, &#x22;在&#x22;, &#x22;学习&#x22;, &#x22;自然&#x22;, &#x22;语言&#x22;, &#x22;处理&#x22;, &#x22;自然语言&#x22;, &#x22;自然语言处理&#x22;}
+
+    # 测试句子
+    sentence = &#x22;我们在学习自然语言处理&#x22;
+
+    # 前向最大匹配
+    forward_result = forward_max_match(sentence, dictionary)
+    print(&#x22;前向最大匹配结果:&#x22;, &#x22;/&#x22;.join(forward_result))
+
+    # 后向最大匹配
+    backward_result = backward_max_match(sentence, dictionary)
+    print(&#x22;后向最大匹配结果:&#x22;, &#x22;/&#x22;.join(backward_result))
+" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h3 id="基于线性链条件随机场的中文分词">基于线性链条件随机场的中文分词<a class="anchor" href="#基于线性链条件随机场的中文分词">#</a></h3>
+<ul>
+<li>将分词过程转化为<strong>对字分类</strong>的问题。
+<ul>
+<li>对于输入橘子的每一个字，根据他在分词结果中的位置腹语不同的标签</li>
+<li>BIES标注法：
+<ul>
+<li>开始B，中间I，结尾E和单独成次S</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>他是研究生物科学的一位科学家
+他|是|研究|生物科学|的|一位|科学家
+他/S 是/S 研/B究/E 生/B物/I科/I学/E 的/S 一/B位/E 科/B学/I家/E</p>
+</blockquote>
+<ul>
+<li>条件随机场(不要求掌握)
+<ul>
+<li>对于给定的观测序列，概率，势函数，马尔科夫状态转移</li>
+</ul>
+</li>
+</ul>
+<h3 id="bpe算法byte-pair-encoding">BPE算法（Byte Pair Encoding）<a class="anchor" href="#bpe算法byte-pair-encoding">#</a></h3>
+<ul>
+<li>基本原理：迭代地合并最频繁出现的字符对</li>
+<li>具体步骤：
+<ol>
+<li>准备语料库，将所有单词拆分为字符序列，在每个单词末尾添加特殊符号</li>
+<li>统计所有相邻字符对的频率</li>
+<li>合并最频繁出现的字符对，形成新的子词</li>
+<li>重复步骤2-3直到达到预设的词表大小或合并次数</li>
+</ol>
+</li>
+<li>优点：
+<ul>
+<li>可以处理未登录词</li>
+<li>压缩效率高</li>
+<li>适应性强</li>
+</ul>
+</li>
+<li>示例：
+<blockquote>
+<p><code>"lower" -> "l o w e r &#x26;lt;/w&#x26;gt;"</code>
+多次合并后可能变成 <code>"low er &#x26;lt;/w&#x26;gt;"</code></p>
+</blockquote>
+</li>
+</ul>
+<h3 id="wordpiece算法">WordPiece算法<a class="anchor" href="#wordpiece算法">#</a></h3>
+<ul>
+<li>基本原理：基于概率最大化的子词分割算法</li>
+<li>与BPE的主要区别：
+<ul>
+<li>使用语言模型计算合并的收益</li>
+<li>选择合并后能最大化训练数据概率的字符对</li>
+</ul>
+</li>
+<li>具体步骤：
+<ol>
+<li>初始化词表为基本字符集</li>
+<li>对每个可能的合并计算概率增益</li>
+<li>选择增益最大的字符对合并</li>
+<li>重复2-3直到达到预设条件</li>
+</ol>
+</li>
+<li>特点：
+<ul>
+<li>常用词保持完整</li>
+<li>生僻词会被分解为更小的子词</li>
+<li>使用”##“标记词中间的子词</li>
+</ul>
+</li>
+<li>应用：
+<ul>
+<li>BERT等预训练模型的分词算法</li>
+</ul>
+</li>
+</ul>
+<h3 id="中文分词的评价">中文分词的评价<a class="anchor" href="#中文分词的评价">#</a></h3>
+<ul>
+<li>
+<p>评价指标</p>
+<ul>
+<li>
+<p>准确率（Precision）：</p>
+<ul>
+<li>正确分词的词数 / 系统分词结果的总词数</li>
+<li>P = 正确分词数 / 系统分词总数</li>
+</ul>
+</li>
+<li>
+<p>召回率（Recall）：</p>
+<ul>
+<li>正确分词的词数 / 标准答案的总词数</li>
+<li>R = 正确分词数 / 标准答案总数</li>
+</ul>
+</li>
+<li>
+<p>F1值：</p>
+<ul>
+<li>准确率和召回率的调和平均</li>
+<li>F1 = 2 × P × R / (P + R)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>评价难点</p>
+<ul>
+<li>分词标准不统一</li>
+<li>歧义切分的判定</li>
+<li>未登录词的处理</li>
+</ul>
+</li>
+<li>
+<p>评价工具</p>
+<ul>
+<li>SIGHAN分词评测工具</li>
+<li>NLPIR分词评测系统</li>
+</ul>
+</li>
+</ul>
+<h2 id="词性标注不要求掌握具体怎么做">词性标注（不要求掌握具体怎么做）<a class="anchor" href="#词性标注不要求掌握具体怎么做">#</a></h2>
+<ul>
+<li>
+<p>词性标注的主要难点在于<strong>歧义性</strong></p>
+</li>
+<li>
+<p>还没有一个被广泛认可的统一词性划分标准</p>
+</li>
+<li>
+<p>基于规则的词性标注</p>
+<ul>
+<li>利用词典和搭配规则针对词语和上下文进行分析，从而得到句子中每个词语词性</li>
+</ul>
+</li>
+<li>
+<p>基于隐马尔科夫模型的词性标注</p>
+<ul>
+<li><strong>长句子</strong>和<strong>未登录词</strong>问题实际应用中需要解决问题</li>
+</ul>
+</li>
+<li>
+<p>基于卷积神经网络的词性标注</p>
+</li>
+<li>
+<p>评价指标：宏F1</p>
+</li>
+</ul>
+<h1 id="3-句法分析">3. 句法分析<a class="anchor" href="#3-句法分析">#</a></h1>
+<ul>
+<li>
+<p>句法：研究自然语言中不同成分组成句子的方式以及支配句子结构决定句子是否成立的规则。</p>
+</li>
+<li>
+<p>语法：指自然语言中句子、短语以及词等语法单位的语法结构和语法意义的规律。</p>
+</li>
+<li>
+<p>基于成分关系，基于依存关系</p>
+</li>
+<li>
+<p>成分语法理论</p>
+<ul>
+<li>成分又称短语结构，是指一个句子内部的结构成分。</li>
+<li>某一类短语属于一个句法范畴。
+<ul>
+<li>句法范畴之间不是完全对等的，而是具有层级关系。</li>
+</ul>
+</li>
+<li>短语结构规则</li>
+<li>成分语法就是由语法范畴以及短语结构规则定义的语法。</li>
+</ul>
+</li>
+<li>
+<p>依存语法理论</p>
+<ul>
+<li>句子的每个成分对应语法结构中的唯一一个节点。</li>
+<li>投射性原则</li>
+<li>两种搜索方式：
+<ul>
+<li>自顶向下</li>
+<li>自顶向上</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="cyk算法基于动态规划思想和自底向上语法分析算法">CYK算法，基于动态规划思想和自底向上语法分析算法<a class="anchor" href="#cyk算法基于动态规划思想和自底向上语法分析算法">#</a></h2>
+<ul>
+<li>要求所使用的语法必须符合乔姆斯基范式，期语法规则被限制为**只具有A->BC或A->w这种形式。</li>
+<li>步骤：
+<ul>
+<li>对于一个长度为n的句子，构造一个（n+1）×（n+1）的二维矩阵T</li>
+<li>矩阵主对角线一下全部为0，主对角线上的元素由输入橘子的终结符号（单词）构成。</li>
+</ul>
+</li>
+</ul>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">class</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> CYKParser</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __init__</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, grammar):</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        """</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        初始化CYK解析器</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        grammar: 字典形式的CNF文法规则</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        """</span></span>
+<span class="line"><span style="color:#005CC5;--shiki-dark:#79B8FF">        self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.grammar </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> grammar</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">    def</span><span style="color:#6F42C1;--shiki-dark:#B392F0"> parse</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(self, sentence):</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        """</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        CYK算法实现</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        sentence: 输入句子（词序列）</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        """</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        n </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> len</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(sentence)</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">        # 初始化表格</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">        table </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [[</span><span style="color:#005CC5;--shiki-dark:#79B8FF">set</span><span style="color:#24292E;--shiki-dark:#E1E4E8">() </span><span style="color:#D73A49;--shiki-dark:#F97583">for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> j </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(n)] </span><span style="color:#D73A49;--shiki-dark:#F97583">for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> i </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(n)]</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">        # 填充对角线（长度为1的子串）</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> i </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(n):</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">            word </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> sentence[i]</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> rule </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.grammar:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> word </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.grammar[rule]:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                    table[i][i].add(rule)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">        # 填充其他单元格</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> length </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(</span><span style="color:#005CC5;--shiki-dark:#79B8FF">2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, n </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 子串长度</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">            for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> i </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(n </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> length </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">):  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 起始位置</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                j </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> i </span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> length </span><span style="color:#D73A49;--shiki-dark:#F97583">-</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 1</span><span style="color:#6A737D;--shiki-dark:#6A737D">  # 结束位置</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> k </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> range</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(i, j):  </span><span style="color:#6A737D;--shiki-dark:#6A737D"># 分割点</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                    for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> rule </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.grammar:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                        for</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> production </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> self</span><span style="color:#24292E;--shiki-dark:#E1E4E8">.grammar[rule]:</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                            if</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> isinstance</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(production, </span><span style="color:#005CC5;--shiki-dark:#79B8FF">tuple</span><span style="color:#24292E;--shiki-dark:#E1E4E8">) </span><span style="color:#D73A49;--shiki-dark:#F97583">and</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> len</span><span style="color:#24292E;--shiki-dark:#E1E4E8">(production) </span><span style="color:#D73A49;--shiki-dark:#F97583">==</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> 2</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                                B, C </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> production</span></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">                                if</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> B </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> table[i][k] </span><span style="color:#D73A49;--shiki-dark:#F97583">and</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> C </span><span style="color:#D73A49;--shiki-dark:#F97583">in</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> table[k</span><span style="color:#D73A49;--shiki-dark:#F97583">+</span><span style="color:#005CC5;--shiki-dark:#79B8FF">1</span><span style="color:#24292E;--shiki-dark:#E1E4E8">][j]:</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">                                    table[i][j].add(rule)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">        return</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> table</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="class CYKParser:
+    def __init__(self, grammar):
+        &#x22;&#x22;&#x22;
+        初始化CYK解析器
+        grammar: 字典形式的CNF文法规则
+        &#x22;&#x22;&#x22;
+        self.grammar = grammar
+
+    def parse(self, sentence):
+        &#x22;&#x22;&#x22;
+        CYK算法实现
+        sentence: 输入句子（词序列）
+        &#x22;&#x22;&#x22;
+        n = len(sentence)
+        # 初始化表格
+        table = [[set() for j in range(n)] for i in range(n)]
+
+        # 填充对角线（长度为1的子串）
+        for i in range(n):
+            word = sentence[i]
+            for rule in self.grammar:
+                if word in self.grammar[rule]:
+                    table[i][i].add(rule)
+
+        # 填充其他单元格
+        for length in range(2, n + 1):  # 子串长度
+            for i in range(n - length + 1):  # 起始位置
+                j = i + length - 1  # 结束位置
+                for k in range(i, j):  # 分割点
+                    for rule in self.grammar:
+                        for production in self.grammar[rule]:
+                            if isinstance(production, tuple) and len(production) == 2:
+                                B, C = production
+                                if B in table[i][k] and C in table[k+1][j]:
+                                    table[i][j].add(rule)
+
+        return table" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="python"><pre><code><span class="line"><span style="color:#D73A49;--shiki-dark:#F97583">if</span><span style="color:#005CC5;--shiki-dark:#79B8FF"> __name__</span><span style="color:#D73A49;--shiki-dark:#F97583"> ==</span><span style="color:#032F62;--shiki-dark:#9ECBFF"> "__main__"</span><span style="color:#24292E;--shiki-dark:#E1E4E8">:</span></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 示例语法规则</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    grammar </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> {</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'S'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'NP'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'VP'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)},</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'NP'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'DET'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'N'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">), </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'N'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'VP'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {(</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'V'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'NP'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">)},</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'DET'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'the'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'N'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'cat'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'dog'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">},</span></span>
+<span class="line"><span style="color:#032F62;--shiki-dark:#9ECBFF">        'V'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">: {</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'chased'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">}</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    }</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 创建解析器</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    parser </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> CYKParser(grammar)</span></span>
+<span class="line"></span>
+<span class="line"><span style="color:#6A737D;--shiki-dark:#6A737D">    # 测试句子</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    sentence </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> [</span><span style="color:#032F62;--shiki-dark:#9ECBFF">'the'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'cat'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'chased'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'the'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">, </span><span style="color:#032F62;--shiki-dark:#9ECBFF">'dog'</span><span style="color:#24292E;--shiki-dark:#E1E4E8">]</span></span>
+<span class="line"><span style="color:#24292E;--shiki-dark:#E1E4E8">    result </span><span style="color:#D73A49;--shiki-dark:#F97583">=</span><span style="color:#24292E;--shiki-dark:#E1E4E8"> parser.parse(sentence)</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">python</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="if __name__ == &#x22;__main__&#x22;:
+    # 示例语法规则
+    grammar = {
+        &#x27;S&#x27;: {(&#x27;NP&#x27;, &#x27;VP&#x27;)},
+        &#x27;NP&#x27;: {(&#x27;DET&#x27;, &#x27;N&#x27;), &#x27;N&#x27;},
+        &#x27;VP&#x27;: {(&#x27;V&#x27;, &#x27;NP&#x27;)},
+        &#x27;DET&#x27;: {&#x27;the&#x27;},
+        &#x27;N&#x27;: {&#x27;cat&#x27;, &#x27;dog&#x27;},
+        &#x27;V&#x27;: {&#x27;chased&#x27;}
+    }
+
+    # 创建解析器
+    parser = CYKParser(grammar)
+
+    # 测试句子
+    sentence = [&#x27;the&#x27;, &#x27;cat&#x27;, &#x27;chased&#x27;, &#x27;the&#x27;, &#x27;dog&#x27;]
+    result = parser.parse(sentence)" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<p>实验结果：</p>
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><pre><code><span class="line"><span>开始解析句子: the cat chased the dog</span></span>
+<span class="line"><span>句子长度: 5</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>步骤1: 初始化解析表格</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>步骤2: 填充对角线（处理单个词）</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理词: the</span></span>
+<span class="line"><span>  找到规则: DET -> the</span></span>
+<span class="line"><span>  位置[0,0]的非终结符: {'DET'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理词: cat</span></span>
+<span class="line"><span>  找到规则: N -> cat</span></span>
+<span class="line"><span>  位置[1,1]的非终结符: {'N'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理词: chased</span></span>
+<span class="line"><span>  找到规则: V -> chased</span></span>
+<span class="line"><span>  位置[2,2]的非终结符: {'V'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理词: the</span></span>
+<span class="line"><span>  找到规则: DET -> the</span></span>
+<span class="line"><span>  位置[3,3]的非终结符: {'DET'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理词: dog</span></span>
+<span class="line"><span>  找到规则: N -> dog</span></span>
+<span class="line"><span>  位置[4,4]的非终结符: {'N'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>步骤3: 填充其他单元格（处理短语）</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理长度为 2 的子串:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: the cat</span></span>
+<span class="line"><span>    分割点 k=0:</span></span>
+<span class="line"><span>    左半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    右半部分: cat -> {'N'}</span></span>
+<span class="line"><span>      应用规则: NP -> DET N</span></span>
+<span class="line"><span>    位置[0,1]的非终结符: {'NP'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: cat chased</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: cat -> {'N'}</span></span>
+<span class="line"><span>    右半部分: chased -> {'V'}</span></span>
+<span class="line"><span>    位置[1,2]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: chased the</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: chased -> {'V'}</span></span>
+<span class="line"><span>    右半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    位置[2,3]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: the dog</span></span>
+<span class="line"><span>    分割点 k=3:</span></span>
+<span class="line"><span>    左半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    右半部分: dog -> {'N'}</span></span>
+<span class="line"><span>      应用规则: NP -> DET N</span></span>
+<span class="line"><span>    位置[3,4]的非终结符: {'NP'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理长度为 3 的子串:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: the cat chased</span></span>
+<span class="line"><span>    分割点 k=0:</span></span>
+<span class="line"><span>    左半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    右半部分: cat chased -> set()</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: the cat -> {'NP'}</span></span>
+<span class="line"><span>    右半部分: chased -> {'V'}</span></span>
+<span class="line"><span>    位置[0,2]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: cat chased the</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: cat -> {'N'}</span></span>
+<span class="line"><span>    右半部分: chased the -> set()</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: cat chased -> set()</span></span>
+<span class="line"><span>    右半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    位置[1,3]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: chased the dog</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: chased -> {'V'}</span></span>
+<span class="line"><span>    右半部分: the dog -> {'NP'}</span></span>
+<span class="line"><span>      应用规则: VP -> V NP</span></span>
+<span class="line"><span>    分割点 k=3:</span></span>
+<span class="line"><span>    左半部分: chased the -> set()</span></span>
+<span class="line"><span>    右半部分: dog -> {'N'}</span></span>
+<span class="line"><span>    位置[2,4]的非终结符: {'VP'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理长度为 4 的子串:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: the cat chased the</span></span>
+<span class="line"><span>    分割点 k=0:</span></span>
+<span class="line"><span>    左半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    右半部分: cat chased the -> set()</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: the cat -> {'NP'}</span></span>
+<span class="line"><span>    右半部分: chased the -> set()</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: the cat chased -> set()</span></span>
+<span class="line"><span>    右半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    位置[0,3]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: cat chased the dog</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: cat -> {'N'}</span></span>
+<span class="line"><span>    右半部分: chased the dog -> {'VP'}</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: cat chased -> set()</span></span>
+<span class="line"><span>    右半部分: the dog -> {'NP'}</span></span>
+<span class="line"><span>    分割点 k=3:</span></span>
+<span class="line"><span>    左半部分: cat chased the -> set()</span></span>
+<span class="line"><span>    右半部分: dog -> {'N'}</span></span>
+<span class="line"><span>    位置[1,4]的非终结符: set()</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>处理长度为 5 的子串:</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>  子串: the cat chased the dog</span></span>
+<span class="line"><span>    分割点 k=0:</span></span>
+<span class="line"><span>    左半部分: the -> {'DET'}</span></span>
+<span class="line"><span>    右半部分: cat chased the dog -> set()</span></span>
+<span class="line"><span>    分割点 k=1:</span></span>
+<span class="line"><span>    左半部分: the cat -> {'NP'}</span></span>
+<span class="line"><span>    右半部分: chased the dog -> {'VP'}</span></span>
+<span class="line"><span>      应用规则: S -> NP VP</span></span>
+<span class="line"><span>    分割点 k=2:</span></span>
+<span class="line"><span>    左半部分: the cat chased -> set()</span></span>
+<span class="line"><span>    右半部分: the dog -> {'NP'}</span></span>
+<span class="line"><span>    分割点 k=3:</span></span>
+<span class="line"><span>    左半部分: the cat chased the -> set()</span></span>
+<span class="line"><span>    右半部分: dog -> {'N'}</span></span>
+<span class="line"><span>    位置[0,4]的非终结符: {'S'}</span></span>
+<span class="line"><span></span></span>
+<span class="line"><span>解析完成！</span></span>
+<span class="line"><span>句子符合语法规则！</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">plaintext</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="开始解析句子: the cat chased the dog
+句子长度: 5
+
+步骤1: 初始化解析表格
+
+步骤2: 填充对角线（处理单个词）
+
+处理词: the
+  找到规则: DET -> the
+  位置[0,0]的非终结符: {&#x27;DET&#x27;}
+
+处理词: cat
+  找到规则: N -> cat
+  位置[1,1]的非终结符: {&#x27;N&#x27;}
+
+处理词: chased
+  找到规则: V -> chased
+  位置[2,2]的非终结符: {&#x27;V&#x27;}
+
+处理词: the
+  找到规则: DET -> the
+  位置[3,3]的非终结符: {&#x27;DET&#x27;}
+
+处理词: dog
+  找到规则: N -> dog
+  位置[4,4]的非终结符: {&#x27;N&#x27;}
+
+步骤3: 填充其他单元格（处理短语）
+
+处理长度为 2 的子串:
+
+  子串: the cat
+    分割点 k=0:
+    左半部分: the -> {&#x27;DET&#x27;}
+    右半部分: cat -> {&#x27;N&#x27;}
+      应用规则: NP -> DET N
+    位置[0,1]的非终结符: {&#x27;NP&#x27;}
+
+  子串: cat chased
+    分割点 k=1:
+    左半部分: cat -> {&#x27;N&#x27;}
+    右半部分: chased -> {&#x27;V&#x27;}
+    位置[1,2]的非终结符: set()
+
+  子串: chased the
+    分割点 k=2:
+    左半部分: chased -> {&#x27;V&#x27;}
+    右半部分: the -> {&#x27;DET&#x27;}
+    位置[2,3]的非终结符: set()
+
+  子串: the dog
+    分割点 k=3:
+    左半部分: the -> {&#x27;DET&#x27;}
+    右半部分: dog -> {&#x27;N&#x27;}
+      应用规则: NP -> DET N
+    位置[3,4]的非终结符: {&#x27;NP&#x27;}
+
+处理长度为 3 的子串:
+
+  子串: the cat chased
+    分割点 k=0:
+    左半部分: the -> {&#x27;DET&#x27;}
+    右半部分: cat chased -> set()
+    分割点 k=1:
+    左半部分: the cat -> {&#x27;NP&#x27;}
+    右半部分: chased -> {&#x27;V&#x27;}
+    位置[0,2]的非终结符: set()
+
+  子串: cat chased the
+    分割点 k=1:
+    左半部分: cat -> {&#x27;N&#x27;}
+    右半部分: chased the -> set()
+    分割点 k=2:
+    左半部分: cat chased -> set()
+    右半部分: the -> {&#x27;DET&#x27;}
+    位置[1,3]的非终结符: set()
+
+  子串: chased the dog
+    分割点 k=2:
+    左半部分: chased -> {&#x27;V&#x27;}
+    右半部分: the dog -> {&#x27;NP&#x27;}
+      应用规则: VP -> V NP
+    分割点 k=3:
+    左半部分: chased the -> set()
+    右半部分: dog -> {&#x27;N&#x27;}
+    位置[2,4]的非终结符: {&#x27;VP&#x27;}
+
+处理长度为 4 的子串:
+
+  子串: the cat chased the
+    分割点 k=0:
+    左半部分: the -> {&#x27;DET&#x27;}
+    右半部分: cat chased the -> set()
+    分割点 k=1:
+    左半部分: the cat -> {&#x27;NP&#x27;}
+    右半部分: chased the -> set()
+    分割点 k=2:
+    左半部分: the cat chased -> set()
+    右半部分: the -> {&#x27;DET&#x27;}
+    位置[0,3]的非终结符: set()
+
+  子串: cat chased the dog
+    分割点 k=1:
+    左半部分: cat -> {&#x27;N&#x27;}
+    右半部分: chased the dog -> {&#x27;VP&#x27;}
+    分割点 k=2:
+    左半部分: cat chased -> set()
+    右半部分: the dog -> {&#x27;NP&#x27;}
+    分割点 k=3:
+    左半部分: cat chased the -> set()
+    右半部分: dog -> {&#x27;N&#x27;}
+    位置[1,4]的非终结符: set()
+
+处理长度为 5 的子串:
+
+  子串: the cat chased the dog
+    分割点 k=0:
+    左半部分: the -> {&#x27;DET&#x27;}
+    右半部分: cat chased the dog -> set()
+    分割点 k=1:
+    左半部分: the cat -> {&#x27;NP&#x27;}
+    右半部分: chased the dog -> {&#x27;VP&#x27;}
+      应用规则: S -> NP VP
+    分割点 k=2:
+    左半部分: the cat chased -> set()
+    右半部分: the dog -> {&#x27;NP&#x27;}
+    分割点 k=3:
+    左半部分: the cat chased the -> set()
+    右半部分: dog -> {&#x27;N&#x27;}
+    位置[0,4]的非终结符: {&#x27;S&#x27;}
+
+解析完成！
+句子符合语法规则！" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+<h2 id="pcfg算法概率上下文无关文法">PCFG算法（概率上下文无关文法）<a class="anchor" href="#pcfg算法概率上下文无关文法">#</a></h2>
+<h2 id="实验课内容">实验课内容<a class="anchor" href="#实验课内容">#</a></h2>
+<h3 id="关键字提取">关键字提取<a class="anchor" href="#关键字提取">#</a></h3>
+<h4 id="tf-idf词频-逆文档频率">TF-IDF（词频-逆文档频率）<a class="anchor" href="#tf-idf词频-逆文档频率">#</a></h4>
+<ul>
+<li>
+<p>基本原理：结合词频（TF）和逆文档频率（IDF）来评估词语对于文档集合的重要程度</p>
+</li>
+<li>
+<p>计算公式：</p>
+<ul>
+<li>TF（词频）：词语在文档中出现的频率
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><pre><code><span class="line"><span>TF = 词语在文档中的出现次数 / 文档的总词数</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">plaintext</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="TF = 词语在文档中的出现次数 / 文档的总词数" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+</li>
+<li>IDF（逆文档频率）：衡量词语的普遍重要性
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>I</mi><mi>D</mi><mi>F</mi><mo stretchy="false">(</mo><mi>t</mi><mo separator="true">,</mo><mi>D</mi><mo stretchy="false">)</mo><mo>=</mo><mi>l</mi><mi>o</mi><mi>g</mi><mo stretchy="false">(</mo><mtext>文档总数</mtext><mi>N</mi><mi mathvariant="normal">/</mi><mtext>包含该词</mtext><mi>t</mi><mtext>的文档数</mtext><mo stretchy="false">)</mo><mo>+</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">IDF(t, D) = log(文档总数N / 包含该词t的文档数) + 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0785em;">I</span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mord mathnormal" style="margin-right:0.1389em;">F</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0278em;">D</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0197em;">l</span><span class="mord mathnormal">o</span><span class="mord mathnormal" style="margin-right:0.0359em;">g</span><span class="mopen">(</span><span class="mord cjk_fallback">文档总数</span><span class="mord mathnormal" style="margin-right:0.109em;">N</span><span class="mord">/</span><span class="mord cjk_fallback">包含该词</span><span class="mord mathnormal">t</span><span class="mord cjk_fallback">的文档数</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span></span>
+</li>
+<li>TF-IDF分数：
+<div class="astro-code astro-code-themes github-light github-dark" style="background-color:#fff;--shiki-dark-bg:#24292e;color:#24292e;--shiki-dark:#e1e4e8; overflow-x: auto;" tabindex="0" data-language="plaintext"><pre><code><span class="line"><span>TF-IDF = TF × IDF</span></span></code></pre><span class="language transition-opacity duration-300 absolute top-3 right-0 ps-1 pe-3 text-sm bg-muted text-muted-foreground select-none">plaintext</span><button class="copy transition-opacity duration-300 opacity-0 absolute top-3 right-3 text-muted-foreground p-1 box-content border border-border rounded bg-primary-foreground" data-code="TF-IDF = TF × IDF" onclick="
+          navigator.clipboard.writeText(this.dataset.code);
+          this.classList.add(&#x27;copied&#x27;);
+          setTimeout(() => this.classList.remove(&#x27;copied&#x27;), 2000)
+        "><div class="ready"><svg class="size-5"><use href="/icons/code.svg#mingcute-clipboard-line"></use></svg></div><div class="success hidden"><svg class="size-5"><use href="/icons/code.svg#mingcute-file-check-line"></use></svg></div></button></div>
+</li>
+</ul>
+</li>
+<li>
+<p>特点：</p>
+<ul>
+<li>词语在文档中出现次数越多，TF值越高</li>
+<li>词语在越少的文档中出现，IDF值越高</li>
+<li>能够过滤掉常见词，突出重要词语</li>
+</ul>
+</li>
+<li>
+<p>应用：</p>
+<ul>
+<li>文本关键词提取</li>
+<li>文本相似度计算</li>
+<li>文本分类</li>
+<li>搜索引擎结果排序</li>
+</ul>
+</li>
+</ul>
+<h4 id="textrank-算法">TextRank 算法<a class="anchor" href="#textrank-算法">#</a></h4>
+<ul>
+<li>TextRank是一种基于图的无监督关键词提取和文本摘要算法</li>
+</ul>
+<ol>
+<li>文本预处理：</li>
+</ol>
+<ul>
+<li>分词</li>
+<li>去除停用词</li>
+<li>词性过滤（可选）</li>
+</ul>
+<ol start="2">
+<li>构建共现图</li>
+</ol>
+<ul>
+<li>节点：图中的节点代表文本中的词语</li>
+<li>变：如果两个词语在一定窗口大小内贡献，则在他们之间建立边。边的权重通常基于共现频率或其他相关度量。</li>
+</ul>
+<ol start="3">
+<li>计算节点权重：</li>
+</ol>
+<ul>
+<li>使用迭代算法计算每个节点的权重。</li>
+<li>初始化每个节点的权重为相同值</li>
+<li>迭代更新节点权重，直到收敛或达到最大迭代次数</li>
+<li>更新公式类似于PageRank：</li>
+</ul>
+<span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi>S</mi><mi>c</mi><mi>o</mi><mi>r</mi><mi>e</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo><mo>=</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>d</mi><mo stretchy="false">)</mo><mo>+</mo><mi>d</mi><mo>×</mo><munder><mo>∑</mo><mrow><mi>B</mi><mo>∈</mo><mi>I</mi><mi>n</mi><mo stretchy="false">(</mo><mi>A</mi><mo stretchy="false">)</mo></mrow></munder><mstyle mathcolor="#cc0000"><mtext>\dfact</mtext></mstyle><mrow><mi>S</mi><mi>c</mi><mi>o</mi><mi>r</mi><mi>e</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow><mrow><mi>O</mi><mi>u</mi><mi>t</mi><mo stretchy="false">(</mo><mi>B</mi><mo stretchy="false">)</mo></mrow></mrow><annotation encoding="application/x-tex">Score(A) = (1-d)+d\times \sum_{B\in In(A)} \dfact{Score(B)}{Out(B)}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0278em;">cor</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal">A</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7778em;vertical-align:-0.0833em;"></span><span class="mord mathnormal">d</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:2.566em;vertical-align:-1.516em;"></span><span class="mop op-limits"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.05em;"><span style="top:-1.809em;margin-left:0em;"><span class="pstrut" style="height:3.05em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathnormal mtight" style="margin-right:0.0502em;">B</span><span class="mrel mtight">∈</span><span class="mord mathnormal mtight" style="margin-right:0.0785em;">I</span><span class="mord mathnormal mtight">n</span><span class="mopen mtight">(</span><span class="mord mathnormal mtight">A</span><span class="mclose mtight">)</span></span></span></span><span style="top:-3.05em;"><span class="pstrut" style="height:3.05em;"></span><span><span class="mop op-symbol large-op">∑</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:1.516em;"><span></span></span></span></span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord text" style="color:#cc0000;"><span class="mord" style="color:#cc0000;">\dfact</span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0576em;">S</span><span class="mord mathnormal" style="margin-right:0.0278em;">cor</span><span class="mord mathnormal">e</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">)</span></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.0278em;">O</span><span class="mord mathnormal">u</span><span class="mord mathnormal">t</span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.0502em;">B</span><span class="mclose">)</span></span></span></span></span></span>
+<p>其中，d是阻尼系数(通常为0.85)，In(A)是指向节点A的所有节点，Out(B)是B指向的所有节点</p>
+<h1 id="4-语义分析">4. 语义分析<a class="anchor" href="#4-语义分析">#</a></h1>
+<h2 id="语义学概述">语义学概述<a class="anchor" href="#语义学概述">#</a></h2>
+<ul>
+<li>研究语言意义的科学成为语义学</li>
+<li>语义的形式化结构表示成为语义表示</li>
+</ul>
+<h3 id="词汇语义学">词汇语义学<a class="anchor" href="#词汇语义学">#</a></h3>
+<ul>
+<li>词汇语义学：主要研究单个词汇的意义以及词汇之间的相互关系</li>
+</ul>
+<ol>
+<li>词汇语义理论</li>
+</ol>
+<ul>
+<li>语义场理论：词汇的意义是相互联系的，构成一个完整的系统和网络，具有某些相同语义特征的一组词聚而成场</li>
+<li>语义成分分析：词义可以由最小的语义成分组合而成。最小的语义成分称为语义特征。</li>
+<li>义元理论：自然语言中包含非常少部分的词汇，这些词语可以用于解释绝大部分的意义
+<ul>
+<li>Hownet</li>
+</ul>
+</li>
+<li>框架语义学：词义只能在相应的知识框架背景中才能得到理解。</li>
+</ul>
+<ol start="2">
+<li>词汇之间的关系</li>
+</ol>
+<ul>
+<li>形体关系：研究词汇的声音形体和拼写之间的关系</li>
+<li>意义关系：主要关注词汇意义之间的关联性、相似性、对立性等关系。</li>
+<li>实体关系：主要研究词汇之间的客观关系。</li>
+</ul>
+<h3 id="句子语义学">句子语义学<a class="anchor" href="#句子语义学">#</a></h3>
+<ul>
+<li>真值条件语义学</li>
+<li>格语法：
+<ul>
+<li>语义格：最小的句子语义成分</li>
+</ul>
+</li>
+<li>句子间关系：
+<ul>
+<li>同义关系</li>
+<li>反义关系</li>
+<li>蕴含关系</li>
+<li>预设关系</li>
+</ul>
+</li>
+</ul>
+<h2 id="语义表示">语义表示<a class="anchor" href="#语义表示">#</a></h2>
+<ul>
+<li>语义表示：将语义信息转化为计算机能够处理的形式</li>
+<li>数理逻辑表示法</li>
+<li>框架表示法
+<ul>
+<li>每个框架由若干槽组成，描述框架所讨论对象的某一方面的属性。</li>
+</ul>
+</li>
+<li>语义网络：
+<ul>
+<li>是一种用实体及其语义关系来表达知识和语义的网格图。语义网络由节点和弧组成：节点表示各种事件、事物、概念、属性、动作等，也可以是一个子网络；弧表示节点之间的语义关系，并且有方向。</li>
+</ul>
+</li>
+</ul>
+<h2 id="分布式表示">分布式表示<a class="anchor" href="#分布式表示">#</a></h2>
+<ul>
+<li>将文本教师为<strong>低维空间下稠密向量</strong>，并在低维表示空间中利用表示向量之间的计算关系，体现文本间的语义关联。</li>
+<li>向量空间模型（VSM）</li>
+<li>独热表示</li>
+</ul>
+<h3 id="单词分布式表示">单词分布式表示<a class="anchor" href="#单词分布式表示">#</a></h3>
+<ul>
+<li>通过将单词表视为定长的低维稠密向量</li>
+<li>在向量空间构建单词之间的语义关系。</li>
+<li>使含义相近的单词具有相似的向量表示
+<ul>
+<li>频繁出现在相同上下文的词语之间赋予较高的表示相似度。</li>
+</ul>
+</li>
+<li>单词向量式表示—基于上下文单词预测词向量模型
+<ul>
+<li>共现矩阵</li>
+<li>连续词袋模型(CBOW)</li>
+<li>跳字模型（SG）</li>
+<li>全局向量模型（GloVe）</li>
+</ul>
+</li>
+<li>未登录词 -> 用”[UNK]表示</li>
+</ul>
+<h3 id="分布式表示的评价">分布式表示的评价<a class="anchor" href="#分布式表示的评价">#</a></h3>
+<ul>
+<li>内部评价、外部评价</li>
+</ul>
+<h3 id="句子分布式表示">句子分布式表示<a class="anchor" href="#句子分布式表示">#</a></h3>
+<ul>
+<li>句子分布式表示：将句子转化为低维稠密向量</li>
+<li>句子分布式表示的方法
+<ul>
+<li>句子向量表示
+<ul>
+<li>句子向量表示的方法：
+<ul>
+<li>句子平均词向量</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="篇章分布式表示">篇章分布式表示<a class="anchor" href="#篇章分布式表示">#</a></h3>
+<ul>
+<li>TF-IDF</li>
+</ul>
+<h2 id="词义消歧">词义消歧<a class="anchor" href="#词义消歧">#</a></h2>
+<h2 id="语义角色标注">语义角色标注<a class="anchor" href="#语义角色标注">#</a></h2>
+<h2 id="xlnet">XLNet<a class="anchor" href="#xlnet">#</a></h2>
+<h4 id="自回归模型与自编码模型">自回归模型与自编码模型<a class="anchor" href="#自回归模型与自编码模型">#</a></h4>
+<ul>
+<li>自回归模型（如GPT）通过预测序列中的下一个词来进行训练。</li>
+<li>自编码模型（如BERT）通过掩盖输入序列中的某些词并预测这些词来进行训练。</li>
+</ul>
+<h4 id="xlnet模型">XLNet模型<a class="anchor" href="#xlnet模型">#</a></h4>
+<ul>
+<li>排序语言模型</li>
+<li>通过随机打乱句子中词的顺序，让模型在预测某个词时，能同时看到这个词的”前后”上下文信息。</li>
+<li>不改变输入顺序</li>
+<li>引入Mask矩阵模拟排列，通过掩码控制每个词能”看到”哪些词。</li>
+<li>双流自注意机制
+<ul>
+<li>内容流</li>
+<li>查询流</li>
+</ul>
+</li>
+</ul>
+<h1 id="6-语言模型">6. 语言模型<a class="anchor" href="#6-语言模型">#</a></h1>
+<h2 id="语言模型的发展历程">语言模型的发展历程<a class="anchor" href="#语言模型的发展历程">#</a></h2>
+<ul>
+<li>ELMo为代表的动态词向量模型开启了语言模型预训练的大门</li>
+<li>此后以GPT和BERT为代表的基于Transformer的大规模预训练语言模型的出现，使得自然语言处理全面进入了预训练微调范式新时代。</li>
+</ul>
+<p>单标签分类</p>
+<ul>
+<li>NLLLoss
+<ul>
+<li><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo>∑</mo><mi>y</mi><mi>log</mi><mo>⁡</mo><mover accent="true"><mi>y</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\sum y\log \hat{y}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop op-symbol small-op" style="position:relative;top:0em;">∑</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mop">lo<span style="margin-right:0.0139em;">g</span></span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord accent"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.6944em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathnormal" style="margin-right:0.0359em;">y</span></span><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.1944em;"><span class="mord">^</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.1944em;"><span></span></span></span></span></span></span></span></span></li>
+</ul>
+</li>
+<li>CrossEntropyLoss
+<ul>
+<li>softmax + NLLLoss</li>
+</ul>
+</li>
+</ul>
+<p>多标签分类</p>
+<ul>
+<li>对每一个标签分别作二分类判断</li>
+<li>使用BCEWithLogitsLoss(Binary Cross Entropy With Logits)</li>
+<li>BCEWithLogitsLoss = Sigmoid + BCELoss</li>
+</ul>
+<p>多任务学习</p>
+<ul>
+<li>多任务学习是指同时学习多个相关任务的方法，旨在提高模型的性能和泛化能力。</li>
+<li>多任务学习的目标是在多个任务之间共享模型的参数，从而提高模型在多个任务上的性能。</li>
+<li>分类：
+<ul>
+<li>
+<p>硬共享（Hard Parameter Sharing）</p>
+<ul>
+<li>不同任务共享相同的隐藏层，只在输出层使用任务特定的参数</li>
+<li>最常用的多任务学习方法</li>
+<li>优点：大大减少过拟合风险</li>
+<li>适用于相关性较强的任务</li>
+</ul>
+</li>
+<li>
+<p>软共享（Soft Parameter Sharing）</p>
+<ul>
+<li>每个任务有自己的模型和参数</li>
+<li>通过正则化使不同任务的参数相似</li>
+<li>常用L2距离等约束参数差异</li>
+<li>适用于相关性较弱的任务</li>
+</ul>
+</li>
+<li>
+<p>层次共享（Hierarchical Sharing）</p>
+<ul>
+<li>在不同层次上进行参数共享</li>
+<li>底层共享基础特征提取</li>
+<li>高层保持任务特定表示</li>
+<li>适合具有层次性的任务</li>
+</ul>
+</li>
+<li>
+<p>共享-私有（Shared-Private）</p>
+<ul>
+<li>同时包含共享网络和任务私有网络</li>
+<li>共享网络学习通用特征</li>
+<li>私有网络学习任务特定特征</li>
+<li>通过对抗训练等方式保证特征分离</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="信息抽取">信息抽取<a class="anchor" href="#信息抽取">#</a></h1>
+<h2 id="命名实体识别">命名实体识别<a class="anchor" href="#命名实体识别">#</a></h2>
+<ul>
+<li>命名实体识别一般包含两个步骤，分别是实体边界判断和实体类别判断。</li>
+<li>命名实体从表现形式还可以进一步分为两种类型：非嵌套命名实体（Non-nested Named Entities）和嵌套命名实体（Nested Named Entities）。</li>
+</ul>
+<h3 id="非嵌套命名实体识别-基于transformer的命名实体识别">非嵌套命名实体识别-基于Transformer的命名实体识别<a class="anchor" href="#非嵌套命名实体识别-基于transformer的命名实体识别">#</a></h3>
+<ul>
+<li>由于Transformer结构可以很好的并行化，并且具有较好的建模长文本的能力，因此基于Transformer结构的深度神经网络被广泛地应用于很多自然语言处理任务，如机器翻译，语言建模，预训练模型等.</li>
+<li>直接在命名实体识别任务上使用Transformer模型往往表现不佳
+<ul>
+<li><strong>位置编码无法捕捉方向信息</strong>：原始Transformer结构使用正弦位置编码，这种编码可以捕捉距离信息,但是不能捕捉方向信息。</li>
+<li><strong>平滑的注意力分布</strong>：Transformer模型在计算注意力时会对注意力分数进行缩放，得到一个较为平滑的注意力分布
+<ul>
+<li>对命名实体识别任务来说，上下文中少数的词就足够用来判断它的标签，平滑的注意力分布反而可能会引入更多的噪声。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="关系抽取">关系抽取<a class="anchor" href="#关系抽取">#</a></h2>
+<ul>
+<li>旨在从无结构文本中识别两个或多个实体之间的语义关系</li>
+<li>二元关系抽取</li>
+<li>实体间的关系可以用 <code>HEAD, RELATION, TAIL</code> 三元组进行表示</li>
+<li>关系抽取任务目标是识别实体间语义关系，因此依据是否已经在无结构文本中标记了实体类型，关系抽取方法可分为联合式抽取和流水线式抽取</li>
+<li>关系抽取算法可以分为
+<ul>
+<li>预定义关系抽取
+<ul>
+<li>有监督和远程监督</li>
+</ul>
+</li>
+<li>开放关系抽取</li>
+</ul>
+</li>
+</ul>
+<h3 id="有监督">有监督<a class="anchor" href="#有监督">#</a></h3>
+<ul>
+<li>有监督的关系抽取方法将关系抽取问题转换为多分类问题</li>
+<li>复杂！</li>
+</ul>
+<h3 id="远程监督">远程监督<a class="anchor" href="#远程监督">#</a></h3>
+<ul>
+<li>远程监督方法假设知识库中两个实体存在某种关系，那么所有提及了这两个实体的句子都表达了这种关系。</li>
+</ul>
+<h3 id="远程监督方法错误标注的根本原因"><strong>远程监督方法错误标注的根本原因</strong><a class="anchor" href="#远程监督方法错误标注的根本原因">#</a></h3>
+<p>远程监督方法的核心假设是：<strong>若知识库中两个实体存在某种关系，则所有提及这两个实体的句子均表达该关系</strong>。这一假设虽然能快速生成大量训练样本，但存在以下关键缺陷：</p>
+<hr>
+<h4 id="1-共现关系"><strong>1. 共现≠关系</strong><a class="anchor" href="#1-共现关系">#</a></h4>
+<ul>
+<li>
+<p><strong>问题本质</strong>：
+实体在文本中的共现（Co-occurrence）并不必然表达知识库中预定义的关系。</p>
+<ul>
+<li><strong>示例</strong>：
+<ul>
+<li><strong>正确标注</strong>：
+<em>“Steve Jobs 是 Apple 的联合创始人。”</em> → 符合知识库关系 <code>/business/company/founders</code>。</li>
+<li><strong>错误标注</strong>：
+<em>“Steve Jobs 去世当天，Apple 发布了 iPhone 4S。”</em> → 仅共现实体，但未表达创始人关系。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>后果</strong>：
+模型会将无关上下文误判为正样本，学习到错误的关联模式。</p>
+</li>
+</ul>
+<hr>
+<h4 id="2-语义歧义性"><strong>2. 语义歧义性</strong><a class="anchor" href="#2-语义歧义性">#</a></h4>
+<ul>
+<li>
+<p><strong>挑战</strong>：
+自然语言中实体关系的表达具有复杂性和歧义性。</p>
+<ul>
+<li><strong>示例</strong>：
+<em>“Apple 任命 Tim Cook 接替 Steve Jobs。”</em>
+<ul>
+<li>知识库中可能存在关系 <code>/business/company/ceo</code>（Tim Cook 是 Apple CEO）。</li>
+<li>但远程监督会错误地将此句标注为 <code>founders</code> 关系，因包含 <code>Apple</code> 和 <code>Steve Jobs</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>后果</strong>：
+模型无法区分关系的具体类型，导致泛化能力下降。</p>
+</li>
+</ul>
+<hr>
+<h4 id="3-数据稀疏性与长尾分布"><strong>3. 数据稀疏性与长尾分布</strong><a class="anchor" href="#3-数据稀疏性与长尾分布">#</a></h4>
+<ul>
+<li>
+<p><strong>问题</strong>：
+知识库通常覆盖高频关系，但低频或长尾关系难以通过远程监督有效捕捉。</p>
+<ul>
+<li><strong>示例</strong>：
+<ul>
+<li>若知识库未收录 <code>Apple</code> 与 <code>Tim Cook</code> 的 <code>CEO</code> 关系，则相关句子不会被标注。</li>
+<li>反之，高频关系（如 <code>founders</code>）的噪声样本会淹没低频关系的学习。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>后果</strong>：
+模型对低频关系的学习效果差，且噪声数据加剧过拟合风险。</p>
+</li>
+</ul>
+<hr>
+<h4 id="4-上下文独立性假设不成立"><strong>4. 上下文独立性假设不成立</strong><a class="anchor" href="#4-上下文独立性假设不成立">#</a></h4>
+<ul>
+<li>
+<p><strong>核心漏洞</strong>：
+远程监督假设”实体共现的上下文无关”，但实际关系表达高度依赖上下文。</p>
+<ul>
+<li><strong>示例</strong>：
+<em>“Steve Jobs 的创新精神推动了 Apple 的发展。”</em> → 隐含 <code>founders</code> 关系。
+<em>“Apple 的新 CEO Tim Cook 面临挑战。”</em> → 隐含 <code>CEO</code> 关系。
+<ul>
+<li>远程监督无法区分这两类上下文，统一标注为 <code>founders</code>。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>后果</strong>：
+模型无法捕捉细粒度的语义差异，导致预测结果粗糙。</p>
+</li>
+</ul>
+<hr>
+<h4 id="5-对知识库覆盖范围的依赖"><strong>5. 对知识库覆盖范围的依赖</strong><a class="anchor" href="#5-对知识库覆盖范围的依赖">#</a></h4>
+<ul>
+<li>
+<p><strong>局限性</strong>：
+远程监督的效果高度依赖知识库的覆盖范围和标注质量。</p>
+<ul>
+<li><strong>示例</strong>：
+<ul>
+<li>若知识库遗漏了 <code>Apple</code> 与 <code>Steve Jobs</code> 的 <code>co-founder</code> 关系，则相关句子不会被标注。</li>
+<li>若知识库错误地将 <code>Apple</code> 与 <code>Tim Cook</code> 标注为 <code>founders</code>，则会引入系统性错误。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p><strong>后果</strong>：
+知识库的噪声会直接传递到训练数据中，形成”错误放大效应”。</p>
+</li>
+</ul>
+<hr>
+<h3 id="总结"><strong>总结</strong><a class="anchor" href="#总结">#</a></h3>
+<p>远程监督方法的错误标注源于其<strong>过度简化的假设</strong>，即”实体共现等同于关系存在”。这种假设忽略了自然语言的复杂性、语义歧义性及上下文依赖性，导致模型学习到大量噪声模式。尽管该方法能快速生成数据，但需结合以下改进措施以提升性能：</p>
+<ol>
+<li><strong>置信度筛选</strong>：为生成样本分配置信度分数，过滤低置信度样本。</li>
+<li><strong>后处理规则</strong>：通过句法分析或规则引擎剔除明显矛盾的标注。</li>
+<li><strong>混合训练</strong>：结合少量高质量人工标注数据与远程监督数据，平衡噪声与信号。</li>
+<li><strong>关系类型细化</strong>：对知识库中的关系进行多维度定义（如时间、方式等），减少歧义性。</li>
+</ol>
+<p>只有通过多维度优化，才能缓解远程监督的固有缺陷，提升关系抽取模型的鲁棒性。</p>
+<h4 id="多实例学习">多实例学习<a class="anchor" href="#多实例学习">#</a></h4>
+<ul>
+<li>多示例学习是指对具有某种特征的数据样本集合进行标注，这样的样本集合称为包（Bag），模型在包级别上进行训练与推断。</li>
+</ul>
+<h4 id="注意力机制">注意力机制<a class="anchor" href="#注意力机制">#</a></h4>
+<ul>
+<li>多实例学习在远程监督的关系抽取方面有了很大的改进，但模型只取置信度最高的一个句子进行训练的方法会造成大量丰富信息的丢失</li>
+<li>实例选择注意力使用句子级别注意力去选择表达了相应关系的句子
+<ul>
+<li>相关->给学习的机会</li>
+<li>不相关 -> 不学习</li>
+</ul>
+</li>
+</ul>
+<h3 id="开放关系抽取">开放关系抽取<a class="anchor" href="#开放关系抽取">#</a></h3>
+<ul>
+<li>开放关系抽取（Open Relation Extraction，ORE）目标是在不需要预先关系定义的情况下，从非结构化文本中提取关系元组，并且不受语料库领域的限制。</li>
+</ul>
+<h2 id="时间抽取">时间抽取<a class="anchor" href="#时间抽取">#</a></h2>
+<ul>
+<li>从文本中发现特定类型事件，并抽取该事件所涉及的时间、地点、人物等元素</li>
+<li>事件由事件触发词（Trigger）以及事件论元（Argument，也称事件元素）组成</li>
+<li>限定域事件抽取
+<ul>
+<li>事件类型</li>
+<li>事件触发词</li>
+<li>事件论元</li>
+<li>论元角色</li>
+</ul>
+</li>
+<li>将事件抽取任务分解成一系列的分类子任务的方法
+<ul>
+<li>触发词识别</li>
+<li>论元识别</li>
+<li>属性分配</li>
+<li>事件共指</li>
+</ul>
+</li>
+<li>文献[368]采用流水线处理框架，其中触发词识别独立于其他任务，论元识别和属性分配任务依赖于触发词识别的结果，在这三个子任务都处理完成后，进行事件共指判断。</li>
+<li>开放域事件提取
+<ul>
+<li>其目标是在没有任何预定义域假设的情况下，从非结构化文本中挖掘提取有意义的事件信息。</li>
+<li>基于聚类的开放域事件抽取目标是从无结构文本中抽取若干主题的相关内容组成一系列事件，可以分为两个主要类型：
+<ul>
+<li>回顾事件抽取（Retrospective Event Extraction）</li>
+<li>在线事件抽取（Online Event Extraction）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="槽位填充文本序列任务">槽位填充（文本序列任务）<a class="anchor" href="#槽位填充文本序列任务">#</a></h2>
+<h1 id="8-机器翻译">8. 机器翻译<a class="anchor" href="#8-机器翻译">#</a></h1>
+<h1 id="9-情感分析">9. 情感分析<a class="anchor" href="#9-情感分析">#</a></h1>
+<h2 id="911-观点模型">9.1.1 观点模型<a class="anchor" href="#911-观点模型">#</a></h2>
+<ul>
+<li>常规、比较</li>
+<li>显式观点、隐式观点</li>
+<li>理性情感、感性情感</li>
+</ul>
+<h2 id="912-情感分析主要任务">9.1.2 情感分析主要任务<a class="anchor" href="#912-情感分析主要任务">#</a></h2>
+<ul>
+<li>
+<p>情感分类任务</p>
+<ul>
+<li>主客观分类</li>
+<li>极性分类</li>
+<li>情绪分类</li>
+<li>情感强度判别</li>
+</ul>
+</li>
+<li>
+<p>情感抽取任务</p>
+<ul>
+<li>情感信息抽取</li>
+<li>观点持有者抽取</li>
+<li>评价词抽取</li>
+<li>评价对象抽取</li>
+<li>评价搭配极性判别</li>
+<li>评价搭配抽取</li>
+</ul>
+</li>
+</ul>
+<h2 id="seq2seq">seq2seq<a class="anchor" href="#seq2seq">#</a></h2>
+<h1 id="11-文本摘要">11. 文本摘要<a class="anchor" href="#11-文本摘要">#</a></h1>
+<ul>
+<li>文本摘要（Text Summarization）是一种利用算法自动实现文本分析、内容提炼并生成摘要的技术。</li>
+<li>由于互联网的快速发展，当前时代的信息量出现了指数级的增长，并远超于人类的对信息地处理和利用能力，从而导致我们无法快速地挑选和有效地运用信息，这种现象称为<strong>信息过载</strong>（Information Overloading）。</li>
+</ul>
+<h2 id="抽取式摘要">抽取式摘要<a class="anchor" href="#抽取式摘要">#</a></h2>
+<ul>
+<li>基于排序</li>
+<li>给予序列标注</li>
+</ul>    </div> </article> </main> <div class="mt-6 items-start gap-x-10 md:flex">  <div class="mt-8 flex-1 text-muted-foreground md:min-w-[50ch]"> <div class="relative flex flex-col gap-y-2 rounded-xl border px-3 sm:px-4 py-2 sm:py-3 astro-tju7bdtj"> <svg aria-hidden="true" class="absolute end-4 top-4 size-20 opacity-10 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12S6.477 2 12 2m0 2a8 8 0 1 0 0 16a8 8 0 0 0 0-16m0 3a5 5 0 0 1 3.75 1.692a1 1 0 1 1-1.5 1.324a3 3 0 1 0 0 3.968a1 1 0 1 1 1.5 1.324A5 5 0 1 1 12 7"/></g></svg>  <div class="absolute bottom-2 right-2 w-20 h-10 signature-container astro-tju7bdtj"> <svg viewBox="0 -1 163.403 90.305" xmlns="http://www.w3.org/2000/svg" class="w-full h-full signature-svg astro-tju7bdtj"> <g stroke-linecap="round" fill-rule="evenodd" stroke="currentColor" stroke-width="0.3mm" fill="currentColor" class="astro-tju7bdtj"> <path class="signature-path astro-tju7bdtj" d="M 24.402 85.301 Q 17.502 85.301 11.952 81.901 Q 6.402 78.501 3.202 72.051 Q 0.002 65.601 0.002 56.801 Q 0.002 41.601 6.502 28.651 Q 13.002 15.701 25.702 7.851 Q 38.402 0.001 56.202 0.001 Q 60.802 0.001 66.052 0.701 Q 71.302 1.401 75.602 2.801 Q 78.402 3.601 78.402 6.801 Q 78.402 9.401 76.452 11.701 Q 74.502 14.001 71.902 14.001 Q 71.102 14.001 70.702 13.901 Q 65.502 12.701 61.802 12.151 Q 58.102 11.601 54.002 11.601 Q 41.302 11.601 32.402 17.751 Q 23.502 23.901 19.102 34.001 Q 14.702 44.101 14.702 55.801 Q 14.702 64.301 18.052 68.951 Q 21.402 73.601 26.802 73.601 Q 32.902 73.601 37.502 68.601 Q 42.102 63.601 45.902 52.401 Q 49.702 41.201 53.402 22.001 Q 54.002 19.201 55.802 18.201 Q 57.602 17.201 60.602 17.201 Q 67.702 17.201 67.702 21.801 Q 67.702 22.601 67.402 23.801 Q 64.802 33.501 62.652 45.251 Q 60.502 57.001 60.502 63.101 Q 60.502 68.501 62.102 70.951 Q 63.702 73.401 67.002 73.401 Q 70.202 73.401 73.102 71.251 A 23.845 23.845 0 0 0 74.956 69.705 A 43.109 43.109 0 0 0 75.125 69.55 A 12.009 12.009 0 0 1 76.332 66.429 A 10.164 10.164 0 0 1 77.002 65.401 Q 79.302 62.301 83.502 62.301 Q 87.102 62.301 87.102 65.001 Q 87.102 65.701 86.902 67.501 Q 86.602 71.101 86.602 71.601 Q 86.602 74.601 89.202 74.601 Q 91.102 74.601 92.852 72.351 Q 94.602 70.101 95.752 66.201 Q 96.902 62.301 96.902 57.601 Q 96.902 54.001 96.002 51.551 Q 95.102 49.101 93.802 49.101 Q 92.702 49.101 92.202 49.651 Q 91.702 50.201 91.202 51.501 Q 90.602 53.101 89.602 54.051 Q 88.602 55.001 86.102 55.001 Q 83.902 55.001 82.602 53.451 Q 81.302 51.901 81.302 48.701 Q 81.302 43.601 84.402 40.701 Q 87.502 37.801 92.402 37.801 Q 96.602 37.801 100.002 39.851 Q 103.402 41.901 105.202 45.801 Q 108.202 41.801 111.952 39.801 Q 115.702 37.801 119.302 37.801 Q 123.202 37.801 125.252 39.601 Q 127.302 41.401 127.302 45.401 Q 127.302 49.901 125.602 52.451 Q 123.902 55.001 121.502 55.001 Q 119.302 55.001 118.502 54.101 Q 117.702 53.201 117.302 51.501 Q 117.102 50.301 116.702 49.701 Q 116.302 49.101 115.302 49.101 Q 114.102 49.101 112.752 51.351 Q 111.402 53.601 110.452 57.301 Q 109.502 61.001 109.502 65.001 Q 109.502 69.701 111.752 72.251 Q 114.002 74.801 117.902 74.801 Q 121.802 74.801 125.252 72.151 Q 127.442 70.468 130.096 67.598 A 81.726 81.726 0 0 0 130.631 67.01 A 46.575 46.575 0 0 1 130.738 65.106 Q 130.998 61.577 131.752 56.951 Q 132.902 49.901 134.702 43.801 Q 135.602 40.601 137.102 39.401 Q 138.602 38.201 141.902 38.201 Q 147.002 38.201 147.002 41.601 Q 147.002 44.101 145.102 53.201 Q 142.702 64.201 142.702 68.101 Q 142.702 71.101 143.502 72.701 Q 144.302 74.301 146.202 74.301 Q 148.002 74.301 150.702 71.801 Q 153.402 69.301 157.902 63.901 Q 159.102 62.501 160.602 62.501 Q 161.902 62.501 162.652 63.701 Q 163.402 64.901 163.402 67.001 Q 163.402 71.001 161.502 73.201 Q 151.602 85.301 143.002 85.301 Q 136.502 85.301 133.552 80.701 A 17.114 17.114 0 0 1 132.192 78.047 A 46.504 46.504 0 0 1 129.824 80.016 A 41.632 41.632 0 0 1 127.252 81.851 Q 122.002 85.301 115.402 85.301 Q 110.302 85.301 106.352 83.401 Q 102.402 81.501 100.102 78.001 Q 94.402 85.201 86.602 85.201 Q 81.102 85.201 77.902 82.001 A 10.732 10.732 0 0 1 76.686 80.537 A 42.127 42.127 0 0 1 76.431 80.739 A 31.425 31.425 0 0 1 74.402 82.201 Q 69.702 85.301 62.902 85.301 Q 55.902 85.301 51.602 81.251 Q 47.302 77.201 46.202 69.801 Q 38.802 85.301 24.402 85.301 Z M 143.802 31.601 Q 139.602 31.601 137.502 29.651 Q 135.402 27.701 135.402 24.201 Q 135.402 20.701 138.152 18.351 Q 140.902 16.001 145.002 16.001 Q 148.702 16.001 151.002 17.801 Q 153.302 19.601 153.302 22.901 Q 153.302 26.901 150.702 29.251 Q 148.102 31.601 143.802 31.601 Z" vector-effect="non-scaling-stroke"></path> </g> </svg> </div>  <div class="flex flex-col astro-tju7bdtj"> <div class="font-medium text-foreground astro-tju7bdtj">笔记：自然语言处理</div> <div class="text-sm astro-tju7bdtj">https://kioshiroi.github.io/blog/nlp</div> </div>  <div class="flex flex-row flex-wrap justify-start gap-x-5 gap-y-1 sm:gap-x-8 astro-tju7bdtj"> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Author</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj">KIOSHIROI</span> </div> <div class="flex gap-x-2 sm:min-w-16 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Published at</span> <span class="text-sm text-foreground max-sm:place-self-center astro-tju7bdtj"> 2025年2月24日 </span> </div> <div class="flex gap-x-2 sm:flex-col astro-tju7bdtj"> <span class="astro-tju7bdtj">Copyright</span> <a class="text-sm text-foreground max-sm:place-self-center underline decoration-muted-foreground/50 underline-offset-2 rounded px-1 -mx-1 transition-all duration-200 hover:no-underline hover:bg-foreground hover:text-background astro-tju7bdtj" href="https://creativecommons.org/licenses/by/4.0/" target="_blank">
+CC BY-NC-SA 4.0
+</a> </div> </div>  <div class="relative astro-tju7bdtj"> <div class="flex flex-row gap-3 astro-tju7bdtj"> <button id="copy-link" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M16.243 9.878a1 1 0 0 1 1.32-.083l.094.083L19.778 12a5.5 5.5 0 0 1-7.596 7.952L12 19.778l-2.121-2.121a1 1 0 0 1 1.32-1.498l.094.083l2.121 2.122a3.5 3.5 0 0 0 5.091-4.8l-.141-.15l-2.121-2.121a1 1 0 0 1 0-1.415M9.17 9.171a1 1 0 0 1 1.32-.083l.095.083l4.242 4.243a1 1 0 0 1-1.32 1.497l-.094-.083l-4.243-4.242a1 1 0 0 1 0-1.415m-4.95-4.95a5.5 5.5 0 0 1 7.597-.173l.182.174l2.121 2.12A1 1 0 0 1 12.8 7.84l-.094-.083l-2.121-2.121a3.5 3.5 0 0 0-5.091 4.8l.141.15l2.121 2.12a1 1 0 0 1-1.32 1.498l-.094-.083L4.222 12a5.5 5.5 0 0 1 0-7.778Z"/></g></svg>  </button> <button id="get-qrcode" class="group rounded-full bg-muted p-1 text-muted-foreground transition-colors hover:text-primary sm:p-1.5 astro-tju7bdtj"> <svg aria-hidden="true" class="size-5 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11 3a2 2 0 0 1 1.995 1.85L13 5v6a2 2 0 0 1-1.85 1.995L11 13H5a2 2 0 0 1-1.995-1.85L3 11V5a2 2 0 0 1 1.85-1.995L5 3zm0 2H5v6h6zM8.5 7a.5.5 0 0 1 .492.41L9 7.5v1a.5.5 0 0 1-.41.492L8.5 9h-1a.5.5 0 0 1-.492-.41L7 8.5v-1a.5.5 0 0 1 .41-.492L7.5 7zM21 5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zM7 15a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 1 2-2zm0 2H5v2h2zm14 0a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2zm-4 0h2v2h-2zm-2-5a1 1 0 0 1 1-1h4a1 1 0 1 1 0 2h-4a1 1 0 0 1-1-1m-2 4a1 1 0 1 0-2 0v4a1 1 0 1 0 2 0z"/></g></svg>  </button>  </div> <div id="qrcode-container" class="absolute z-10 -mt-2 box-content max-h-0 max-w-44 overflow-hidden rounded-xl border bg-muted p-4 opacity-0 transition-all duration-300 ease-in-out aria-expanded:max-h-44 aria-expanded:translate-y-4 aria-expanded:opacity-100 astro-tju7bdtj" aria-expanded="false"></div> <script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script> <script>(function(){const content = undefined;
+
+  const renderContent = content ?? window.location.href
+  // Load qrcode
+  function loadqrcode(qrcodeContainer) {
+    if (!qrcodeContainer) throw new Error('qrcode container not found')
+    if (qrcodeContainer.innerHTML !== '') return
+    new QRCode(qrcodeContainer, renderContent)
+  }
+  const qrcodeContainer = document.getElementById('qrcode-container')
+  if (!qrcodeContainer) throw new Error('qrcode container not found')
+  loadqrcode(qrcodeContainer)
+})();</script> </div> </div> <div class="mx-6 rounded-b-xl border border-t-0 px-3 pb-1.5 pt-1 sm:mx-8 sm:px-4 astro-tju7bdtj"> <a href="/projects#sponsorship" class="flex items-center justify-between text-muted-foreground no-underline astro-tju7bdtj"> <span class="astro-tju7bdtj">Buy me a cup of coffee ☕.</span> <svg aria-hidden="true" class="box-content size-5 p-1 astro-tju7bdtj astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M17 2a3 3 0 0 1 3 3v12a1 1 0 0 1 .351 1.936l-8 3a1 1 0 0 1-.702 0l-8-3A1 1 0 0 1 4 17V5a3 3 0 0 1 3-3zm0 2H7a1 1 0 0 0-.993.883L6 5v12.682l6 2.25l6-2.25V5a1 1 0 0 0-.883-.993zm-5 1a1 1 0 0 1 .993.883L13 6v1h2a1 1 0 0 1 .117 1.993L15 9h-5a.5.5 0 0 0-.09.992L10 10h4a2.5 2.5 0 0 1 .164 4.995L14 15h-1v1a1 1 0 0 1-1.993.117L11 16v-1H9a1 1 0 0 1-.117-1.993L9 13h5a.5.5 0 0 0 .09-.992L14 12h-4a2.5 2.5 0 0 1-.164-4.995L10 7h1V6a1 1 0 0 1 1-1"/></g></svg>  </a> </div>  <script type="module" src="/_astro/Copyright.astro_astro_type_script_index_0_lang.CQ7TF57l.js"></script> <div class="flex max-sm:flex-col sm:justify-between gap-2 mt-3 sm:mt-6"> <span class="min-w-0"> <a href="/blog/brain-inspired-cognitive-computing" class="group inline-flex items-center gap-x-2 rounded-xl px-4 py-2 no-underline transition-colors duration-300 hover:bg-muted max-sm:max-w-[80%] sm:flex"> <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="shrink-0 rotate-180 stroke-muted-foreground transition-colors group-hover:stroke-primary"> <line x1="5" y1="12" x2="19" y2="12" class="translate-x-4 scale-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:scale-x-100"></line> <polyline points="12 5 19 12 12 19" class="translate-x-0 transition-all duration-300 ease-in-out group-hover:translate-x-1"></polyline> </svg> <p class="truncate font-medium transition-colors">笔记：类脑与认知计算</p> </a> </span> <span class="min-w-0">  </span> </div> <comment-component class="astro-w2uxdene"><div id="waline" class="not-prose mt-3 sm:mt-6 astro-w2uxdene">
+Comment seems to stuck. Try to refresh?✨
+</div></comment-component><script type="module" src="/_astro/Comment.astro_astro_type_script_index_0_lang.CoJ8wWoz.js"></script> </div> <div class="min-w-48 basis-60">  </div> </div> <button aria-label="Back to Top" class="z-90 group fixed bottom-8 end-4 flex h-10 w-10 translate-y-28 items-center justify-center rounded-full border-2 border-transparent bg-muted text-muted-foreground opacity-0 transition-all duration-300 hover:border-border/75 data-[show=true]:translate-y-0 data-[show=true]:opacity-100 sm:end-8 sm:h-12 sm:w-12" data-show="false" id="to-top-btn"> <div class="absolute bottom-0 end-0 start-0 top-0 flex items-center justify-center transition-opacity group-hover:opacity-0 group-[.ended]:opacity-0"> <span class="text">10</span> <span class="text-xs">%</span> </div> <svg aria-hidden="true" class="opacity-0 transition-opacity group-hover:opacity-100 group-[.ended]:opacity-100 astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none" fill-rule="evenodd"><path d="M24 0v24H0V0zM12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M11.293 8.293a1 1 0 0 1 1.414 0l5.657 5.657a1 1 0 0 1-1.414 1.414L12 10.414l-4.95 4.95a1 1 0 0 1-1.414-1.414z"/></g></svg>  </button> <script>(function(){const headerName = "content-header";
+const contentName = "content";
+const needPercent = true;
+
+  const scrollBtn = document.getElementById('to-top-btn')
+  const scrollPercentEl = scrollBtn.children[0].children[0]
+  const targetHeader = document.getElementById(headerName)
+  const articleElement = document.getElementById(contentName)
+
+  // scroll to top
+  function callback(entries) {
+    entries.forEach((entry) => {
+      // only show the scroll to top button when the heading is out of view
+      scrollBtn.dataset.show = (!entry.isIntersecting).toString()
+    })
+  }
+  scrollBtn.addEventListener('click', () => {
+    document.documentElement.scrollTo({ behavior: 'smooth', top: 0 })
+  })
+  if (targetHeader) {
+    const observer = new IntersectionObserver(callback)
+    observer.observe(targetHeader)
+  } else {
+    console.error(`Element with ID ${headerName} not found.`)
+  }
+
+  if (needPercent) {
+    // scroll percentage
+    let scrollHeight = articleElement.scrollHeight // total height
+    let articleTop = articleElement.offsetTop // article top
+    const clientHeight = document.documentElement.clientHeight // client height
+
+    function recalculateHeights() {
+      scrollHeight = articleElement.scrollHeight
+      articleTop = articleElement.offsetTop
+    }
+
+    const images = articleElement.querySelectorAll('img')
+    let loadedImagesCount = 0
+    const totalImages = images.length
+
+    if (totalImages > 0) {
+      images.forEach((img) => {
+        if (img.complete) {
+          loadedImagesCount++
+        } else {
+          img.addEventListener('load', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+          img.addEventListener('error', () => {
+            loadedImagesCount++
+            if (loadedImagesCount === totalImages) {
+              recalculateHeights()
+            }
+          })
+        }
+      })
+      if (loadedImagesCount === totalImages) {
+        recalculateHeights()
+      }
+    }
+
+    function calculateScrollPercent() {
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+      if (scrollTop < articleTop) return
+      
+      const scrollableHeight = Math.max(scrollHeight - clientHeight, 1)
+      const scrolledAmount = scrollTop - articleTop
+      
+      const percent = Math.round((scrolledAmount / scrollableHeight) * 100)
+      return Math.max(0, Math.min(100, percent))
+    }
+
+    document.addEventListener('scroll', () => {
+      const scrollPercent = calculateScrollPercent()
+      if (scrollPercent === undefined) return
+      scrollPercentEl.innerText = scrollPercent.toString()
+
+      // If percent is 100, percent won't need to show
+      scrollBtn.classList.toggle('ended', scrollPercent >= 100)
+    })
+
+    window.addEventListener('resize', recalculateHeights)
+  } else {
+    scrollBtn.classList.add('ended')
+  }
+})();</script>  <footer class="mx-auto mb-5 mt-16"> <div class="border-t border-border pt-5"> <div class="flex items-center gap-y-3 max-sm:flex-col sm:justify-between sm:gap-y-0"> <div class="flex items-center gap-x-4 gap-y-2 text-muted-foreground max-sm:flex-col [&_a:hover]:text-primary [&_a]:text-foreground"> <a class="text-xs" style="color:hsl(var(--muted-foreground)/var(--tw-text-opacity,1))" href target="_blank">  </a> <span>
+© 2026 KIOSHIROI &
+<a href="/terms/list">Site policy</a> </span> <span class="text-muted-foreground [&_a:hover]:text-primary [&_a]:text-foreground"> <a href="https://github.com/withastro/astro" target="_blank">
+Astro
+</a> 
+theme powered
+</span> </div>  <div class="flex items-center gap-x-4"> <a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="https://github.com/KIOSHIROI" aria-label="github"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.593 23.258l-.011.002l-.071.035l-.02.004l-.014-.004l-.071-.035q-.016-.005-.024.005l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.017-.018m.265-.113l-.013.002l-.185.093l-.01.01l-.003.011l.018.43l.005.012l.008.007l.201.093q.019.005.029-.008l.004-.014l-.034-.614q-.005-.018-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.004-.011l.017-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M6.315 6.176c-.25-.638-.24-1.367-.129-2.034a6.8 6.8 0 0 1 2.12 1.07c.28.214.647.283.989.18A9.3 9.3 0 0 1 12 5c.961 0 1.874.14 2.703.391c.342.104.709.034.988-.18a6.8 6.8 0 0 1 2.119-1.07c.111.667.12 1.396-.128 2.033c-.15.384-.075.826.208 1.14C18.614 8.117 19 9.04 19 10c0 2.114-1.97 4.187-5.134 4.818c-.792.158-1.101 1.155-.495 1.726c.389.366.629.882.629 1.456v3a1 1 0 0 0 2 0v-3c0-.57-.12-1.112-.334-1.603C18.683 15.35 21 12.993 21 10c0-1.347-.484-2.585-1.287-3.622c.21-.82.191-1.646.111-2.28c-.071-.568-.17-1.312-.57-1.756c-.595-.659-1.58-.271-2.28-.032a9 9 0 0 0-2.125 1.045A11.4 11.4 0 0 0 12 3c-.994 0-1.953.125-2.851.356a9 9 0 0 0-2.125-1.045c-.7-.24-1.686-.628-2.281.031c-.408.452-.493 1.137-.566 1.719l-.005.038c-.08.635-.098 1.462.112 2.283C3.484 7.418 3 8.654 3 10c0 2.992 2.317 5.35 5.334 6.397A4 4 0 0 0 8 17.98l-.168.034c-.717.099-1.176.01-1.488-.122c-.76-.322-1.152-1.133-1.63-1.753c-.298-.385-.732-.866-1.398-1.088a1 1 0 0 0-.632 1.898c.558.186.944 1.142 1.298 1.566c.373.448.869.916 1.58 1.218c.682.29 1.483.393 2.438.276V21a1 1 0 0 0 2 0v-3c0-.574.24-1.09.629-1.456c.607-.572.297-1.568-.495-1.726C6.969 14.187 5 12.114 5 10c0-.958.385-1.881 1.108-2.684c.283-.314.357-.756.207-1.14"/></g></svg>  </a><a class="inline-block text-muted-foreground transition-all hover:text-muted-foreground/75" href="/rss.xml" aria-label="rss"> <svg aria-hidden="true" class=" astro-p7sajfz3" width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1em;"><g fill="none"><path d="m12.594 23.258l-.012.002l-.071.035l-.02.004l-.014-.004l-.071-.036q-.016-.004-.024.006l-.004.01l-.017.428l.005.02l.01.013l.104.074l.015.004l.012-.004l.104-.074l.012-.016l.004-.017l-.017-.427q-.004-.016-.016-.018m.264-.113l-.014.002l-.184.093l-.01.01l-.003.011l.018.43l.005.012l.008.008l.201.092q.019.005.029-.008l.004-.014l-.034-.614q-.005-.019-.02-.022m-.715.002a.02.02 0 0 0-.027.006l-.006.014l-.034.614q.001.018.017.024l.015-.002l.201-.093l.01-.008l.003-.011l.018-.43l-.003-.012l-.01-.01z"/><path fill="currentColor" d="M5.5 17a1.5 1.5 0 1 1 0 3a1.5 1.5 0 0 1 0-3m0-14C14.06 3 21 9.94 21 18.5q0 .268-.009.534a1 1 0 0 1-1.999-.068Q19 18.734 19 18.5C19 11.044 12.956 5 5.5 5q-.234 0-.466.008a1 1 0 0 1-.068-1.999Q5.231 3 5.5 3m0 7a8.5 8.5 0 0 1 8.482 9.066a1 1 0 0 1-1.996-.132a6.5 6.5 0 0 0-6.92-6.92a1 1 0 1 1-.132-1.995q.28-.02.566-.019"/></g></svg>  </a> </div> </div> </div> </footer> </div> <script>(function(){const live2dAutoloadSrc = "/live2d-autoload.js?v=20260612b";
+const live2dCdnPath = "/live2d-api/";
+
+      (() => {
+        const LIVE2D_AUTOLOAD_SRC = live2dAutoloadSrc
+        const LIVE2D_FLAG_KEY = '__live2d_autoload_injected__'
+        const LIVE2D_SCHEDULED_KEY = '__live2d_autoload_scheduled__'
+
+        window.__LIVE2D_CDN_PATH__ = live2dCdnPath
+
+        function injectLive2D() {
+          if (window[LIVE2D_FLAG_KEY]) return
+          window[LIVE2D_FLAG_KEY] = true
+
+          const script = document.createElement('script')
+          script.src = LIVE2D_AUTOLOAD_SRC
+          script.async = true
+          script.defer = true
+          script.crossOrigin = 'anonymous'
+          document.body.appendChild(script)
+        }
+
+        function scheduleLive2DLoad() {
+          if (window[LIVE2D_SCHEDULED_KEY]) return
+          window[LIVE2D_SCHEDULED_KEY] = true
+
+          if ('requestIdleCallback' in window) {
+            window.requestIdleCallback(() => injectLive2D(), { timeout: 3000 })
+          } else {
+            setTimeout(injectLive2D, 1200)
+          }
+        }
+
+        if (document.readyState !== 'loading') {
+          scheduleLive2DLoad()
+        } else {
+          document.addEventListener('DOMContentLoaded', scheduleLive2DLoad, { once: true })
+          window.addEventListener('load', scheduleLive2DLoad, { once: true })
+        }
+
+        document.addEventListener('astro:page-load', scheduleLive2DLoad)
+      })()
+    })();</script> <script>
+      (() => {
+        const OBSERVER_KEY = '__deferred_image_observer__'
+
+        function revealDeferredImage(img) {
+          const source = img.getAttribute('data-src')
+          if (!source) return
+          img.setAttribute('src', source)
+          img.removeAttribute('data-src')
+          img.removeAttribute('data-deferred-image')
+        }
+
+        function getObserver() {
+          if (!('IntersectionObserver' in window)) return null
+          if (!window[OBSERVER_KEY]) {
+            window[OBSERVER_KEY] = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (!entry.isIntersecting) return
+                  const image = entry.target
+                  revealDeferredImage(image)
+                  window[OBSERVER_KEY].unobserve(image)
+                })
+              },
+              {
+                rootMargin: '320px 0px'
+              }
+            )
+          }
+          return window[OBSERVER_KEY]
+        }
+
+        function bindDeferredImages(root = document) {
+          const deferredImages = root.querySelectorAll('img[data-deferred-image="true"][data-src]')
+          if (!deferredImages.length) return
+
+          const observer = getObserver()
+
+          deferredImages.forEach((img) => {
+            if (img.hasAttribute('data-deferred-bound')) return
+            img.setAttribute('data-deferred-bound', 'true')
+
+            if (observer) {
+              observer.observe(img)
+            } else {
+              revealDeferredImage(img)
+            }
+          })
+        }
+
+        if (document.readyState === 'loading') {
+          document.addEventListener('DOMContentLoaded', () => bindDeferredImages(), { once: true })
+        } else {
+          bindDeferredImages()
+        }
+
+        document.addEventListener('astro:page-load', () => bindDeferredImages())
+      })()
+    </script>   <script type="module" src="/_astro/BaseLayout.astro_astro_type_script_index_0_lang.BK0m7-AI.js"></script> <!-- <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const originalTitle = document.title
+        document.addEventListener('visibilitychange', () => {
+          if (document.hidden) {
+            document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+          } else {
+            document.title = originalTitle
+          }
+        })
+        window.addEventListener('blur', () => {
+          document.title = 'ฅ^•ﻌ•^ฅ 主人快回来吧~'
+        })
+        window.addEventListener('focus', () => {
+          document.title = originalTitle
+        })
+      })
+    </script> --> <script type="module">document.addEventListener("DOMContentLoaded",()=>{function s(n,i,a,e,o){const t=document.createElement("div");t.className=`click-particle color-${o}`;const c=Math.cos(a)*e,l=Math.sin(a)*e;t.style.setProperty("--dx",c+"px"),t.style.setProperty("--dy",l+"px"),t.style.left=n+"px",t.style.top=i+"px";const d=Math.random()*6+8;t.style.width=d+"px",t.style.height=d+"px",document.body.appendChild(t),setTimeout(()=>{t.parentNode&&t.parentNode.removeChild(t)},1100)}document.addEventListener("click",n=>{for(let e=0;e<10;e++){const o=Math.PI*2/10*e,t=18+Math.random()*8,c=e%10+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},e*12)}for(let e=0;e<4;e++){const o=Math.random()*Math.PI*2,t=18+Math.random()*10,c=Math.floor(Math.random()*10)+1;setTimeout(()=>{s(n.clientX,n.clientY,o,t,c)},(10+e)*12)}})});</script> <script type="module">document.addEventListener("DOMContentLoaded",()=>{document.addEventListener("click",n=>{const e=n.target.closest('a[href^="#"]');if(!e||e.closest("toc-heading"))return;const t=e.getAttribute("href");if(!t||t==="#")return;const o=t.substring(1),r=document.getElementById(o);r&&(n.preventDefault(),history.pushState(null,"",t),r.scrollIntoView({behavior:"smooth",block:"start"}))})});</script> </body> </html> <script src="https://cdn.jsdelivr.net/npm/medium-zoom@1/dist/medium-zoom.min.js"></script> <script>(function(){const selector = ".prose .zoomable";
+const background = "hsl(var(--background) / 0.8)";
+
+  if (typeof mediumZoom !== 'undefined') {
+    mediumZoom(selector, { background })
+  }
+})();</script> 
