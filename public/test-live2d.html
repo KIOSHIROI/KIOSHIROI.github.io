@@ -34,11 +34,46 @@
     const statusEl = document.getElementById('status');
     function log(msg, isError) {
       const cls = isError ? 'err' : 'ok';
-      statusEl.innerHTML += `<span class="${cls}">[${new Date().toISOString().slice(11,23)}] ${msg}</span>\n`;
+      statusEl.innerHTML += `<span class="${cls}">[${new Date().toISOString().slice(11,23)}] ${escapeHtml(msg)}</span>\n`;
       console.log(msg);
     }
+    function escapeHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
     log('Page loaded, window.innerWidth=' + window.innerWidth);
+
+    // INTERCEPT fetch to log all model-related requests
+    const _origFetch = window.fetch;
+    window.fetch = function(url, opts) {
+      let urlStr = (url instanceof Request) ? url.url : String(url);
+      // Log ALL fetches to /live2d-api/ or model files
+      if (urlStr.includes('live2d-api') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('texture') || urlStr.includes('motion3') || urlStr.includes('exp3')) {
+        let start = Date.now();
+        log('FETCH: ' + urlStr.substring(0, 100));
+        return _origFetch.call(window, url, opts).then(resp => {
+          let dur = Date.now() - start;
+          if (!resp.ok) {
+            log('FETCH FAIL [' + resp.status + ' ' + resp.statusText + '] ' + urlStr.substring(0, 100), true);
+          } else {
+            log('FETCH OK [' + resp.status + ' ' + dur + 'ms] ' + urlStr.substring(0, 100));
+          }
+          return resp;
+        }).catch(err => {
+          log('FETCH ERROR: ' + err.message + ' for ' + urlStr.substring(0, 100), true);
+          throw err;
+        });
+      }
+      return _origFetch.call(window, url, opts);
+    };
+
+    // Also intercept console.error and console.warn
+    const _origError = console.error;
+    console.error = function() {
+      let msg = Array.from(arguments).join(' ');
+      if (msg.includes('live2d') || msg.includes('Cubism') || msg.includes('Failed') || msg.includes('model') || msg.includes('Moc') || msg.includes('moc')) {
+        log('CONSOLE.ERROR: ' + msg, true);
+      }
+      _origError.apply(console, arguments);
+    };
 
     // Set up same config as the blog
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
