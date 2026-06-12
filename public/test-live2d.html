@@ -54,15 +54,11 @@
     let fbHistory = [];
     let glHooked = false;
 
-    function hookCanvasGL() {
-      const canvas = document.getElementById('live2d');
-      if (!canvas) return setTimeout(hookCanvasGL, 500);
-
-      // Intercept getContext to hook operations AFTER SDK creates GL context
-      const origGetContext = HTMLCanvasElement.prototype.getContext;
-      HTMLCanvasElement.prototype.getContext = function(type, attrs) {
-        const ctx = origGetContext.call(this, type, attrs);
-        if (this.id === 'live2d' && ctx && !glHooked) {
+    // Install getContext interceptor IMMEDIATELY (before initWidget creates canvas)
+    const origGetContext = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+      const ctx = origGetContext.call(this, type, attrs);
+      if (this.id === 'live2d' && ctx && !glHooked) {
           glHooked = true;
           log('=== Hooking GL operations on #live2d ===', 'section');
           const gl = ctx;
@@ -108,7 +104,6 @@
         }
         return ctx;
       };
-    }
 
     // Run baseline WebGL rendering test on a SEPARATE canvas
     function testGLRendering() {
@@ -217,9 +212,6 @@
         log('SDK loaded ✓ live2d=' + typeof window.live2d);
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
         log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
-
-        // Install canvas GL hooks before initWidget creates canvas
-        hookCanvasGL();
 
         log('=== Calling initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
