@@ -3,19 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v5 — Image Hook Fix + State Trace</title>
+  <title>Live2D Test v6 — Console.log Hook + Model Inspect</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 60vh; overflow-y: auto; }
-    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; }
+    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; } .sdk { color: #2ECC40; }
     #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
   </style>
 </head>
 <body>
-  <h2>Live2D Test v5 — Image Hook Fix + State Trace + GL Error Skip</h2>
+  <h2>Live2D Test v6 — Console.log Hook + Model Inspect + XHR Trace</h2>
   <div id="log">Loading...</div>
 
   <script>
+    // ===== MUST be first: save originals before anything else =====
     const _origLog = console.log.bind(console);
     const _origError = console.error.bind(console);
     const _origWarn = console.warn.bind(console);
@@ -33,6 +34,14 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
+    // ===== Console.log interceptor — captures SDK messages =====
+    console.log = function() {
+      const msg = Array.from(arguments).join(' ');
+      if (msg && !msg.startsWith('SYNC-PIXEL') && !msg.startsWith('GL Error') && !msg.startsWith('STATE:') && !msg.startsWith('FETCH') && !msg.startsWith('TEX_IMG') && !msg.startsWith('Checking') && !msg.startsWith('STATUS') && !msg.startsWith('FORCING') && !msg.startsWith('GL hooks') && !msg.startsWith('Hooking') && !msg.startsWith('SDK loaded') && !msg.startsWith('Widget loaded') && !msg.startsWith('initWidget') && !msg.startsWith('WAIFU') && !msg.startsWith('live2d') && !msg.startsWith('=== ') && !msg.startsWith('+') && !msg.startsWith('State:') && !msg.startsWith('GL ops:') && !msg.startsWith('FB history:') && !msg.startsWith('Texture loads:') && !msg.startsWith('Loaded textures:') && !msg.startsWith('waifu:') && !msg.startsWith('--- ') && !msg.startsWith('MODEL ')) {
+        log('SDK.log: ' + msg, 'sdk');
+      }
+      return _origLog.apply(console, arguments);
+    };
     console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
     console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
 
@@ -44,17 +53,69 @@
         let start = Date.now();
         return _origFetch.call(window, url, opts).then(resp => {
           const cl = resp.headers.get('content-length') || '?';
-          log('FETCH [' + resp.status + ' ' + cl + 'B ' + (Date.now()-start) + 'ms] ' + urlStr.split('/').pop(), resp.ok ? 'ok' : 'err');
+          const fname = urlStr.split('/').pop();
+          log('FETCH [' + resp.status + ' ' + cl + 'B ' + (Date.now()-start) + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
+          // Clone and read JSON files to verify content
+          if (fname.includes('model3.json') && resp.ok) {
+            return resp.clone().text().then(txt => {
+              try {
+                const parsed = JSON.parse(txt);
+                const texCount = parsed?.FileReferences?.Textures?.length || 0;
+                log('MODEL_JSON: ' + fname + ' has ' + texCount + ' textures, Version=' + parsed?.Version, texCount > 0 ? 'ok' : 'err');
+              } catch(e) {
+                log('MODEL_JSON parse error: ' + e.message, 'err');
+              }
+              return resp;
+            });
+          }
           return resp;
         }).catch(err => { log('FETCH ERR: ' + err.message, 'err'); throw err; });
       }
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== Image loading interceptor — FIXED: hook Image constructor instead of addEventListener =====
+    // ===== XHR interceptor — SDK might use XHR instead of fetch =====
+    const _origXHR = window.XMLHttpRequest;
+    window.XMLHttpRequest = function() {
+      const xhr = new _origXHR();
+      const _origOpen = xhr.open;
+      let _url = '';
+      xhr.open = function(method, url, async, user, password) {
+        _url = String(url);
+        return _origOpen.call(xhr, method, url, async, user, password);
+      };
+      const _origSend = xhr.send;
+      xhr.send = function(body) {
+        if (_url && (_url.includes('live2d') || _url.includes('.moc3') || _url.includes('model3') || _url.includes('motion3') || _url.includes('exp3') || _url.includes('texture_') || _url.includes('physics3'))) {
+          const start = Date.now();
+          xhr.addEventListener('load', () => {
+            const fname = _url.split('/').pop();
+            log('XHR [' + xhr.status + ' ~' + (xhr.responseText?.length||xhr.response?.byteLength||'?') + 'B ' + (Date.now()-start) + 'ms] ' + fname, xhr.status < 400 ? 'ok' : 'err');
+            // Inspect model3.json
+            if (fname.includes('model3.json') && xhr.status < 400) {
+              try {
+                const parsed = JSON.parse(xhr.responseText);
+                const texCount = parsed?.FileReferences?.Textures?.length || 0;
+                log('XHR_MODEL_JSON: ' + fname + ' has ' + texCount + ' textures', texCount > 0 ? 'ok' : 'err');
+              } catch(e) {
+                log('XHR_MODEL_JSON parse error: ' + e.message, 'err');
+              }
+            }
+          });
+          xhr.addEventListener('error', () => {
+            log('XHR ERR: ' + _url.split('/').pop(), 'err');
+          });
+        }
+        return _origSend.call(xhr, body);
+      };
+      return xhr;
+    };
+
+    // ===== Image loading interceptor =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
     const textureFiles = [];
+    const allImgSrcs = []; // Track ALL image srcs, even non-texture ones
 
     const _origImage = window.Image;
     window.Image = function() {
@@ -62,35 +123,37 @@
       const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
       let srcValue = '';
 
-      // Override src property setter
       Object.defineProperty(img, 'src', {
         get: function() { return srcValue; },
         set: function(val) {
           srcValue = val;
-          if (val && (val.includes('texture_') || val.includes('.png'))) {
-            const fname = val.split('/').pop();
-            const _addEL = img.addEventListener.bind(img);
-            img.addEventListener = function(evt, fn, opts) {
-              if (evt === 'load') {
-                const origFn = fn;
-                fn = function(e) {
-                  textureLoadCount++;
-                  const dims = img.naturalWidth + 'x' + img.naturalHeight;
-                  textureFiles.push(fname + ' ' + dims);
-                  log('TEX_IMG loaded #' + textureLoadCount + ': ' + fname + ' (' + dims + ')');
-                  return origFn.call(this, e);
-                };
-              }
-              if (evt === 'error') {
-                const origFn = fn;
-                fn = function(e) {
-                  textureErrorCount++;
-                  log('!!! TEX_IMG ERROR #' + textureErrorCount + ': ' + fname, 'err');
-                  return origFn.call(this, e);
-                };
-              }
-              return _addEL.call(this, evt, fn, opts);
-            };
+          if (val) {
+            allImgSrcs.push(val.split('/').pop());
+            if (val.includes('texture_') || val.includes('.png')) {
+              const fname = val.split('/').pop();
+              const _addEL = img.addEventListener.bind(img);
+              img.addEventListener = function(evt, fn, opts) {
+                if (evt === 'load') {
+                  const origFn = fn;
+                  fn = function(e) {
+                    textureLoadCount++;
+                    const dims = img.naturalWidth + 'x' + img.naturalHeight;
+                    textureFiles.push(fname + ' ' + dims);
+                    log('TEX_IMG loaded #' + textureLoadCount + ': ' + fname + ' (' + dims + ')');
+                    return origFn.call(this, e);
+                  };
+                }
+                if (evt === 'error') {
+                  const origFn = fn;
+                  fn = function(e) {
+                    textureErrorCount++;
+                    log('!!! TEX_IMG ERROR #' + textureErrorCount + ': ' + fname, 'err');
+                    return origFn.call(this, e);
+                  };
+                }
+                return _addEL.call(this, evt, fn, opts);
+              };
+            }
           }
           _origSetSrc.set.call(this, val);
         },
@@ -155,7 +218,7 @@
           return origFns.viewport.call(gl, x,y,w,h);
         };
 
-        // GL error polling — with filter
+        // GL error polling
         setInterval(() => {
           if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
           const err = gl.getError();
@@ -208,7 +271,154 @@
       return origRAF.call(window, wrappedCb);
     };
 
-    // ===== State tracking — poll model internals =====
+    // ===== DIRECT MODEL INSPECTION =====
+    function inspectModel() {
+      log('=== Direct Model Inspection ===', 'section');
+      try {
+        const l2d = window.live2d;
+        if (!l2d) { log('window.live2d: undefined', 'err'); return; }
+        log('window.live2d keys: ' + Object.keys(l2d).join(', '));
+        // Try to find properties via prototype chain
+        for (let key in l2d) {
+          try {
+            const val = l2d[key];
+            const type = typeof val;
+            if (type === 'object' && val !== null) {
+              log('  l2d.' + key + ': [' + type + '] keys=' + Object.keys(val).join(',').slice(0,80));
+            } else if (type === 'function') {
+              log('  l2d.' + key + ': [function]');
+            } else {
+              log('  l2d.' + key + ': ' + val);
+            }
+          } catch(e) { /* skip */ }
+        }
+
+        // Try _modelManager
+        const mm = l2d._modelManager || l2d.modelManager;
+        if (mm) {
+          log('ModelManager found, keys: ' + Object.keys(mm).join(', ').slice(0,100));
+          for (let key in mm) {
+            try {
+              const val = mm[key];
+              log('  mm.' + key + ': ' + (typeof val));
+            } catch(e) {}
+          }
+        } else {
+          log('No ModelManager found on live2d', 'warn');
+          // Try getOwnPropertyNames for non-enumerable
+          const allProps = Object.getOwnPropertyNames(l2d);
+          log('All own props on live2d: ' + allProps.join(', '));
+        }
+      } catch(e) {
+        log('Inspect error: ' + e.message, 'err');
+      }
+    }
+
+    // ===== Model-specific deep inspection =====
+    function deepInspectModels() {
+      log('=== Deep Model Inspect ===', 'section');
+      try {
+        const l2d = window.live2d;
+        if (!l2d) return;
+        const mm = l2d._modelManager || l2d.modelManager;
+        if (!mm) {
+          // Try brute force: get ALL properties from ALL window.live2d children
+          log('Trying brute force model search...', 'warn');
+          function searchObj(obj, depth) {
+            if (depth > 3 || !obj || typeof obj !== 'object') return;
+            for (let key in obj) {
+              try {
+                const val = obj[key];
+                if (typeof val === 'object' && val !== null) {
+                  if (typeof val.getSize === 'function') {
+                    log('FOUND CsmMap at live2d.' + key + ' size=' + val.getSize(), 'ok');
+                    searchObj(val, depth + 1);
+                  }
+                  if (typeof val.getTextureCount === 'function') {
+                    const tc = val.getTextureCount();
+                    log('FOUND modelSetting at live2d.' + key + ' getTextureCount()=' + tc, tc > 0 ? 'ok' : 'err');
+                  }
+                }
+              } catch(e2) {}
+            }
+          }
+          searchObj(l2d, 0);
+          return;
+        }
+
+        // Check _models
+        const models = mm._models;
+        if (!models) {
+          log('mm._models is undefined, mm keys: ' + Object.keys(mm).join(', '), 'warn');
+          return;
+        }
+
+        try {
+          const size = models.getSize();
+          log('Models count: ' + size);
+          for (let i = 0; i < size; i++) {
+            const model = models.at(i);
+            log('Model[' + i + '] exists: ' + !!model);
+            if (model) {
+              // Inspect model object
+              const modelKeys = Object.keys(model);
+              log('  Model keys: ' + modelKeys.join(', '));
+
+              // Try to access modelSetting
+              const ms = model._modelSetting || model.modelSetting || model._setting;
+              if (ms) {
+                log('  ModelSetting found, keys: ' + Object.keys(ms).join(', '));
+                try {
+                  if (typeof ms.getTextureCount === 'function') {
+                    const tc = ms.getTextureCount();
+                    log('  getTextureCount() = ' + tc, tc > 0 ? 'ok' : 'err');
+                    if (tc > 0) {
+                      for (let t = 0; t < tc; t++) {
+                        try {
+                          const texPath = ms.getTextureFileName ? ms.getTextureFileName(t) : ms.getTextureFilePath(t);
+                          log('  Texture[' + t + ']: ' + texPath);
+                        } catch(e3) {
+                          log('  Texture[' + t + ']: error=' + e3.message, 'err');
+                        }
+                      }
+                    }
+                  } else {
+                    log('  No getTextureCount method on ModelSetting', 'warn');
+                    // Enumerate all methods
+                    const methods = [];
+                    for (let k in ms) { if (typeof ms[k] === 'function') methods.push(k); }
+                    log('  ModelSetting methods: ' + methods.join(', '));
+                  }
+                } catch(e4) {
+                  log('  getTextureCount error: ' + e4.message, 'err');
+                }
+              } else {
+                log('  No _modelSetting found', 'warn');
+                // Try to find any property that looks like a model setting
+                for (let k in model) {
+                  try {
+                    const v = model[k];
+                    if (v && typeof v.getTextureCount === 'function') {
+                      log('  Found modelSetting-like at model.' + k + ', getTextureCount()=' + v.getTextureCount(), 'ok');
+                    }
+                  } catch(e5) {}
+                }
+              }
+
+              // Check state
+              try { log('  _state: ' + model._state); } catch(e) { log('  _state: private/inaccessible'); }
+              try { log('  _textureCount: ' + model._textureCount); } catch(e) { log('  _textureCount: private/inaccessible'); }
+            }
+          }
+        } catch(e6) {
+          log('Models iteration error: ' + e6.message, 'err');
+        }
+      } catch(e) {
+        log('Deep inspect error: ' + e.message, 'err');
+      }
+    }
+
+    // ===== State tracking via model inspection =====
     let lastReportedState = -1;
     function pollModelState() {
       const interval = setInterval(() => {
@@ -221,17 +431,21 @@
               if (model && model._state !== undefined) {
                 const st = model._state;
                 if (st !== lastReportedState) {
-                  const tCount = model._textureCount;
-                  const modelT = model._modelSetting?.getTextureCount?.();
-                  log(`STATE: ${lastReportedState}→${st} [t=${tCount}/${modelT??'?'}]`, st === 22 ? 'ok' : (st >= 20 ? 'info' : ''));
                   lastReportedState = st;
+                  let extra = '';
+                  try {
+                    const ms = model._modelSetting;
+                    if (ms && typeof ms.getTextureCount === 'function') {
+                      extra += ' tc_setting=' + ms.getTextureCount();
+                    }
+                  } catch(e) {}
+                  try { extra += ' tc_loaded=' + model._textureCount; } catch(e) {}
+                  log(`STATE: →${st}${extra}`, st === 22 ? 'ok' : (st >= 20 ? 'info' : ''));
                 }
               }
             }
           }
-        } catch(e) {
-          // Cannot access — expected if fields are truly private
-        }
+        } catch(e) {}
       }, 500);
 
       setTimeout(() => {
@@ -251,7 +465,8 @@
         ' texImg=' + glOps.texImage2D +
         ' clear=' + glOps.clear +
         ' texLoad=' + textureLoadCount +
-        ' texErr=' + textureErrorCount, 'info');
+        ' texErr=' + textureErrorCount +
+        ' allImgs=' + allImgSrcs.length, 'info');
     }
 
     let startTime;
@@ -317,6 +532,10 @@
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
         log('SDK loaded ✓ live2d=' + typeof window.live2d);
+
+        // Inspect live2d immediately after SDK loads
+        inspectModel();
+
         await loadExternalResource(BASE + 'waifu-tips.js', 'js');
         log('Widget loaded ✓ initWidget=' + typeof window.initWidget);
 
@@ -333,6 +552,11 @@
         });
         log('initWidget() called ✓');
 
+        // Deep inspect at intervals as model loads
+        setTimeout(() => { log('=== Inspect@+3s ===', 'section'); deepInspectModels(); }, 3000);
+        setTimeout(() => { log('=== Inspect@+6s ===', 'section'); deepInspectModels(); }, 6000);
+        setTimeout(() => { log('=== Inspect@+10s ===', 'section'); deepInspectModels(); }, 10000);
+
         // Start state polling
         setTimeout(() => pollModelState(), 2000);
 
@@ -345,19 +569,21 @@
           checkGLNoPreserveDB('+15s');
           fullCheckAsync('+15s');
           periodicStatus();
+          deepInspectModels();
           log('=== Final diagnostics ===', 'section');
           log('State: ' + lastReportedState, lastReportedState === 22 ? 'ok' : 'err');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
           log('FB history: ' + fbHistory.join(' → '), 'info');
           log('Texture loads: ' + textureLoadCount + ' errors: ' + textureErrorCount, textureLoadCount === 5 ? 'ok' : 'err');
           log('Loaded textures: ' + JSON.stringify(textureFiles), 'info');
+          log('All image srcs created: ' + JSON.stringify(allImgSrcs), 'info');
           const waifu = document.getElementById('waifu');
           if (waifu) {
             const s = getComputedStyle(waifu);
             log('waifu: bottom=' + s.bottom + ' display=' + s.display + ' rect=' + JSON.stringify(waifu.getBoundingClientRect()));
+          } else {
+            log('waifu element NOT FOUND', 'err');
           }
-          log('--- If state<22: check why model loading stalled ---', 'section');
-          log('--- If state=22 but drawE=0: view.render() issue ---', 'section');
         }, 15000);
 
         // Extended check
@@ -365,6 +591,7 @@
           periodicStatus();
           checkGLNoPreserveDB('+30s');
           fullCheckAsync('+30s');
+          deepInspectModels();
         }, 30000);
 
       } catch(e) {
