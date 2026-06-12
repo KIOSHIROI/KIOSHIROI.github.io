@@ -142,23 +142,60 @@
           throw new Error('initWidget not available');
         }
 
-        log('Calling initWidget...');
+        // Directly test SDK without widget
+        log('--- Direct SDK test ---');
 
-        // Set model force
-        localStorage.setItem('modelId', '0');
-        localStorage.setItem('modelTexturesId', '0');
+        // Create canvas manually (mimics what widget does)
+        document.body.insertAdjacentHTML("beforeend", '<div id="waifu"><canvas id="live2d" width="800" height="800"></canvas></div>');
 
-        initWidget({
-          waifuPath: BASE + 'waifu-tips.json',
-          cdnPath: '/live2d-api/',
-          homePath: 'https://kioshiroi.github.io/',
-          tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
-          dragEnable: true,
-          dragDirection: ['x', 'y'],
-          switchType: 'order'
-        });
+        // Initialize SDK
+        window.live2d.init('');
 
-        log('initWidget called - check for #waifu element');
+        // Load teto model directly
+        setTimeout(() => {
+          log('Loading teto model directly via SDK...');
+          window.live2d.loadModel('/live2d-api/model/teto/');
+        }, 500);
+
+        // Continuous pixel monitoring - check every frame if something renders
+        let pixelChecks = 0;
+        let lastNonZero = false;
+        function monitorPixels() {
+          pixelChecks++;
+          const canvas = document.getElementById('live2d');
+          if (!canvas) return;
+          try {
+            const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+            if (gl && !gl.isContextLost()) {
+              var px = new Uint8Array(4);
+              // Sample center of canvas
+              gl.readPixels(canvas.width/2, canvas.height/2, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+              if (px[0] !== 0 || px[1] !== 0 || px[2] !== 0 || px[3] !== 0) {
+                if (!lastNonZero) {
+                  log('PIXEL DETECTED! (check #' + pixelChecks + ') RGBA(' + px[0] + ',' + px[1] + ',' + px[2] + ',' + px[3] + ')');
+                  lastNonZero = true;
+                }
+              }
+              // Also sample several points
+              if (pixelChecks % 180 === 0) {
+                gl.readPixels(300, 300, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                log('Monitor #' + pixelChecks + ' center:RGBA(' + px[0] + ',' + px[1] + ',' + px[2] + ',' + px[3] + ')');
+              }
+            }
+          } catch(e) {}
+          if (pixelChecks < 600) requestAnimationFrame(monitorPixels);
+        }
+        requestAnimationFrame(monitorPixels);
+
+        // Try randomExpression after delay
+        setTimeout(() => {
+          try {
+            log('Calling window.live2d.randomExpression()');
+            window.live2d.randomExpression();
+          } catch(e) {
+            log('randomExpression error: ' + e.message, true);
+          }
+        }, 5000);
 
         // Check canvas and WebGL state after delays
         function checkCanvasState(label) {
