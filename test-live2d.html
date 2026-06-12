@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v12 — Direct Moc3 Parse Test</title>
+  <title>Live2D Test v13 — Framebuffer Trace + Force Blit</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v12 — Direct Moc3 Parse Test</h2>
+  <h2>Live2D Test v13 — Framebuffer Trace + Force Blit</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -37,7 +37,7 @@
     }
 
     const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','STATUS','===','WINDOW','UNHANDLED','TEX_','GLHOOK',
-      'CORE_','MOC_PARSE','MODEL_PARSE','DIRECT_'];
+      'FB_','BLIT_','CANVAS_','READPIXEL_'];
 
     console.log = function() {
       const msg = Array.from(arguments).join(' ');
@@ -54,7 +54,7 @@
 
     // ===== Fetch interceptor =====
     const _origFetch = window.fetch;
-    let rawMoc3Buffer = null; // capture moc3 buffer for direct parsing
+    let rawMoc3Buffer = null;
     const fetchLog = [];
     window.fetch = function(url, opts) {
       let urlStr = (url instanceof Request) ? url.url : String(url);
@@ -86,76 +86,166 @@
     // ===== Image hook =====
     let textureLoadCount = 0;
     let textureErrorCount = 0;
-    const loadedTextures = [];
-    const failedTextures = [];
 
     const _origImage = window.Image;
     window.Image = function() {
       const img = new _origImage();
       const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-      let srcValue = '';
       let fname = '';
 
       const _addEL = img.addEventListener.bind(img);
       img.addEventListener = function(evt, fn, opts) {
         if (evt === 'load') {
           const origFn = fn;
-          fn = function(e) {
-            if (fname && fname.includes('texture_')) { textureLoadCount++; loadedTextures.push(fname); }
-            return origFn.call(this, e);
-          };
+          fn = function(e) { if (fname && fname.includes('texture_')) textureLoadCount++; return origFn.call(this, e); };
         }
         if (evt === 'error') {
           const origFn = fn;
-          fn = function(e) {
-            if (fname && fname.includes('texture_')) { textureErrorCount++; failedTextures.push(fname); }
-            return origFn.call(this, e);
-          };
+          fn = function(e) { if (fname && fname.includes('texture_')) textureErrorCount++; return origFn.call(this, e); };
         }
         return _addEL.call(this, evt, fn, opts);
       };
 
       Object.defineProperty(img, 'src', {
-        get: function() { return srcValue; },
-        set: function(val) {
-          srcValue = val;
-          if (val) { fname = decodeURIComponent(val.split('?')[0].split('/').pop()); }
-          _origSetSrc.set.call(this, val);
-        },
+        get: function() { return this.__srcVal || ''; },
+        set: function(val) { this.__srcVal = val; if (val) fname = decodeURIComponent(val.split('?')[0].split('/').pop()); _origSetSrc.set.call(this, val); },
         configurable: true, enumerable: true
       });
       return img;
     };
 
-    // ===== GL hooks =====
-    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0 };
+    // ===== GL hooks — detailed framebuffer tracing =====
+    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindFb: 0 };
     let glRef = null;
     let glHooked = false;
+    let lastFramebuffer = null; // track current FB binding
+    const fbMap = new Map(); // track FBO objects → id
+    let fbIdCounter = 0;
+    let lastBlitTime = 0;
 
     const origGetContext = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, attrs) {
       if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
         attrs = attrs || {};
         attrs.preserveDrawingBuffer = true;
+        log('GLHOOK: WebGL context created, preserveDrawingBuffer=true');
       }
       const ctx = origGetContext.call(this, type, attrs);
       if (this.id === 'live2d' && ctx && !glHooked) {
         glHooked = true; glRef = ctx;
         const gl = ctx;
+
+        // Basic counters
         ['texImage2D','drawElements','clear','useProgram','createTexture'].forEach(name => {
           const orig = gl[name].bind(gl);
           gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
         });
+
+        // === Framebuffer trace ===
+        const _origBindFramebuffer = gl.bindFramebuffer.bind(gl);
+        gl.bindFramebuffer = function(target, framebuffer) {
+          const targetName = target === gl.FRAMEBUFFER ? 'FRAMEBUFFER' :
+                             target === gl.DRAW_FRAMEBUFFER ? 'DRAW_FB' :
+                             target === gl.READ_FRAMEBUFFER ? 'READ_FB' : '0x'+target.toString(16);
+
+          if (framebuffer === null) {
+            if (lastFramebuffer !== null) {
+              log('FB_BIND: ' + targetName + ' → null (default) [was FBO]', target === gl.DRAW_FRAMEBUFFER ? 'warn' : 'ok');
+              lastBlitTime = Date.now();
+            } else {
+              // Too noisy: only log every 100th bindFb to null
+              if (glOps.bindFb % 100 === 0) {
+                // skip verbose logging
+              }
+            }
+            lastFramebuffer = null;
+          } else {
+            let fbId = fbMap.get(framebuffer);
+            if (!fbId) { fbId = 'FBO' + (++fbIdCounter); fbMap.set(framebuffer, fbId); }
+            if (lastFramebuffer !== framebuffer) {
+              log('FB_BIND: ' + targetName + ' → ' + fbId + (lastFramebuffer === null ? ' [was default]' : ''), 'info');
+            }
+            lastFramebuffer = framebuffer;
+          }
+
+          glOps.bindFb++;
+          return _origBindFramebuffer.call(gl, target, framebuffer);
+        };
+
+        // === Track active texture ===
+        const _origActiveTexture = gl.activeTexture.bind(gl);
+        gl.activeTexture = function(tex) {
+          // too verbose, skip
+          return _origActiveTexture.call(gl, tex);
+        };
+
+        // === Intercept framebuffer creation ===
+        const _origCreateFramebuffer = gl.createFramebuffer.bind(gl);
+        gl.createFramebuffer = function() {
+          const fb = _origCreateFramebuffer();
+          if (fb) {
+            const fbId = 'FBO' + (++fbIdCounter);
+            fbMap.set(fb, fbId);
+            log('FB_CREATE: ' + fbId, 'info');
+          }
+          return fb;
+        };
+
+        // === Intercept drawBuffers ===
+        if (gl.drawBuffers) {
+          const _origDrawBuffers = gl.drawBuffers.bind(gl);
+          const bufNames = { 36064: 'COLOR0', 0: 'NONE' };
+          gl.drawBuffers = function(buffers) {
+            const names = Array.from(buffers).map(b => bufNames[b] || '0x'+b.toString(16)).join(',');
+            log('DRAW_BUFS: [' + names + ']', 'info');
+            return _origDrawBuffers.call(gl, buffers);
+          };
+        }
       }
       return ctx;
     };
+
+    // ===== FBO content inspector =====
+    function inspectFBO(label) {
+      if (!glRef || glRef.isContextLost()) return;
+      const gl = glRef;
+      // Save current state
+      const savedFb = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+
+      // Try to read pixels from whatever FB is currently bound
+      const px = new Uint8Array(4);
+      gl.readPixels(10, 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+      log('READPIXEL_default: (' + label + ') RGBA(' + px.join(',') + ') FB=' + (savedFb ? 'FBO' : 'null'), 'info');
+
+      // Also try binding null (default framebuffer) explicitly
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      const px2 = new Uint8Array(4);
+      gl.readPixels(10, 10, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px2);
+      log('READPIXEL_forced: (' + label + ') RGBA(' + px2.join(',') + ')', 'info');
+
+      // Check viewport
+      const vp = gl.getParameter(gl.VIEWPORT);
+      log('CANVAS_VIEWPORT: ' + vp[0] + ',' + vp[1] + ' ' + vp[2] + 'x' + vp[3]);
+
+      // Check scissor
+      const sc = gl.getParameter(gl.SCISSOR_BOX);
+      log('CANVAS_SCISSOR: ' + sc[0] + ',' + sc[1] + ' ' + sc[2] + 'x' + sc[3]);
+
+      // Restore
+      gl.bindFramebuffer(gl.FRAMEBUFFER, savedFb);
+    }
 
     function snapshotCanvas(label) {
       const canvas = document.getElementById('live2d');
       if (!canvas) return;
       try {
         if (glRef && !glRef.isContextLost()) {
+          // Save current framebuffer
+          const curFb = glRef.getParameter(glRef.FRAMEBUFFER_BINDING);
+
+          // Bind default framebuffer
           glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
+
           const px = new Uint8Array(4);
           let found = false;
           for (let y = 0; y < canvas.height && !found; y += 7) {
@@ -167,7 +257,10 @@
               }
             }
           }
-          if (!found) log('SNAP: all pixels zero', 'warn');
+          if (!found) log('SNAP: all pixels zero (curFb=' + (curFb ? 'FBO' : 'null') + ')', 'warn');
+
+          // Restore framebuffer
+          glRef.bindFramebuffer(glRef.FRAMEBUFFER, curFb);
         }
         const dataUrl = canvas.toDataURL('image/png');
         const snapshotEl = document.getElementById('snapshot');
@@ -178,89 +271,7 @@
 
     function periodicStatus() {
       log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
-        ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount, 'info');
-    }
-
-    // ===== DIRECT MOC3 PARSE TEST =====
-    function testMocParsing(buf, label) {
-      log('=== Direct moc3 parse test (' + label + ') ===', 'section');
-
-      // Check if Live2DCubismCore exists
-      if (typeof Live2DCubismCore === 'undefined') {
-        log('CORE_MISSING: Live2DCubismCore is not defined', 'err');
-        return;
-      }
-      log('CORE_AVAILABLE: Live2DCubismCore keys=' + Object.keys(Live2DCubismCore).join(', '));
-
-      // Check Moc
-      if (!Live2DCubismCore.Moc) {
-        log('CORE_MISSING: Live2DCubismCore.Moc not found', 'err');
-        return;
-      }
-
-      // Try different API signatures
-      log('CORE_Moc methods: ' + Object.keys(Live2DCubismCore.Moc).join(', '));
-      log('CORE_Moc prototype: ' + (Live2DCubismCore.Moc.prototype ? Object.getOwnPropertyNames(Live2DCubismCore.Moc.prototype).join(', ') : 'none'));
-
-      // Try fromArrayBuffer
-      if (typeof Live2DCubismCore.Moc.fromArrayBuffer === 'function') {
-        try {
-          log('MOC_PARSE: calling fromArrayBuffer(' + buf.byteLength + ' bytes)...');
-          const moc = Live2DCubismCore.Moc.fromArrayBuffer(buf);
-          if (moc) {
-            log('MOC_PARSE: SUCCESS! moc object created ✓', 'ok');
-            // Check model count
-            if (Live2DCubismCore.Moc.prototype) {
-              log('MOC_PARSE: moc keys=' + Object.keys(moc).join(', '));
-            }
-            return moc;
-          } else {
-            log('MOC_PARSE: returned null/falsy', 'err');
-          }
-        } catch(e) {
-          log('MOC_PARSE: fromArrayBuffer threw: ' + e.message, 'err');
-        }
-      }
-
-      // Try constructor
-      if (typeof Live2DCubismCore.Moc === 'function') {
-        try {
-          log('MOC_PARSE: calling new Moc(arrayBuffer)...');
-          const moc = new Live2DCubismCore.Moc(buf);
-          if (moc) {
-            log('MOC_PARSE: constructor SUCCESS! ✓', 'ok');
-            return moc;
-          }
-        } catch(e) {
-          log('MOC_PARSE: constructor threw: ' + e.message, 'err');
-        }
-      }
-
-      // Try create
-      if (Live2DCubismCore.Moc.create) {
-        try {
-          log('MOC_PARSE: calling Moc.create(buf)...');
-          const moc = Live2DCubismCore.Moc.create(buf);
-          if (moc) {
-            log('MOC_PARSE: create() SUCCESS! ✓', 'ok');
-            return moc;
-          }
-        } catch(e) {
-          log('MOC_PARSE: create() threw: ' + e.message, 'err');
-        }
-      }
-
-      log('MOC_PARSE: all attempts failed', 'err');
-      return null;
-    }
-
-    // Verify moc3 buffer magic bytes
-    function verifyMocBytes(buf) {
-      if (buf.byteLength < 4) return false;
-      const dv = new DataView(buf);
-      const magic = dv.getUint32(0, false);
-      log('MOC_BYTES: size=' + buf.byteLength + 'B magic=0x' + magic.toString(16).toUpperCase(), magic === 0x4D4F4333 ? 'ok' : 'err');
-      return magic === 0x4D4F4333;
+        ' bindFb=' + glOps.bindFb + ' texLoad=' + textureLoadCount, 'info');
     }
 
     let startTime;
@@ -283,28 +294,12 @@
     async function main() {
       startTime = Date.now();
       try {
-        // ===== SEQUENTIAL LOADING =====
         log('=== Loading CSS ===', 'section');
         await loadExternalResource(BASE + 'waifu.css', 'css');
 
         log('=== Loading Cubism Core ===', 'section');
         await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
         await new Promise(r => setTimeout(r, 200));
-
-        // Core should be available now
-        log('=== Checking Live2DCubismCore ===', 'section');
-        if (typeof Live2DCubismCore !== 'undefined') {
-          log('CORE_LOADED: version=' + Live2DCubismCore.Version);
-          log('CORE_KEYS: ' + JSON.stringify(Object.keys(Live2DCubismCore)));
-          if (Live2DCubismCore.Moc) {
-            log('CORE_Moc: ' + JSON.stringify(Object.keys(Live2DCubismCore.Moc)));
-            // Check if fromArrayBuffer is defined
-            const mSig = typeof Live2DCubismCore.Moc.fromArrayBuffer;
-            log('CORE_Moc.fromArrayBuffer type=' + mSig);
-          }
-        } else {
-          log('CORE_MISSING: Live2DCubismCore undefined', 'err');
-        }
 
         log('=== Loading Live2D SDK ===', 'section');
         await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
@@ -333,51 +328,33 @@
         });
         log('initWidget() called');
 
-        // ===== Wait for moc3 to be downloaded, then test parsing =====
-        // The SDK will fetch moc3 internally. We capture it via fetch interceptor.
-        // Wait up to 5s for rawMoc3Buffer to be populated
+        // ===== Wait for moc3 to be cached =====
         let mocWait = 0;
         while (!rawMoc3Buffer && mocWait < 10000) {
           await new Promise(r => setTimeout(r, 200)); mocWait += 200;
         }
 
         if (rawMoc3Buffer) {
-          log('=== Moc3 buffer captured (' + rawMoc3Buffer.byteLength + ' bytes) ===', 'section');
-          verifyMocBytes(rawMoc3Buffer);
-          testMocParsing(rawMoc3Buffer, 'SDK-fetched');
-
-          // Also try fetching moc3 directly ourselves
-          log('=== Direct moc3 fetch (bypass SDK) ===', 'section');
-          try {
-            const resp = await fetch('/live2d-api/model/teto/重音テト.moc3');
-            const dirBuf = await resp.arrayBuffer();
-            log('DIRECT_FETCH: ' + dirBuf.byteLength + ' bytes, status=' + resp.status);
-            verifyMocBytes(dirBuf);
-            testMocParsing(dirBuf, 'direct-fetch');
-          } catch(e) {
-            log('DIRECT_FETCH failed: ' + e.message, 'err');
-          }
-        } else {
-          log('MOC3_TIMEOUT: rawMoc3Buffer never populated after 10s', 'err');
+          log('=== Moc3 captured: ' + rawMoc3Buffer.byteLength + ' bytes ===', 'section');
         }
 
-        // ===== Monitoring =====
-        for (let i = 2; i <= 30; i += 2) {
-          setTimeout(() => {
-            periodicStatus();
-            if (i % 8 === 0) snapshotCanvas('+' + i + 's');
-          }, i * 1000);
-        }
+        // ===== Periodic inspection =====
+        setTimeout(() => { periodicStatus(); inspectFBO('+3s'); }, 3000);
+        setTimeout(() => { periodicStatus(); inspectFBO('+6s'); snapshotCanvas('+6s'); }, 6000);
+        setTimeout(() => { periodicStatus(); inspectFBO('+12s'); snapshotCanvas('+12s'); }, 12000);
+        setTimeout(() => { periodicStatus(); inspectFBO('+20s'); snapshotCanvas('+20s'); }, 20000);
 
         // Final summary
         setTimeout(() => {
           periodicStatus();
+          inspectFBO('+35s');
           snapshotCanvas('+35s');
           log('=== Final Summary ===', 'section');
           log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('Loaded textures: ' + JSON.stringify(loadedTextures));
+          log('FBO count: ' + fbIdCounter);
+          log('Last FB bind to null: ' + (lastBlitTime ? (lastBlitTime - startTime) + 'ms ago' : 'NEVER'), 'warn');
           log('Fetch log:');
-          fetchLog.forEach(e => log('  ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']', e.status >= 400 ? 'err' : 'sdk'));
+          fetchLog.forEach(e => log('  ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']'));
         }, 35000);
 
       } catch(e) {
