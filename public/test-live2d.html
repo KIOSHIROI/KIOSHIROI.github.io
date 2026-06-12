@@ -17,19 +17,22 @@
   <div id="log">Loading...</div>
 
   <script>
+    // Save original console methods BEFORE anything else
+    const _origLog = console.log.bind(console);
+    const _origError = console.error.bind(console);
+    const _origWarn = console.warn.bind(console);
+
     const logEl = document.getElementById('log');
     function log(msg, cls) {
       const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       logEl.innerHTML += `<span class="${cls || 'ok'}">[${new Date().toISOString().slice(11,23)}] ${safe}</span>\n`;
-      console.log(msg);
+      _origLog(msg);  // Use saved original, not console.log (avoids recursion)
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // Intercept ALL console output
-    const _origError = console.error, _origWarn = console.warn, _origLog = console.log;
-    console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError.apply(console, arguments); };
-    console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn.apply(console, arguments); };
-    console.log   = function(){ log('   ' + Array.from(arguments).join(' ').substring(0,200), 'info'); _origLog.apply(console, arguments); };
+    // Intercept console.error and console.warn (NOT console.log to avoid recursion)
+    console.error = function(){ log('🔴 ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
+    console.warn  = function(){ log('🟡 ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
 
     // Intercept fetch for model files
     const _origFetch = window.fetch;
