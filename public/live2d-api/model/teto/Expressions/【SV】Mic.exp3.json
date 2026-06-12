@@ -15,11 +15,6 @@
             "Id": "ParamBHandIN",
             "Value": 0.0,
             "Blend": "Add"
-        },
-        {
-            "Id": "ParamWatermarkOFF",
-            "Value": 1.0,
-            "Blend": "Add"
         }
     ]
 }
