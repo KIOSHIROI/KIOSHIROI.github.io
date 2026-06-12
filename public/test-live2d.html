@@ -43,7 +43,9 @@
     };
 
     // ========== GL OPERATION COUNTING (on #live2d canvas) ==========
-    let glOps = { texImage2D: 0, drawElements: 0, drawArrays: 0, clear: 0, uniformMatrix4fv: 0, useProgram: 0, texParameteri: 0, createTexture: 0, bindFramebuffer: 0, bindTexture: 0 };
+    let glOps = { texImage2D: 0, drawElements: 0, drawArrays: 0, clear: 0, uniformMatrix4fv: 0, useProgram: 0, texParameteri: 0, createTexture: 0, bindFramebuffer: 0, bindTexture: 0, bufferData: 0, enableVertexAttribArray: 0 };
+    let lastFB = '(none)';
+    let fbHistory = [];
     let glHooked = false;
 
     function hookCanvasGL() {
@@ -60,13 +62,33 @@
           const gl = ctx;
           // Wrap key GL functions
           const origFns = {};
-          for (const name of ['texImage2D','drawElements','drawArrays','clear','useProgram','bindFramebuffer','uniformMatrix4fv']) {
+          for (const name of ['texImage2D','drawElements','drawArrays','clear','useProgram','uniformMatrix4fv','bufferData','enableVertexAttribArray']) {
             origFns[name] = gl[name].bind(gl);
             gl[name] = function() {
               glOps[name] = (glOps[name] || 0) + 1;
               return origFns[name].apply(gl, arguments);
             };
           }
+          // Special handling for bindFramebuffer to track FB binding
+          origFns.bindFramebuffer = gl.bindFramebuffer.bind(gl);
+          gl.bindFramebuffer = function(target, fb) {
+            glOps.bindFramebuffer++;
+            lastFB = fb === null ? 'null(default)' : ('FB#' + (fb ? 'obj' : '???'));
+            if (fbHistory.length < 20) fbHistory.push(lastFB);
+            return origFns.bindFramebuffer.call(gl, target, fb);
+          };
+          // Track createTexture
+          origFns.createTexture = gl.createTexture.bind(gl);
+          gl.createTexture = function() {
+            glOps.createTexture++;
+            return origFns.createTexture();
+          };
+          // Track bindTexture
+          origFns.bindTexture = gl.bindTexture.bind(gl);
+          gl.bindTexture = function() {
+            glOps.bindTexture++;
+            return origFns.bindTexture.apply(gl, arguments);
+          };
           // Also check for getError periodically
           setInterval(() => {
             if (gl.isContextLost()) { log('!!! GL CONTEXT LOST !!!', 'err'); return; }
@@ -215,6 +237,8 @@
           checkGL('+15s');
           fullCheck('+15s');
           log('=== Final GL ops: ' + JSON.stringify(glOps) + ' ===', 'section');
+          log('FB history: ' + fbHistory.join(' → '), 'info');
+          log('Last FB: ' + lastFB, 'info');
           const waifu = document.getElementById('waifu');
           if (waifu) {
             const s = getComputedStyle(waifu);
