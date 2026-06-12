@@ -139,26 +139,41 @@
 
         log('initWidget called - check for #waifu element');
 
-        // Check after a delay
-        setTimeout(() => {
+        // Check canvas and WebGL state after delays
+        function checkCanvasState(label) {
           const waifu = document.getElementById('waifu');
           const toggle = document.getElementById('waifu-toggle');
           const canvas = document.getElementById('live2d');
-          log('After 3s: waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
+          log(label + ': waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
           if (canvas) {
-            log('Canvas: ' + canvas.width + 'x' + canvas.height + ' style:' + canvas.style.width + 'x' + canvas.style.height);
+            log('  Canvas: ' + canvas.width + 'x' + canvas.height + ' CSS:' + canvas.style.width + 'x' + canvas.style.height);
+            log('  Canvas pos: left=' + canvas.offsetLeft + ' top=' + canvas.offsetTop + ' parentW=' + canvas.parentElement.offsetWidth + ' parentH=' + canvas.parentElement.offsetHeight);
+            log('  Canvas computed w/h: ' + getComputedStyle(canvas).width + 'x' + getComputedStyle(canvas).height);
+            try {
+              const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+              if (gl) {
+                log('  WebGL: context created, vendor=' + gl.getParameter(gl.VENDOR) + ' renderer=' + gl.getParameter(gl.RENDERER));
+                log('  WebGL: viewport=' + gl.getParameter(gl.VIEWPORT)[2] + 'x' + gl.getParameter(gl.VIEWPORT)[3]);
+                log('  WebGL: contextLost=' + gl.isContextLost());
+              } else {
+                log('  WebGL: FAILED to create context!', true);
+              }
+            } catch(e) {
+              log('  WebGL: ERROR - ' + e.message, true);
+            }
           }
-        }, 3000);
-
-        setTimeout(() => {
-          const waifu = document.getElementById('waifu');
-          const toggle = document.getElementById('waifu-toggle');
-          const canvas = document.getElementById('live2d');
-          log('After 8s: waifu=' + !!waifu + ' toggle=' + !!toggle + ' canvas=' + !!canvas);
+          // Check if waifu element is in DOM and visible
           if (waifu) {
-            log('waifu display=' + waifu.style.display + ' bottom=' + waifu.style.bottom + ' left=' + waifu.style.left);
+            const style = getComputedStyle(waifu);
+            log('  #waifu: display=' + style.display + ' opacity=' + style.opacity + ' visibility=' + style.visibility + ' overflow=' + style.overflow);
+            log('  #waifu: bottom=' + style.bottom + ' left=' + style.left + ' right=' + style.right + ' position=' + style.position);
+            log('  #waifu: width=' + style.width + ' height=' + style.height);
+            log('  #waifu rect: ' + JSON.stringify(waifu.getBoundingClientRect()));
           }
-        }, 8000);
+        }
+        setTimeout(() => checkCanvasState('After 3s'), 3000);
+        setTimeout(() => checkCanvasState('After 8s'), 8000);
+
 
       } catch (error) {
         log('ERROR: ' + error.message, true);
