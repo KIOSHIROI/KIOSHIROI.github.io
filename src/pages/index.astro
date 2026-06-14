@@ -56,7 +56,7 @@ import config from '@/site-config'
           date='Sep 2026 - Present'
           href='https://hias.ucas.ac.cn/'
         >
-          <img src='/images/education/ucas-badge.jpg' alt='HIAS' class='absolute right-4 top-4 size-10 rounded object-contain' loading='lazy' />
+          <img slot='cover' src='/images/education/ucas-badge.jpg' alt='' class='cover-image absolute end-0 top-0 z-0 h-full w-2/5 object-cover opacity-40 sm:opacity-50' loading='lazy' />
         </Card>
         <Card
           as='a'
@@ -65,7 +65,7 @@ import config from '@/site-config'
           date='Sep 2022 - Jul 2026'
           href='https://www.bnuzh.edu.cn/'
         >
-          <img src='/images/education/bnu-badge.jpg' alt='BNU' class='absolute right-4 top-4 size-10 rounded object-contain' loading='lazy' />
+          <img slot='cover' src='/images/education/bnu-badge.jpg' alt='' class='cover-image absolute end-0 top-0 z-0 h-full w-2/5 object-cover opacity-40 sm:opacity-50' loading='lazy' />
         </Card>
       </Section>
       <Section title='Statistics'>
@@ -74,3 +74,10 @@ import config from '@/site-config'
     </div>
   </main>
 </PageLayout>
+
+<style>
+  .cover-image {
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+    -webkit-mask-image: -webkit-linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 1) 100%);
+  }
+</style>
