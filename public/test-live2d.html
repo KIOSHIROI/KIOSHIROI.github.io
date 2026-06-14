@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v17 — FBO Tracking + Force Blit</title>
+  <title>Live2D Test v18 — V16 base + blit hook only + try/catch</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v17 — FBO Tracking + Force Blit</h2>
+  <h2>Live2D Test v18 — V16 base + blit hook only (safe mode)</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -27,18 +27,10 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // ===== FBO + Render Trackers =====
-    let drawElements = 0, drawArrays = 0, texturesCreated = 0, texImage2DCalls = 0;
-    let fboId = 0, fboCreated = 0, fboDeleted = 0, bindFbCalls = 0, fboTex2d = 0, fboRb = 0;
+    // ===== Trackers (same as V16) =====
+    let drawElements = 0, drawArrays = 0, texturesCreated = 0;
     let blitCalls = 0;
-    let lastFboId = 0;
-    const fboMap = new Map();  // fboId → { tex, rb, width, height, colorTex }
-    const allFbos = [];  // all known fbo objects
-    let liveFbos = new Set();
-
-    // NOTE: we expose these for snapshot reading
-    window.__FBO_MAP__ = fboMap;
-    window.__LIVE_FBOS__ = liveFbos;
+    let glType = '?';  // webgl1 vs webgl2
 
     const _origGetCtx = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function(type, attrs) {
@@ -49,66 +41,29 @@
       const ctx = _origGetCtx.call(this, type, attrs);
       if (this.id === 'live2d' && ctx) {
         const gl = ctx;
+        glType = type;
 
+        // === V16 hooks (known safe) ===
         const _de = gl.drawElements.bind(gl);
-        gl.drawElements = function(mode, count, type, offset) {
-          drawElements++;
-          return _de(mode, count, type, offset);
-        };
+        gl.drawElements = function() { drawElements++; return _de.apply(gl, arguments); };
         const _da = gl.drawArrays.bind(gl);
         gl.drawArrays = function() { drawArrays++; return _da.apply(gl, arguments); };
         const _ct = gl.createTexture.bind(gl);
         gl.createTexture = function() { texturesCreated++; return _ct(); };
-        const _ti = gl.texImage2D.bind(gl);
-        gl.texImage2D = function() { texImage2DCalls++; return _ti.apply(gl, arguments); };
 
-        // ===== FBO tracking =====
-        const _cf = gl.createFramebuffer.bind(gl);
-        gl.createFramebuffer = function() {
-          const fb = _cf();
-          fboCreated++;
-          const id = ++fboId;
-          fboMap.set(fb, { id, tex: null, rb: null, colorTex: null });
-          allFbos.push(fb);
-          liveFbos.add(fb);
-          return fb;
-        };
-        const _df = gl.deleteFramebuffer.bind(gl);
-        gl.deleteFramebuffer = function(fb) {
-          liveFbos.delete(fb);
-          return _df(fb);
-        };
-        const _bf = gl.bindFramebuffer.bind(gl);
-        gl.bindFramebuffer = function(target, fb) {
-          bindFbCalls++;
-          lastFboId = fb ? (fboMap.get(fb)?.id || '?') : 0;
-          _bf(target, fb);
-        };
-        const _ft = gl.framebufferTexture2D.bind(gl);
-        gl.framebufferTexture2D = function(target, attachment, textarget, texture, level) {
-          fboTex2d++;
-          const curFb = gl.getParameter(gl.FRAMEBUFFER_BINDING);
-          if (curFb && fboMap.has(curFb) && attachment === gl.COLOR_ATTACHMENT0) {
-            fboMap.get(curFb).colorTex = texture;
-          }
-          _ft(target, attachment, textarget, texture, level);
-        };
-        const _fr = gl.framebufferRenderbuffer.bind(gl);
-        gl.framebufferRenderbuffer = function(target, attachment, rbtarget, rb) {
-          fboRb++;
-          _fr(target, attachment, rbtarget, rb);
-        };
-
-        // ===== Blit tracking =====
-        // Check if WebGL2 (blitFramebuffer is WebGL2-only)
+        // === NEW: blit hook ONLY (try/catch safe) ===
         if (gl.blitFramebuffer) {
           const _blit = gl.blitFramebuffer.bind(gl);
           gl.blitFramebuffer = function(sx0, sy0, sx1, sy1, dx0, dy0, dx1, dy1, mask, filter) {
             blitCalls++;
-            const readFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-            const drawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
-            log('BLIT#' + blitCalls + ' read=' + (readFb?fboMap.get(readFb)?.id:'def') + ' draw=' + (drawFb?fboMap.get(drawFb)?.id:'def'), 'info');
-            _blit(sx0, sy0, sx1, sy1, dx0, dy0, dx1, dy1, mask, filter);
+            try {
+              const readFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
+              const drawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
+              log('BLIT#' + blitCalls + ' gl=' + glType + ' read=' + (readFb?'FBO':'def') + ' draw=' + (drawFb?'FBO':'def'), 'info');
+            } catch(e) {
+              log('BLIT#' + blitCalls + ' hook-err: ' + e.message, 'err');
+            }
+            return _blit(sx0, sy0, sx1, sy1, dx0, dy0, dx1, dy1, mask, filter);
           };
         }
       }
@@ -121,51 +76,25 @@
       const gl = c.getContext('webgl2') || c.getContext('webgl');
       if (!gl || gl.isContextLost()) return;
 
-      const curFbId = lastFboId;
-
-      // 1. Check default framebuffer
       gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       const px = new Uint8Array(4);
-      let defPixel = null;
-      for (let y = 0; y < c.height && !defPixel; y += 10) {
-        for (let x = 0; x < c.width && !defPixel; x += 10) {
+      let found = false;
+      for (let y = 0; y < c.height && !found; y += 5) {
+        for (let x = 0; x < c.width && !found; x += 5) {
           gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-          if (px[0] || px[1] || px[2] || px[3]) defPixel = {x, y, px:Array.from(px)};
-        }
-      }
-
-      // 2. Check all active FBOs for color pixels
-      let fboPixel = null, fboScanCount = 0;
-      for (const fb of liveFbos) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, fb);
-        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) continue;
-        fboScanCount++;
-        // Only sample center region (fast)
-        for (let y = 100; y < c.height && !fboPixel; y += 30) {
-          for (let x = 100; x < c.width && !fboPixel; x += 30) {
-            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-            if (px[0] || px[1] || px[2] || px[3]) {
-              fboPixel = { id: fboMap.get(fb)?.id, x, y, px: Array.from(px) };
-            }
+          if (px[0] || px[1] || px[2] || px[3]) {
+            log('SNAP: pixel(' + x + ',' + y + ')=' + px.join(','), 'ok');
+            found = true;
           }
         }
       }
+      if (!found) log('SNAP: zero (de=' + drawElements + ' da=' + drawArrays + ' ct=' + texturesCreated + ' blit=' + blitCalls + ' gl=' + glType + ')', 'warn');
 
-      // Restore
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-
-      let msg = 'DFB=' + (defPixel ? `FOUND(${defPixel.x},${defPixel.y} r${defPixel.px[0]}g${defPixel.px[1]}b${defPixel.px[2]})` : 'ZERO');
-      msg += ' FBOs=' + fboScanCount + '/' + liveFbos.size;
-      msg += (fboPixel ? ` FBO#${fboPixel.id}(${fboPixel.x},${fboPixel.y} r${fboPixel.px[0]}g${fboPixel.px[1]}b${fboPixel.px[2]})` : ' ALL_ZERO');
-      msg += ` lastBind=${curFbId} blit=${blitCalls}`;
-      log('SNAP[' + label + ']: ' + msg, defPixel || fboPixel ? 'ok' : 'warn');
-
-      // Canvas toDataURL
       const du = c.toDataURL('image/png');
-      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB de='+drawElements+' blit='+blitCalls+'):</strong><br><img src="'+du+'" style="max-width:300px">';
+      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB de='+drawElements+' blit='+blitCalls+' gl='+glType+'):</strong><br><img src="'+du+'" style="max-width:300px">';
     }
 
-    // ===== MAIN =====
+    // ===== MAIN (same as V16) =====
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
     const MOC3_PATH = '/live2d-api/model/teto/重音テト.moc3';
@@ -236,9 +165,9 @@
           tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
           dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
         });
-        log('initWidget done');
+        log('initWidget done (glType=' + glType + ')');
 
-        // ===== Monitor + attempt force-blit =====
+        // ===== Monitor + force visibility periodically =====
         for (const t of [3, 5, 8, 10, 15, 20, 30, 45, 60]) {
           setTimeout(() => {
             const waifu = document.getElementById('waifu');
@@ -248,34 +177,8 @@
               waifu.style.visibility = 'visible';
               waifu.style.opacity = '1';
               if (!waifu.style.zIndex || waifu.style.zIndex < '99999') waifu.style.zIndex = '99999';
-              log('STATUS[' + t + 's]: de=' + drawElements + ' texImg=' + texImage2DCalls + ' fbo=' + liveFbos.size + ' fbBind=' + bindFbCalls + ' blit=' + blitCalls + ' cs.disp=' + cs.display, 'info');
+              log('STATUS[' + t + 's]: de=' + drawElements + ' ct=' + texturesCreated + ' blit=' + blitCalls + ' gl=' + glType + ' cs.disp=' + cs.display);
             }
-
-            // === Force-blit: if we have FBOs but no blit calls, try manual compositing ===
-            if (blitCalls === 0 && liveFbos.size > 0) {
-              const c = document.getElementById('live2d');
-              const gl = c && (c.getContext('webgl2') || c.getContext('webgl'));
-              if (gl && gl.blitFramebuffer) {
-                // Save current state
-                const readFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-                const drawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
-
-                for (const fb of liveFbos) {
-                  try {
-                    gl.bindFramebuffer(gl.READ_FRAMEBUFFER, fb);
-                    if (gl.checkFramebufferStatus(gl.READ_FRAMEBUFFER) !== gl.FRAMEBUFFER_COMPLETE) continue;
-                    gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-                    gl.blitFramebuffer(0, 0, c.width, c.height, 0, c.height, c.width, 0, gl.COLOR_BUFFER_BIT, gl.NEAREST);
-                    log('FORCE-BLIT[' + t + 's]: FBO#' + (fboMap.get(fb)?.id) + ' → default', 'ok');
-                    break; // only need one successful blit
-                  } catch(e) {}
-                }
-                // Restore
-                gl.bindFramebuffer(gl.READ_FRAMEBUFFER, readFb);
-                gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, drawFb);
-              }
-            }
-
             if (t % 10 === 0 || t === 8) snap('+' + t + 's');
           }, t * 1000);
         }
