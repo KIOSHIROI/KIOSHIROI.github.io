@@ -1,4 +1,4 @@
-// Live2D Cubism 5 (v3) async autoload with multi-CDN fallback
+// Live2D Cubism 5 (v3) async autoload with multi-CDN fallback + moc3 precache
 const widgetBaseCandidates = [
   window.__LIVE2D_WIDGET_BASE__,
   'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/',
@@ -44,12 +44,54 @@ function loadExternalResource(url, type) {
   })
 }
 
+// ===== Moc3 precache system =====
+// Stores pre-fetched ArrayBuffers and intercepts fetch() to return them instantly.
+const _precacheStore = new Map()
+const _origFetch = window.fetch
+
+async function precacheFile(url) {
+  try {
+    const resp = await _origFetch(url)
+    const ct = resp.headers.get('content-type') || 'application/octet-stream'
+    const buf = await resp.arrayBuffer()
+    _precacheStore.set(url, { buffer: buf, contentType: ct })
+    return buf
+  } catch (e) {
+    // Silently fail — the normal network fetch will handle it
+    return null
+  }
+}
+
+// Install fetch interceptor (must happen before SDK loads)
+window.fetch = function(url, opts) {
+  const urlStr = (url instanceof Request) ? url.url : String(url)
+  const hit = _precacheStore.get(urlStr)
+  if (hit) {
+    return Promise.resolve(new Response(hit.buffer, {
+      status: 200,
+      headers: {
+        'Content-Type': hit.contentType,
+        'Content-Length': String(hit.buffer.byteLength)
+      }
+    }))
+  }
+  return _origFetch.call(window, url, opts)
+}
+
 async function loadWidgetBundleFromBase(base) {
   const normalizedBase = base.endsWith('/') ? base : `${base}/`
+
+  // Start precaching the moc3 immediately (runs in background)
+  const moc3Url = localCdnPath + 'model/teto/重音テト.moc3'
+  const moc3Promise = precacheFile(moc3Url)
+
   await loadExternalResource(`${normalizedBase}waifu.css`, 'css')
   await loadExternalResource(`${normalizedBase}Core/live2dcubismcore.js`, 'js')
   await loadExternalResource(`${normalizedBase}live2d-sdk.js`, 'js')
   await loadExternalResource(`${normalizedBase}waifu-tips.js`, 'js')
+
+  // Wait for moc3 precache to finish
+  await moc3Promise
 
   if (typeof window.initWidget !== 'function') {
     throw new Error(`initWidget is not available from ${normalizedBase}`)
