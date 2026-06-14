@@ -112,6 +112,26 @@ draft: false
 comment: true
 ```
 
+### 创建新文章（脚手架）
+
+使用内置脚手架快速创建文章模板：
+
+```bash
+cd /Users/kioshiro/程序/KIOSHIROI-Blog-Astro
+node src/scripts/index.js new -m "文章标题"
+```
+
+选项：
+- `-m` 使用 MDX 格式（推荐）
+- `-d` 创建草稿（draft: true）
+- `-l zh` 指定语言
+
+生成的文件路径为 `src/content/blog/<slug>/index.mdx`，slug 规则：
+- 英文标题 → 自动生成英文 slug（如 `"My Post"` → `my-post`）
+- 中文标题 → 自动用日期作为 slug（如 `"我的文章"` → `post-20260614`）
+
+生成后编辑 frontmatter 和正文内容，然后 `git push origin master` 即可自动部署。
+
 ## 5. 常见任务应该先看哪里
 
 ### 改站点名称、导航、评论、搜索

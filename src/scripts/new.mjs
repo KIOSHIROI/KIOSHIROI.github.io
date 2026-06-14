@@ -23,19 +23,19 @@ import slugify from './libs/slugify.cjs'
 function getDate() {
   const date = new Date()
   const year = date.getFullYear()
-  const month = String(date.getMonth() + 1).padStart(2, '0') // Month is 0-based
+  const month = String(date.getMonth() + 1).padStart(2, '0')
   const day = String(date.getDate()).padStart(2, '0')
-  const hours = String(date.getHours()).padStart(2, '0')
-  const minutes = String(date.getMinutes()).padStart(2, '0')
-  const seconds = String(date.getSeconds()).padStart(2, '0')
-
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+  return `${year}-${month}-${day}`
 }
 
 function getPostSlug(postTitle) {
   let slug = slugify(postTitle).toLocaleLowerCase()
-  if (slug === '') {
-    slug = 'untitled'
+  if (slug === '' || slug === 'untitled') {
+    // Chinese-only title → use date-based slug
+    const now = new Date()
+    const mm = String(now.getMonth() + 1).padStart(2, '0')
+    const dd = String(now.getDate()).padStart(2, '0')
+    slug = `post-${now.getFullYear()}${mm}${dd}`
   }
   return slug
 }
@@ -83,24 +83,30 @@ export default function main(args) {
   console.log('Creating new post:', postTitle)
 
   const fileExtension = parsedArgs.mdx ? '.mdx' : '.md'
-  const fileName = getPostSlug(postTitle) + fileExtension
-  const fullPath = path.join(TARGET_DIR, fileName)
+  const slug = getPostSlug(postTitle)
+  const postDir = path.join(TARGET_DIR, slug)
+  const fileName = 'index' + fileExtension
+  const fullPath = path.join(postDir, fileName)
 
   console.log('Full path:', fullPath)
 
-  if (fs.existsSync(fullPath)) {
-    console.error(`ERROR: File ${fullPath} already exists`)
+  if (fs.existsSync(postDir)) {
+    console.error(`ERROR: Directory ${postDir} already exists`)
     process.exit(1)
   }
 
+  fs.mkdirSync(postDir, { recursive: true })
+
   let content = `---
-title: ${postTitle}
+title: '${postTitle}'
 description: 'Write your description here.'
 publishDate: ${getDate()}
+category: 'tech'
 `
   content += parsedArgs.draft ? 'draft: true\n' : ''
   content += parsedArgs.lang ? `lang: ${parsedArgs.lang}\n` : ''
   content += `tags: ['tag1', 'tag2']
+comment: true
 ---
 
 Write your content here.
