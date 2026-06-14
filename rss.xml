@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/scripts/pretty-feed-v3.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:h="http://www.w3.org/TR/html4/"><channel><title>KIOSHIROI&apos;s CS-learning Road</title><description>A BNUer&apos;s self-save road</description><link>https://kioshiroi.github.io</link><item><title>笔记-DDIA</title><link>https://kioshiroi.github.io/blog/csapp5</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp5</guid><description>This note is hosted on Notion: DDIA</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CSAPP 第12章 并发编程</title><link>https://kioshiroi.github.io/blog/csapp12</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp12</guid><description>This note is hosted on Notion: CSAPP 第12章 并发编程</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CSAPP 第6章 存储器层次结构</title><link>https://kioshiroi.github.io/blog/csapp6</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp6</guid><description>This note is hosted on Notion: CSAPP 第6章 存储器层次结构</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CSAPP 第8章 异常控制流</title><link>https://kioshiroi.github.io/blog/csapp8</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp8</guid><description>This note is hosted on Notion: CSAPP 第8章 异常控制流</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CUDA入门</title><link>https://kioshiroi.github.io/blog/cuda_fish</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/cuda_fish</guid><description>This note is hosted on Notion: CUDA入门</description><pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 05: Deployment</title><link>https://kioshiroi.github.io/blog/fsdl5</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl5</guid><description>This note is hosted on Notion: Lecture 05: Deployment</description><pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 04: Data Management</title><link>https://kioshiroi.github.io/blog/fsdl4</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl4</guid><description>This note is hosted on Notion: Lecture 04: Data Management</description><pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 03: Troubleshooting &amp; Testing</title><link>https://kioshiroi.github.io/blog/fsdl3</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl3</guid><description>This note is hosted on Notion: Lecture 03: Troubleshooting &amp; Testing</description><pubDate>Wed, 04 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 02: Development Infrastructure &amp; Tooling</title><link>https://kioshiroi.github.io/blog/fsdl2</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl2</guid><description>This note is hosted on Notion: Lecture 02: Development Infrastructure &amp; Tooling</description><pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 01: When to Use ML and Course Vision</title><link>https://kioshiroi.github.io/blog/fsdl1</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl1</guid><description>This note is hosted on Notion: Lecture 01: When to Use ML and Course Vision</description><pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>MXFP——为量化而生的浮点数们</title><link>https://kioshiroi.github.io/blog/mxfp</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/mxfp</guid><description>This note is hosted on Notion: MXFP——为量化而生的浮点数们</description><pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>智能边缘系统搭建常用教程链接（自用）</title><link>https://kioshiroi.github.io/blog/edge-system-cases</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/edge-system-cases</guid><description>智能边缘系统搭建常用教程链接集合，涵盖Ubuntu安装、Golang、Kubernetes、Docker等工具的配置与使用。</description><pubDate>Mon, 02 Jun 2025 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet href="/scripts/pretty-feed-v3.xsl" type="text/xsl"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:h="http://www.w3.org/TR/html4/"><channel><title>KIOSHIROI&apos;s CS-learning Road</title><description>A BNUer&apos;s self-save road</description><link>https://kioshiroi.github.io</link><item><title>笔记-CSAPP 第12章 并发编程</title><link>https://kioshiroi.github.io/blog/csapp12</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp12</guid><description>This note is hosted on Notion: CSAPP 第12章 并发编程</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-DDIA</title><link>https://kioshiroi.github.io/blog/csapp5</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp5</guid><description>This note is hosted on Notion: DDIA</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CSAPP 第6章 存储器层次结构</title><link>https://kioshiroi.github.io/blog/csapp6</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp6</guid><description>This note is hosted on Notion: CSAPP 第6章 存储器层次结构</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CSAPP 第8章 异常控制流</title><link>https://kioshiroi.github.io/blog/csapp8</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/csapp8</guid><description>This note is hosted on Notion: CSAPP 第8章 异常控制流</description><pubDate>Thu, 14 May 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-CUDA入门</title><link>https://kioshiroi.github.io/blog/cuda_fish</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/cuda_fish</guid><description>This note is hosted on Notion: CUDA入门</description><pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 05: Deployment</title><link>https://kioshiroi.github.io/blog/fsdl5</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl5</guid><description>This note is hosted on Notion: Lecture 05: Deployment</description><pubDate>Tue, 03 Mar 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 04: Data Management</title><link>https://kioshiroi.github.io/blog/fsdl4</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl4</guid><description>This note is hosted on Notion: Lecture 04: Data Management</description><pubDate>Sun, 08 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 03: Troubleshooting &amp; Testing</title><link>https://kioshiroi.github.io/blog/fsdl3</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl3</guid><description>This note is hosted on Notion: Lecture 03: Troubleshooting &amp; Testing</description><pubDate>Wed, 04 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 02: Development Infrastructure &amp; Tooling</title><link>https://kioshiroi.github.io/blog/fsdl2</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl2</guid><description>This note is hosted on Notion: Lecture 02: Development Infrastructure &amp; Tooling</description><pubDate>Sun, 01 Feb 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>笔记-Lecture 01: When to Use ML and Course Vision</title><link>https://kioshiroi.github.io/blog/fsdl1</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/fsdl1</guid><description>This note is hosted on Notion: Lecture 01: When to Use ML and Course Vision</description><pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>MXFP——为量化而生的浮点数们</title><link>https://kioshiroi.github.io/blog/mxfp</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/mxfp</guid><description>This note is hosted on Notion: MXFP——为量化而生的浮点数们</description><pubDate>Wed, 28 Jan 2026 00:00:00 GMT</pubDate><content:encoded>&lt;p&gt;import { RedirectCard } from &apos;@/components/user&apos;&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>智能边缘系统搭建常用教程链接（自用）</title><link>https://kioshiroi.github.io/blog/edge-system-cases</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/edge-system-cases</guid><description>智能边缘系统搭建常用教程链接集合，涵盖Ubuntu安装、Golang、Kubernetes、Docker等工具的配置与使用。</description><pubDate>Mon, 02 Jun 2025 00:00:00 GMT</pubDate><content:encoded>&lt;ul&gt;
 &lt;li&gt;&lt;a href=&quot;https://ubuntu.com/download/server&quot;&gt;ubuntu server下载&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/qq_24950043/article/details/123764210&quot;&gt;mac安装ubuntu虚拟机&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;&lt;a href=&quot;https://go.dev/dl/&quot;&gt;golang官方dl地址&lt;/a&gt;&lt;/li&gt;
@@ -5419,416 +5419,7 @@ model.fit(X_train, y_train)
 # 预测并评估模型
 y_pred = model.predict(X_test)
 print(f&quot;准确率: {accuracy_score(y_test, y_pred)}&quot;)
-&lt;/code&gt;&lt;/pre&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>python入门（上）</title><link>https://kioshiroi.github.io/blog/python</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/python</guid><description>Python是一种解释型高级编程语言，所有数据类型都是对象，使用缩进控制域。本教程涵盖基础介绍、控制结构、函数和数据结构。</description><pubDate>Wed, 15 May 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. python介绍&lt;/h2&gt;
-&lt;h3&gt;高级编程语言（解释型）&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;C/C++语言、Java等都是编译型语言&lt;/li&gt;
-&lt;li&gt;解释型语言没有编译器，一条一条地解释，动态语言，边解释边分配内存&lt;/li&gt;
-&lt;li&gt;Python使用缩进控制域&lt;/li&gt;
-&lt;li&gt;Python的所有数据类型都是&quot;对象&quot;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;简介、易读、更接近自然语言&lt;/h3&gt;
-&lt;h3&gt;Python的数据类型&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;不同于C语言，Python不需要显式声明数据类型&lt;/li&gt;
-&lt;li&gt;Python的&apos;&apos;(单引号)和&quot;&quot;(双引号)一般认为没有区别&lt;/li&gt;
-&lt;li&gt;Python的强制类型转换格式为: int() float() str()&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;类&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;Python的类采用的思想是鸭子类型，即&quot;如果看起来像鸭子，叫起来像鸭子，那么它就是鸭子&quot;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;2. 控制结构&lt;/h2&gt;
-&lt;h3&gt;条件语句&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;if、else、elif&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-x = 10
-if x &gt; 5:
-    print(&quot;x 大于 5&quot;)
-elif x == 5:
-    print(&quot;x 等于 5&quot;)
-else:
-    print(&quot;x 小于 5&quot;)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;循环语句&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;for&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;for&lt;/code&gt;循环用于遍历序列（如列表、元组、字符串等）&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码1
-fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
-for fruit in fruits:
-    print(fruit)
-
-# 示例代码1
-for num in range(3):
-	print(num)
-# 0
-# 1
-# 2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start=&quot;2&quot;&gt;
-&lt;li&gt;while&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;while&lt;/code&gt;循环在条件为真时反复执行代码块。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-count = 0
-while count &amp;#x3C; 5:
-    print(count)
-    count += 1
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;控制流&lt;/h3&gt;
-&lt;ol&gt;
-&lt;li&gt;break&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;break&lt;/code&gt;语句用于提前退出循环。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-for i in range(10):
-    if i == 5:
-        break
-    print(i)
-
-# 1
-# 2
-# 3
-# 4
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start=&quot;2&quot;&gt;
-&lt;li&gt;continue&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;continue&lt;/code&gt;语句用于跳过当前迭代并继续下一次迭代。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-for i in range(10):
-    if i % 2 == 0:
-        continue
-    print(i)
-# 1
-# 3
-# 5
-# 7
-# 9
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;ol start=&quot;3&quot;&gt;
-&lt;li&gt;pass&lt;/li&gt;
-&lt;/ol&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;pass&lt;/code&gt;语句用于占位，表示什么都不做。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-for i in range(10):
-    pass
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;类似于C语言中的空语句&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-c&quot;&gt;if (condition)
-    ;
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h2&gt;3. 函数&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;函数是组织代码的重要方式，它们可以让代码更加模块化和易于维护。函数可以执行特定的任务并返回结果。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;定义函数&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;在Python中，可以使用&lt;code&gt;def&lt;/code&gt;关键字来定义函数。函数名后跟一对圆括号和一个冒号，函数体缩进。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-# 无返回值 相当于C语言void函数
-def greet(name):
-    print(f&quot;Hello, {name}!&quot;) # print(&quot;Hello, {}!&quot;.format(name))
-
-# 调用函数
-greet(&quot;Alice&quot;)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;返回值&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;函数可以使用&lt;code&gt;return&lt;/code&gt;语句返回一个值。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-def add(a, b):
-    return a + b
-
-# 调用函数并存储返回值
-result = add(3, 5)
-print(result)  # 输出 8
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;默认参数值&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;可以为函数参数指定默认值，如果调用函数时未提供该参数，则使用默认值。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-def greet(name=&quot;Guest&quot;):
-    print(f&quot;Hello, {name}!&quot;)
-
-# 调用函数
-greet()          # 输出 Hello, Guest!
-greet(&quot;Alice&quot;)   # 输出 Hello, Alice!
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;可变参数&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;可以使用&lt;code&gt;*args&lt;/code&gt;和&lt;code&gt;**kwargs&lt;/code&gt;来定义可变参数的函数，&lt;code&gt;*args&lt;/code&gt;用于接收任意数量的位置参数，&lt;code&gt;**kwargs&lt;/code&gt;用于接收任意数量的关键字参数。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-def print_args(*args):
-    for arg in args:
-        print(arg)
-
-print_args(1, 2, 3)
-
-def print_kwargs(**kwargs):
-    for key, value in kwargs.items():
-        print(f&quot;{key}: {value}&quot;)
-
-print_kwargs(name=&quot;Alice&quot;, age=30)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;嵌套函数和闭包&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;可以在函数内部定义函数，这种函数称为嵌套函数。闭包是指内部函数引用了外部函数的变量，并且外部函数已经返回。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-def outer_function(msg):
-    def inner_function():
-        print(msg)
-    return inner_function
-
-closure = outer_function(&quot;Hello&quot;)
-closure()  # 输出 Hello
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;闭包是一个非常有用的编程概念，它可以在许多情况下提升代码的可读性、可维护性和灵活性。以下是闭包的几个主要用途：&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h4&gt;1. 数据封装&lt;/h4&gt;
-&lt;p&gt;闭包可以用来封装数据，提供一种实现数据隐藏和保护的方式。这类似于面向对象编程中的私有属性。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def make_counter():
-    count = 0
-
-    def counter():
-        nonlocal count
-        count += 1
-        return count
-
-    return counter
-
-# 创建一个计数器实例
-my_counter = make_counter()
-print(my_counter())  # 输出 1
-print(my_counter())  # 输出 2
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个示例中，&lt;code&gt;count&lt;/code&gt;变量被封装在&lt;code&gt;make_counter&lt;/code&gt;函数中，只有内部的&lt;code&gt;counter&lt;/code&gt;函数可以访问和修改它。&lt;/p&gt;
-&lt;h4&gt;2. 回调函数&lt;/h4&gt;
-&lt;p&gt;闭包常用于回调函数中，尤其是在异步编程和事件驱动编程中。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def create_callback(message):
-    def callback():
-        print(message)
-    return callback
-
-callback_hello = create_callback(&quot;Hello, World!&quot;)
-callback_hello()  # 输出 Hello, World!
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个示例中，&lt;code&gt;callback&lt;/code&gt;函数作为一个回调函数，能够记住并使用&lt;code&gt;create_callback&lt;/code&gt;函数的参数&lt;code&gt;message&lt;/code&gt;。&lt;/p&gt;
-&lt;h4&gt;3. 高阶函数&lt;/h4&gt;
-&lt;p&gt;闭包可以用于创建高阶函数，即返回另一个函数的函数。这在函数式编程中非常常见。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def multiplier(factor):
-    def multiply(number):
-        return number * factor
-    return multiply
-
-times_two = multiplier(2)
-times_three = multiplier(3)
-
-print(times_two(5))  # 输出 10
-print(times_three(5))  # 输出 15
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个示例中，&lt;code&gt;multiplier&lt;/code&gt;函数返回一个新的函数&lt;code&gt;multiply&lt;/code&gt;，该函数将输入的数字乘以一个特定的因子。&lt;/p&gt;
-&lt;h4&gt;4. 延迟求值&lt;/h4&gt;
-&lt;p&gt;闭包可以用于延迟求值，即在需要时才计算结果，而不是在定义时就计算。这在某些性能优化中非常有用。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def make_lazy_add(a, b):
-    def lazy_add():
-        return a + b
-    return lazy_add
-
-lazy_add_function = make_lazy_add(2, 3)
-print(lazy_add_function())  # 输出 5
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个示例中，&lt;code&gt;lazy_add&lt;/code&gt;函数只有在被调用时才计算&lt;code&gt;a + b&lt;/code&gt;的值。&lt;/p&gt;
-&lt;h4&gt;5. 状态持久化&lt;/h4&gt;
-&lt;p&gt;闭包可以用来持久化某些状态，而不需要使用全局变量。这对于构建状态机或管理复杂的状态非常有用。&lt;/p&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def create_accumulator():
-    total = 0
-
-    def add(value):
-        nonlocal total
-        total += value
-        return total
-
-    return add
-
-accumulator = create_accumulator()
-print(accumulator(10))  # 输出 10
-print(accumulator(5))   # 输出 15
-&lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;在这个示例中，&lt;code&gt;total&lt;/code&gt;变量的状态在多次调用&lt;code&gt;add&lt;/code&gt;函数之间得以持久化。&lt;/p&gt;
-&lt;h3&gt;匿名函数&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;匿名函数是一种没有名字的函数，通常用于简单的操作。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
-add = lambda a, b: a + b
-print(add(3, 5))  # 输出 8
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;p&gt;匿名函数在c语言中不存在，是python的特色。原因是python的函数是对象，可以赋值给变量，而匿名函数就是没有名字的函数对象。而c语言的函数是语句，不能赋值给变量。&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;h2&gt;4. 数据结构&lt;/h2&gt;
-&lt;ul&gt;
-&lt;li&gt;Python 提供了多种内置的数据结构，用于存储和组织数据。我们将详细介绍以下几种常见的数据结构：列表、元组、字典和集合。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;列表&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;列表是一种有序的可变序列，可以存储任意类型的元素。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建列表
-fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
-
-# 访问元素
-print(fruits[0])  # 输出 &quot;apple&quot;
-
-# 修改元素
-fruits[1] = &quot;blueberry&quot;
-
-# 添加元素
-fruits.append(&quot;date&quot;)
-
-# 删除元素
-fruits.remove(&quot;apple&quot;)
-
-# 遍历列表
-for fruit in fruits:
-    print(fruit)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;h3&gt;元组&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;
-&lt;p&gt;元组是一种有序的&lt;strong&gt;不可变序列&lt;/strong&gt;，一旦创建就不能修改。&lt;/p&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建元组
-coordinates = (10.0, 20.0)
-
-# 访问元素
-print(coordinates[0])  # 输出 10.0
-
-# 遍历元组
-for coordinate in coordinates:
-    print(coordinate)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;元组通常用于存储不需要修改的数据，例如地理坐标或数据库记录。&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;字典&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;字典是一种无序的可变映射，使用键-值对来存储数据。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建字典
-student = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 25, &quot;major&quot;: &quot;Computer Science&quot;}
-
-# 访问值
-print(student[&quot;name&quot;])  # 输出 &quot;Alice&quot;
-
-# 修改值
-student[&quot;age&quot;] = 26
-
-# 添加键-值对
-student[&quot;grade&quot;] = &quot;A&quot;
-
-# 删除键-值对
-del student[&quot;major&quot;]
-
-# 遍历字典
-for key, value in student.items():
-    print(f&quot;{key}: {value}&quot;)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h3&gt;集合&lt;/h3&gt;
-&lt;ul&gt;
-&lt;li&gt;集合是一种无序的可变集合，不允许重复元素。&lt;/li&gt;
-&lt;li&gt;
-&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建集合
-numbers = {1, 2, 3, 4}
-
-# 添加元素
-numbers.add(5)
-
-# 删除元素
-numbers.remove(3)
-
-# 集合运算
-odds = {1, 3, 5, 7}
-evens = {2, 4, 6, 8}
-union = odds | evens      # 并集
-intersection = odds &amp;#x26; evens  # 交集
-
-# 遍历集合
-for number in numbers:
-    print(number)
-
-&lt;/code&gt;&lt;/pre&gt;
-&lt;/li&gt;
-&lt;/ul&gt;
-&lt;blockquote&gt;
-&lt;ul&gt;
-&lt;li&gt;集合的声明类似C语言数组的声明，请不要混淆&lt;/li&gt;
-&lt;li&gt;Python中数组的声明需要&lt;code&gt;import array&lt;/code&gt;包，使用较少，通常在数值运算中使用类似的np.array&lt;/li&gt;
-&lt;li&gt;c语言中没有集合的概念，c++中使用set和unordered_set来表示集合，c++11中引入了unordered_map和unordered_set，可以用来表示集合。c++中的集合运算。&lt;/li&gt;
-&lt;/ul&gt;
-&lt;/blockquote&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>python入门（下）</title><link>https://kioshiroi.github.io/blog/python2</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/python2</guid><description>在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。</description><pubDate>Wed, 15 May 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;5. 异常处理&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>python入门（下）</title><link>https://kioshiroi.github.io/blog/python2</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/python2</guid><description>在编写代码时可能会遇到各种错误和异常。Python提供了异常处理机制来确保程序能够优雅地处理错误，本教程涵盖异常处理、模块与包、字符串处理及文件操作。</description><pubDate>Wed, 15 May 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;5. 异常处理&lt;/h2&gt;
 &lt;ul&gt;
 &lt;li&gt;在编写代码时，可能会遇到各种错误和异常。为了确保程序能够优雅地处理这些错误，Python 提供了异常处理机制。我们将详细介绍如何使用 &lt;code&gt;try&lt;/code&gt;、&lt;code&gt;except&lt;/code&gt;、&lt;code&gt;else&lt;/code&gt; 和 &lt;code&gt;finally&lt;/code&gt; 块来处理异常。&lt;/li&gt;
 &lt;/ul&gt;
@@ -6325,7 +5916,416 @@ os.mkdir(&quot;example_dir&quot;)
 
 # 删除目录
 os.rmdir(&quot;example_dir&quot;)
-&lt;/code&gt;&lt;/pre&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>第一篇Github Blog</title><link>https://kioshiroi.github.io/blog/my-first-github-blog</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/my-first-github-blog</guid><description>2024年3月21日，这是我创建Github Blog的辉煌时刻。希望我能够在这个Blog网站中创造有价值的文章，帮助其他同学学到更多有用的知识。</description><pubDate>Thu, 21 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;放在开始的话&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>python入门（上）</title><link>https://kioshiroi.github.io/blog/python</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/python</guid><description>Python是一种解释型高级编程语言，所有数据类型都是对象，使用缩进控制域。本教程涵盖基础介绍、控制结构、函数和数据结构。</description><pubDate>Wed, 15 May 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;1. python介绍&lt;/h2&gt;
+&lt;h3&gt;高级编程语言（解释型）&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;C/C++语言、Java等都是编译型语言&lt;/li&gt;
+&lt;li&gt;解释型语言没有编译器，一条一条地解释，动态语言，边解释边分配内存&lt;/li&gt;
+&lt;li&gt;Python使用缩进控制域&lt;/li&gt;
+&lt;li&gt;Python的所有数据类型都是&quot;对象&quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;简介、易读、更接近自然语言&lt;/h3&gt;
+&lt;h3&gt;Python的数据类型&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;不同于C语言，Python不需要显式声明数据类型&lt;/li&gt;
+&lt;li&gt;Python的&apos;&apos;(单引号)和&quot;&quot;(双引号)一般认为没有区别&lt;/li&gt;
+&lt;li&gt;Python的强制类型转换格式为: int() float() str()&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;类&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;Python的类采用的思想是鸭子类型，即&quot;如果看起来像鸭子，叫起来像鸭子，那么它就是鸭子&quot;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;2. 控制结构&lt;/h2&gt;
+&lt;h3&gt;条件语句&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;if、else、elif&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+x = 10
+if x &gt; 5:
+    print(&quot;x 大于 5&quot;)
+elif x == 5:
+    print(&quot;x 等于 5&quot;)
+else:
+    print(&quot;x 小于 5&quot;)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;循环语句&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;for&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;for&lt;/code&gt;循环用于遍历序列（如列表、元组、字符串等）&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码1
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+for fruit in fruits:
+    print(fruit)
+
+# 示例代码1
+for num in range(3):
+	print(num)
+# 0
+# 1
+# 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;while&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;while&lt;/code&gt;循环在条件为真时反复执行代码块。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+count = 0
+while count &amp;#x3C; 5:
+    print(count)
+    count += 1
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;控制流&lt;/h3&gt;
+&lt;ol&gt;
+&lt;li&gt;break&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;break&lt;/code&gt;语句用于提前退出循环。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+for i in range(10):
+    if i == 5:
+        break
+    print(i)
+
+# 1
+# 2
+# 3
+# 4
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&quot;2&quot;&gt;
+&lt;li&gt;continue&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;continue&lt;/code&gt;语句用于跳过当前迭代并继续下一次迭代。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+for i in range(10):
+    if i % 2 == 0:
+        continue
+    print(i)
+# 1
+# 3
+# 5
+# 7
+# 9
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;ol start=&quot;3&quot;&gt;
+&lt;li&gt;pass&lt;/li&gt;
+&lt;/ol&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;code&gt;pass&lt;/code&gt;语句用于占位，表示什么都不做。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+for i in range(10):
+    pass
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;类似于C语言中的空语句&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-c&quot;&gt;if (condition)
+    ;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h2&gt;3. 函数&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;函数是组织代码的重要方式，它们可以让代码更加模块化和易于维护。函数可以执行特定的任务并返回结果。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;定义函数&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;在Python中，可以使用&lt;code&gt;def&lt;/code&gt;关键字来定义函数。函数名后跟一对圆括号和一个冒号，函数体缩进。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+# 无返回值 相当于C语言void函数
+def greet(name):
+    print(f&quot;Hello, {name}!&quot;) # print(&quot;Hello, {}!&quot;.format(name))
+
+# 调用函数
+greet(&quot;Alice&quot;)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;返回值&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;函数可以使用&lt;code&gt;return&lt;/code&gt;语句返回一个值。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+def add(a, b):
+    return a + b
+
+# 调用函数并存储返回值
+result = add(3, 5)
+print(result)  # 输出 8
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;默认参数值&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;可以为函数参数指定默认值，如果调用函数时未提供该参数，则使用默认值。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+def greet(name=&quot;Guest&quot;):
+    print(f&quot;Hello, {name}!&quot;)
+
+# 调用函数
+greet()          # 输出 Hello, Guest!
+greet(&quot;Alice&quot;)   # 输出 Hello, Alice!
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;可变参数&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;可以使用&lt;code&gt;*args&lt;/code&gt;和&lt;code&gt;**kwargs&lt;/code&gt;来定义可变参数的函数，&lt;code&gt;*args&lt;/code&gt;用于接收任意数量的位置参数，&lt;code&gt;**kwargs&lt;/code&gt;用于接收任意数量的关键字参数。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+def print_args(*args):
+    for arg in args:
+        print(arg)
+
+print_args(1, 2, 3)
+
+def print_kwargs(**kwargs):
+    for key, value in kwargs.items():
+        print(f&quot;{key}: {value}&quot;)
+
+print_kwargs(name=&quot;Alice&quot;, age=30)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;嵌套函数和闭包&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;可以在函数内部定义函数，这种函数称为嵌套函数。闭包是指内部函数引用了外部函数的变量，并且外部函数已经返回。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+def outer_function(msg):
+    def inner_function():
+        print(msg)
+    return inner_function
+
+closure = outer_function(&quot;Hello&quot;)
+closure()  # 输出 Hello
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;闭包是一个非常有用的编程概念，它可以在许多情况下提升代码的可读性、可维护性和灵活性。以下是闭包的几个主要用途：&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h4&gt;1. 数据封装&lt;/h4&gt;
+&lt;p&gt;闭包可以用来封装数据，提供一种实现数据隐藏和保护的方式。这类似于面向对象编程中的私有属性。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def make_counter():
+    count = 0
+
+    def counter():
+        nonlocal count
+        count += 1
+        return count
+
+    return counter
+
+# 创建一个计数器实例
+my_counter = make_counter()
+print(my_counter())  # 输出 1
+print(my_counter())  # 输出 2
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在这个示例中，&lt;code&gt;count&lt;/code&gt;变量被封装在&lt;code&gt;make_counter&lt;/code&gt;函数中，只有内部的&lt;code&gt;counter&lt;/code&gt;函数可以访问和修改它。&lt;/p&gt;
+&lt;h4&gt;2. 回调函数&lt;/h4&gt;
+&lt;p&gt;闭包常用于回调函数中，尤其是在异步编程和事件驱动编程中。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def create_callback(message):
+    def callback():
+        print(message)
+    return callback
+
+callback_hello = create_callback(&quot;Hello, World!&quot;)
+callback_hello()  # 输出 Hello, World!
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在这个示例中，&lt;code&gt;callback&lt;/code&gt;函数作为一个回调函数，能够记住并使用&lt;code&gt;create_callback&lt;/code&gt;函数的参数&lt;code&gt;message&lt;/code&gt;。&lt;/p&gt;
+&lt;h4&gt;3. 高阶函数&lt;/h4&gt;
+&lt;p&gt;闭包可以用于创建高阶函数，即返回另一个函数的函数。这在函数式编程中非常常见。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def multiplier(factor):
+    def multiply(number):
+        return number * factor
+    return multiply
+
+times_two = multiplier(2)
+times_three = multiplier(3)
+
+print(times_two(5))  # 输出 10
+print(times_three(5))  # 输出 15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在这个示例中，&lt;code&gt;multiplier&lt;/code&gt;函数返回一个新的函数&lt;code&gt;multiply&lt;/code&gt;，该函数将输入的数字乘以一个特定的因子。&lt;/p&gt;
+&lt;h4&gt;4. 延迟求值&lt;/h4&gt;
+&lt;p&gt;闭包可以用于延迟求值，即在需要时才计算结果，而不是在定义时就计算。这在某些性能优化中非常有用。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def make_lazy_add(a, b):
+    def lazy_add():
+        return a + b
+    return lazy_add
+
+lazy_add_function = make_lazy_add(2, 3)
+print(lazy_add_function())  # 输出 5
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在这个示例中，&lt;code&gt;lazy_add&lt;/code&gt;函数只有在被调用时才计算&lt;code&gt;a + b&lt;/code&gt;的值。&lt;/p&gt;
+&lt;h4&gt;5. 状态持久化&lt;/h4&gt;
+&lt;p&gt;闭包可以用来持久化某些状态，而不需要使用全局变量。这对于构建状态机或管理复杂的状态非常有用。&lt;/p&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;def create_accumulator():
+    total = 0
+
+    def add(value):
+        nonlocal total
+        total += value
+        return total
+
+    return add
+
+accumulator = create_accumulator()
+print(accumulator(10))  # 输出 10
+print(accumulator(5))   # 输出 15
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;在这个示例中，&lt;code&gt;total&lt;/code&gt;变量的状态在多次调用&lt;code&gt;add&lt;/code&gt;函数之间得以持久化。&lt;/p&gt;
+&lt;h3&gt;匿名函数&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;匿名函数是一种没有名字的函数，通常用于简单的操作。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 示例代码
+add = lambda a, b: a + b
+print(add(3, 5))  # 输出 8
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;p&gt;匿名函数在c语言中不存在，是python的特色。原因是python的函数是对象，可以赋值给变量，而匿名函数就是没有名字的函数对象。而c语言的函数是语句，不能赋值给变量。&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;h2&gt;4. 数据结构&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Python 提供了多种内置的数据结构，用于存储和组织数据。我们将详细介绍以下几种常见的数据结构：列表、元组、字典和集合。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;列表&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;列表是一种有序的可变序列，可以存储任意类型的元素。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建列表
+fruits = [&quot;apple&quot;, &quot;banana&quot;, &quot;cherry&quot;]
+
+# 访问元素
+print(fruits[0])  # 输出 &quot;apple&quot;
+
+# 修改元素
+fruits[1] = &quot;blueberry&quot;
+
+# 添加元素
+fruits.append(&quot;date&quot;)
+
+# 删除元素
+fruits.remove(&quot;apple&quot;)
+
+# 遍历列表
+for fruit in fruits:
+    print(fruit)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;h3&gt;元组&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;元组是一种有序的&lt;strong&gt;不可变序列&lt;/strong&gt;，一旦创建就不能修改。&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建元组
+coordinates = (10.0, 20.0)
+
+# 访问元素
+print(coordinates[0])  # 输出 10.0
+
+# 遍历元组
+for coordinate in coordinates:
+    print(coordinate)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;元组通常用于存储不需要修改的数据，例如地理坐标或数据库记录。&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;字典&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;字典是一种无序的可变映射，使用键-值对来存储数据。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建字典
+student = {&quot;name&quot;: &quot;Alice&quot;, &quot;age&quot;: 25, &quot;major&quot;: &quot;Computer Science&quot;}
+
+# 访问值
+print(student[&quot;name&quot;])  # 输出 &quot;Alice&quot;
+
+# 修改值
+student[&quot;age&quot;] = 26
+
+# 添加键-值对
+student[&quot;grade&quot;] = &quot;A&quot;
+
+# 删除键-值对
+del student[&quot;major&quot;]
+
+# 遍历字典
+for key, value in student.items():
+    print(f&quot;{key}: {value}&quot;)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h3&gt;集合&lt;/h3&gt;
+&lt;ul&gt;
+&lt;li&gt;集合是一种无序的可变集合，不允许重复元素。&lt;/li&gt;
+&lt;li&gt;
+&lt;pre&gt;&lt;code class=&quot;language-python&quot;&gt;# 创建集合
+numbers = {1, 2, 3, 4}
+
+# 添加元素
+numbers.add(5)
+
+# 删除元素
+numbers.remove(3)
+
+# 集合运算
+odds = {1, 3, 5, 7}
+evens = {2, 4, 6, 8}
+union = odds | evens      # 并集
+intersection = odds &amp;#x26; evens  # 交集
+
+# 遍历集合
+for number in numbers:
+    print(number)
+
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;blockquote&gt;
+&lt;ul&gt;
+&lt;li&gt;集合的声明类似C语言数组的声明，请不要混淆&lt;/li&gt;
+&lt;li&gt;Python中数组的声明需要&lt;code&gt;import array&lt;/code&gt;包，使用较少，通常在数值运算中使用类似的np.array&lt;/li&gt;
+&lt;li&gt;c语言中没有集合的概念，c++中使用set和unordered_set来表示集合，c++11中引入了unordered_map和unordered_set，可以用来表示集合。c++中的集合运算。&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/blockquote&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>第一篇Github Blog</title><link>https://kioshiroi.github.io/blog/my-first-github-blog</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/my-first-github-blog</guid><description>2024年3月21日，这是我创建Github Blog的辉煌时刻。希望我能够在这个Blog网站中创造有价值的文章，帮助其他同学学到更多有用的知识。</description><pubDate>Thu, 21 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;h2&gt;放在开始的话&lt;/h2&gt;
 &lt;p&gt;2024年3月21日，这是我创建Github Blog的辉煌时刻。希望我能够在这个Blog网站中创造有价值的文章，帮助其他同学学到更多有用的知识。&lt;/p&gt;</content:encoded><h:img src="undefined"/><enclosure url="undefined"/></item><item><title>为什么我们选择最小平方损失？</title><link>https://kioshiroi.github.io/blog/why-square</link><guid isPermaLink="true">https://kioshiroi.github.io/blog/why-square</guid><description>对于训练集X、标签集Y，我们假定误差遵循高斯分布，通过最大似然估计推导出最小平方损失函数，理解回归问题中常用损失函数的数学原理。</description><pubDate>Thu, 21 Mar 2024 00:00:00 GMT</pubDate><content:encoded>&lt;blockquote&gt;
 &lt;p&gt;&lt;strong&gt;&quot;Why least square?&quot;&lt;/strong&gt;                 --吴恩达&lt;/p&gt;
 &lt;/blockquote&gt;
