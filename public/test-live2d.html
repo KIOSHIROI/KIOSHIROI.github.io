@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v21 — Zero hooks + rAF post-render blit</title>
+  <title>Live2D Test v22 — DOM inspection + multi-canvas read + glFinish</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v21 — Zero SDK hooks, rAF post-render inspection + forced blit</h2>
+  <h2>Live2D Test v22 — DOM inspection + multi-canvas read + glFinish</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -27,109 +27,99 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // === ZERO SDK hooks. No getContext override at all. ===
-    // We only set preserveDrawingBuffer via the canvas directly.
+    function inspectDOM() {
+      const waifu = document.getElementById('waifu');
+      if (!waifu) { log('DOM: #waifu not found', 'err'); return; }
 
-    // === rAF-based post-render inspection ===
-    // Double rAF to capture state AFTER a full frame cycle.
-    function rAFInspect(label) {
-      let rAFCount = 0;
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          inspect(label);
-        });
+      const canvases = waifu.querySelectorAll('canvas');
+      log('DOM: waifu has ' + canvases.length + ' canvas(es) innerHTML=' + waifu.innerHTML.length + 'B', 'section');
+
+      canvases.forEach((c, i) => {
+        log(`DOM: canvas[${i}] id="${c.id}" class="${c.className}" ${c.width}x${c.height} style="${c.getAttribute('style')}"`, 'info');
       });
+
+      // Check #waifu's children
+      for (const child of waifu.children) {
+        log(`DOM: child <${child.tagName.toLowerCase()}> id="${child.id}" class="${child.className}"`, 'info');
+      }
+
+      // Check #waifu's computed styles
+      const wcs = window.getComputedStyle(waifu);
+      log(`DOM: waifu cs position=${wcs.position} display=${wcs.display} overflow=${wcs.overflow} zIndex=${wcs.zIndex}`, 'info');
     }
 
-    function inspect(label) {
-      const c = document.getElementById('live2d');
-      if (!c) return;
-      const gl = c.getContext('webgl2') || c.getContext('webgl');
-      if (!gl || gl.isContextLost()) return;
+    function readAllCanvases(label) {
+      const waifu = document.getElementById('waifu');
+      if (!waifu) return;
+      const canvases = waifu.querySelectorAll('canvas');
 
-      const px = new Uint8Array(4);
-
-      // Save state
-      const savedDrawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
-      const savedReadFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-      const vp = gl.getParameter(gl.VIEWPORT);
-
-      let msg = `drawFb=${savedDrawFb?'FBO':'def'} readFb=${savedReadFb?'FBO':'def'} vp=${vp[2]}x${vp[3]}`;
-
-      // === 1. Check default FB ===
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      let defPixel = null;
-      for (let y = 0; y < c.height && !defPixel; y += 10) {
-        for (let x = 0; x < c.width && !defPixel; x += 10) {
-          gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-          if (px[0] || px[1] || px[2] || px[3]) defPixel = { x, y, px: Array.from(px) };
-        }
-      }
-      msg += ' DFB=' + (defPixel ? `FOUND(${defPixel.x},${defPixel.y})` : 'ZERO');
-
-      // === 2. If drawFb is non-null, read FBO pixels ===
-      if (savedDrawFb) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, savedDrawFb);
-        const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
-        if (status === gl.FRAMEBUFFER_COMPLETE) {
-          let fboPixel = null;
-          for (let y = 0; y < c.height && !fboPixel; y += 10) {
-            for (let x = 0; x < c.width && !fboPixel; x += 10) {
-              gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-              if (px[0] || px[1] || px[2] || px[3]) fboPixel = { x, y, px: Array.from(px) };
+      canvases.forEach((c, i) => {
+        const gl = c.getContext('webgl2') || c.getContext('webgl');
+        if (!gl || gl.isContextLost()) {
+          log(`CANVAS[${i}] id=${c.id}: no WebGL context or lost`, 'warn');
+          // Try 2D context
+          const ctx2d = c.getContext('2d');
+          if (ctx2d) {
+            const data = ctx2d.getImageData(0, 0, Math.min(c.width, 100), Math.min(c.height, 100));
+            let found = false;
+            for (let j = 3; j < data.data.length && !found; j += 4) {
+              if (data.data[j] > 0) found = true;
             }
+            log(`CANVAS[${i}] 2D: alphaFound=${found}`, found ? 'ok' : 'info');
           }
-          msg += fboPixel ? ` FBO=FOUND(${fboPixel.x},${fboPixel.y})` : ' FBO=ZERO';
+          return;
+        }
 
-          // === 3. If FBO has pixels, try to blit to default FB ===
-          if (fboPixel && gl.blitFramebuffer) {
-            try {
-              gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedDrawFb);
-              gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
-              gl.blitFramebuffer(0, 0, vp[2], vp[3], 0, 0, vp[2], vp[3], gl.COLOR_BUFFER_BIT, gl.NEAREST);
+        // Save state
+        const drawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
+        const readFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
+        const vp = gl.getParameter(gl.VIEWPORT);
 
-              // Check default FB after blit
-              gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-              let dfbAfter = null;
-              for (let y = 0; y < c.height && !dfbAfter; y += 10) {
-                for (let x = 0; x < c.width && !dfbAfter; x += 10) {
-                  gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-                  if (px[0] || px[1] || px[2] || px[3]) dfbAfter = { x, y, px: Array.from(px) };
-                }
+        // glFinish to ensure all commands are done
+        gl.finish();
+
+        // Read default FB
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        const px = new Uint8Array(4);
+        let defPixel = null;
+        for (let y = 0; y < c.height && !defPixel; y += 5) {
+          for (let x = 0; x < c.width && !defPixel; x += 5) {
+            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            if (px[0] || px[1] || px[2] || px[3]) defPixel = {x, y, px:Array.from(px)};
+          }
+        }
+
+        // Read FBO if bound
+        let fboPixel = null;
+        if (drawFb) {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, drawFb);
+          if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) {
+            for (let y = 0; y < c.height && !fboPixel; y += 10) {
+              for (let x = 0; x < c.width && !fboPixel; x += 10) {
+                gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                if (px[0] || px[1] || px[2] || px[3]) fboPixel = {x, y, px:Array.from(px)};
               }
-              msg += ' BLIT=' + (dfbAfter ? `OK(${dfbAfter.x},${dfbAfter.y})` : 'NO_PIXEL');
-            } catch(e) {
-              msg += ' BLIT_ERR=' + e.message;
             }
           }
-        } else {
-          msg += ' FBO_INCOMPLETE';
         }
-      } else {
-        // drawFb is def — try finding ANY non-null bound FB
-        msg += ' | (no FBO bound)';
-      }
 
-      // Restore
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedReadFb);
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, savedDrawFb);
+        let msg = `CANVAS[${i}] id="${c.id}" ${c.width}x${c.height} drawFb=${drawFb?'FBO':'def'}`;
+        msg += ' DFB=' + (defPixel ? `FOUND(${defPixel.x},${defPixel.y})` : 'ZERO');
+        msg += fboPixel ? ` FBO=FOUND(${fboPixel.x},${fboPixel.y})` : '';
+        log(msg, defPixel || fboPixel ? 'ok' : 'warn');
 
-      log('SNAP[' + label + '] ' + msg, defPixel ? 'ok' : 'warn');
+        // Get dataURL
+        if (c.width > 0 && c.height > 0) {
+          const du = c.toDataURL('image/png');
+          if (du.length > 1000) {
+            document.getElementById('snapshot').innerHTML += `<br><strong>canvas[${i}] ${c.id}:</strong><br><img src="${du}" style="max-width:300px; border:1px solid #ccc">`;
+          }
+        }
 
-      // Canvas export
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-      const du = c.toDataURL('image/png');
-      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB):</strong><br><img src="'+du+'" style="max-width:300px">';
-      // Restore again
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedReadFb);
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, savedDrawFb);
-    }
-
-    // ===== Periodic rAF inspection =====
-    function scheduleInspections() {
-      for (const t of [8, 12, 18, 25, 35, 50, 70]) {
-        setTimeout(() => rAFInspect('+' + t + 's rAF'), t * 1000);
-      }
+        // Restore
+        gl.bindFramebuffer(gl.READ_FRAMEBUFFER, readFb);
+        gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, drawFb);
+      });
     }
 
     // ===== MAIN =====
@@ -146,7 +136,7 @@
     async function main() {
       startTime = Date.now();
       try {
-        // Force preserveDrawingBuffer on the live2d canvas BEFORE SDK inits
+        // preserveDrawingBuffer override (no hooks)
         const _getContext = HTMLCanvasElement.prototype.getContext;
         HTMLCanvasElement.prototype.getContext = function(type, attrs) {
           if (this.id === 'live2d' && type && type.includes('webgl')) {
@@ -199,10 +189,16 @@
         });
         log('initWidget done');
 
-        // Schedule inspections
-        scheduleInspections();
+        // Inspect DOM after widget initializes
+        setTimeout(() => inspectDOM(), 1000);
+        setTimeout(() => inspectDOM(), 5000);
 
-        // Tap canvas
+        // Read all canvases
+        setTimeout(() => readAllCanvases('+8s'), 8000);
+        setTimeout(() => readAllCanvases('+15s'), 15000);
+        setTimeout(() => readAllCanvases('+30s'), 30000);
+
+        // Tap
         setTimeout(() => {
           const c = document.getElementById('live2d');
           if (c) { ['mousedown','touchstart'].forEach(evt => c.dispatchEvent(new Event(evt, { bubbles: true }))); }
