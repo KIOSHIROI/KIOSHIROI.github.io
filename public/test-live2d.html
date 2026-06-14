@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v20 — rAF snap + clear/bindFb tracking</title>
+  <title>Live2D Test v21 — Zero hooks + rAF post-render blit</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,7 +14,7 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v20 — rAF snap timing + clear/bindFb logging</h2>
+  <h2>Live2D Test v21 — Zero SDK hooks, rAF post-render inspection + forced blit</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
@@ -27,117 +27,109 @@
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // ===== Trackers =====
-    let drawElements = 0, drawArrays = 0, texturesCreated = 0;
-    let clearCalls = 0, bindFbCalls = 0;
-    let lastBindTarget = '?';  // 'FBO' or 'def'
-    let glType = '?';
+    // === ZERO SDK hooks. No getContext override at all. ===
+    // We only set preserveDrawingBuffer via the canvas directly.
 
-    const _origGetCtx = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, attrs) {
-      if (this.id === 'live2d' && type && type.includes('webgl')) {
-        if (attrs) attrs.preserveDrawingBuffer = true;
-        else { attrs = { preserveDrawingBuffer: true }; }
-      }
-      const ctx = _origGetCtx.call(this, type, attrs);
-      if (this.id === 'live2d' && ctx) {
-        const gl = ctx;
-        glType = type;
+    // === rAF-based post-render inspection ===
+    // Double rAF to capture state AFTER a full frame cycle.
+    function rAFInspect(label) {
+      let rAFCount = 0;
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          inspect(label);
+        });
+      });
+    }
 
-        const _de = gl.drawElements.bind(gl);
-        gl.drawElements = function() { drawElements++; return _de.apply(gl, arguments); };
-        const _da = gl.drawArrays.bind(gl);
-        gl.drawArrays = function() { drawArrays++; return _da.apply(gl, arguments); };
-        const _ct = gl.createTexture.bind(gl);
-        gl.createTexture = function() { texturesCreated++; return _ct(); };
-
-        // === bindFramebuffer (no getParameter — just count + track target) ===
-        const _bf = gl.bindFramebuffer.bind(gl);
-        gl.bindFramebuffer = function(target, fb) {
-          bindFbCalls++;
-          // Track whether we're binding an FBO or default
-          // target can be FRAMEBUFFER, DRAW_FRAMEBUFFER, READ_FRAMEBUFFER
-          // fb === null means default framebuffer
-          // We only care about DRAW bindings (FRAMEBUFFER or DRAW_FRAMEBUFFER)
-          if (target === gl.FRAMEBUFFER || target === gl.DRAW_FRAMEBUFFER) {
-            lastBindTarget = fb === null ? 'def' : 'FBO';
-          }
-          _bf(target, fb);
-        };
-
-        // === clear (count only, no getParameter) ===
-        const _cl = gl.clear.bind(gl);
-        gl.clear = function(mask) {
-          clearCalls++;
-          _cl(mask);
-        };
-      }
-      return ctx;
-    };
-
-    function snap(label) {
+    function inspect(label) {
       const c = document.getElementById('live2d');
       if (!c) return;
       const gl = c.getContext('webgl2') || c.getContext('webgl');
       if (!gl || gl.isContextLost()) return;
 
-      // Read current state
-      const curDrawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
-      const curReadFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
-      const vp = gl.getParameter(gl.VIEWPORT);
-      const colorMask = gl.getParameter(gl.COLOR_WRITEMASK);  // [r,g,b,a]
-      const clearColor = gl.getParameter(gl.COLOR_CLEAR_VALUE);  // [r,g,b,a]
-
-      // Bind default FB for reading
-      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       const px = new Uint8Array(4);
+
+      // Save state
+      const savedDrawFb = gl.getParameter(gl.DRAW_FRAMEBUFFER_BINDING);
+      const savedReadFb = gl.getParameter(gl.READ_FRAMEBUFFER_BINDING);
+      const vp = gl.getParameter(gl.VIEWPORT);
+
+      let msg = `drawFb=${savedDrawFb?'FBO':'def'} readFb=${savedReadFb?'FBO':'def'} vp=${vp[2]}x${vp[3]}`;
+
+      // === 1. Check default FB ===
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       let defPixel = null;
-      for (let y = 0; y < c.height && !defPixel; y += 5) {
-        for (let x = 0; x < c.width && !defPixel; x += 5) {
+      for (let y = 0; y < c.height && !defPixel; y += 10) {
+        for (let x = 0; x < c.width && !defPixel; x += 10) {
           gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
           if (px[0] || px[1] || px[2] || px[3]) defPixel = { x, y, px: Array.from(px) };
         }
       }
+      msg += ' DFB=' + (defPixel ? `FOUND(${defPixel.x},${defPixel.y})` : 'ZERO');
 
-      // Check if any FBO is currently bound (use DRAW binding)
-      if (curDrawFb) {
-        gl.bindFramebuffer(gl.FRAMEBUFFER, curDrawFb);
-        if (gl.checkFramebufferStatus(gl.FRAMEBUFFER) === gl.FRAMEBUFFER_COMPLETE) {
-          let fboPx = null;
-          for (let y = 0; y < c.height && !fboPx; y += 10) {
-            for (let x = 0; x < c.width && !fboPx; x += 10) {
+      // === 2. If drawFb is non-null, read FBO pixels ===
+      if (savedDrawFb) {
+        gl.bindFramebuffer(gl.FRAMEBUFFER, savedDrawFb);
+        const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+        if (status === gl.FRAMEBUFFER_COMPLETE) {
+          let fboPixel = null;
+          for (let y = 0; y < c.height && !fboPixel; y += 10) {
+            for (let x = 0; x < c.width && !fboPixel; x += 10) {
               gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-              if (px[0] || px[1] || px[2] || px[3]) fboPx = { x, y, px: Array.from(px) };
+              if (px[0] || px[1] || px[2] || px[3]) fboPixel = { x, y, px: Array.from(px) };
             }
           }
-          if (fboPx) {
-            log('FBO-PXL: (' + fboPx.x + ',' + fboPx.y + ') r' + fboPx.px, 'ok');
+          msg += fboPixel ? ` FBO=FOUND(${fboPixel.x},${fboPixel.y})` : ' FBO=ZERO';
+
+          // === 3. If FBO has pixels, try to blit to default FB ===
+          if (fboPixel && gl.blitFramebuffer) {
+            try {
+              gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedDrawFb);
+              gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, null);
+              gl.blitFramebuffer(0, 0, vp[2], vp[3], 0, 0, vp[2], vp[3], gl.COLOR_BUFFER_BIT, gl.NEAREST);
+
+              // Check default FB after blit
+              gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+              let dfbAfter = null;
+              for (let y = 0; y < c.height && !dfbAfter; y += 10) {
+                for (let x = 0; x < c.width && !dfbAfter; x += 10) {
+                  gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+                  if (px[0] || px[1] || px[2] || px[3]) dfbAfter = { x, y, px: Array.from(px) };
+                }
+              }
+              msg += ' BLIT=' + (dfbAfter ? `OK(${dfbAfter.x},${dfbAfter.y})` : 'NO_PIXEL');
+            } catch(e) {
+              msg += ' BLIT_ERR=' + e.message;
+            }
           }
+        } else {
+          msg += ' FBO_INCOMPLETE';
         }
+      } else {
+        // drawFb is def — try finding ANY non-null bound FB
+        msg += ' | (no FBO bound)';
       }
 
       // Restore
-      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, curReadFb);
-      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, curDrawFb);
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedReadFb);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, savedDrawFb);
 
-      let msg = 'DFB=' + (defPixel ? `FOUND(${defPixel.x},${defPixel.y})` : 'ZERO');
-      msg += ` draw=${(curDrawFb?'FBO':'def')} lastBind=${lastBindTarget}`;
-      msg += ` vp=${vp[2]}x${vp[3]} clr=${clearCalls} fbBind=${bindFbCalls}`;
-      msg += ` colorW=${colorMask} clearC=(${clearColor.join(',')})`;
-      log('SNAP[' + label + '] de=' + drawElements + ' ' + msg, defPixel ? 'ok' : 'warn');
+      log('SNAP[' + label + '] ' + msg, defPixel ? 'ok' : 'warn');
 
+      // Canvas export
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
       const du = c.toDataURL('image/png');
-      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB de='+drawElements+'):</strong><br><img src="'+du+'" style="max-width:300px">';
+      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB):</strong><br><img src="'+du+'" style="max-width:300px">';
+      // Restore again
+      gl.bindFramebuffer(gl.READ_FRAMEBUFFER, savedReadFb);
+      gl.bindFramebuffer(gl.DRAW_FRAMEBUFFER, savedDrawFb);
     }
 
-    // rAF-based snapshot — fires right after a render frame
-    function rAFSnap(label) {
-      // Double rAF to ensure we're between frames (after rendering, before next clear)
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          snap(label + ' (rAF)');
-        });
-      });
+    // ===== Periodic rAF inspection =====
+    function scheduleInspections() {
+      for (const t of [8, 12, 18, 25, 35, 50, 70]) {
+        setTimeout(() => rAFInspect('+' + t + 's rAF'), t * 1000);
+      }
     }
 
     // ===== MAIN =====
@@ -154,6 +146,16 @@
     async function main() {
       startTime = Date.now();
       try {
+        // Force preserveDrawingBuffer on the live2d canvas BEFORE SDK inits
+        const _getContext = HTMLCanvasElement.prototype.getContext;
+        HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+          if (this.id === 'live2d' && type && type.includes('webgl')) {
+            if (!attrs) attrs = {};
+            attrs.preserveDrawingBuffer = true;
+          }
+          return _getContext.call(this, type, attrs);
+        };
+
         log('=== Step 0: precache moc3 ===', 'section');
         const resp = await _origFetch(MOC3_PATH);
         const buf = await resp.arrayBuffer();
@@ -195,19 +197,12 @@
           tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
           dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
         });
-        log('initWidget done (gl=' + glType + ')');
+        log('initWidget done');
 
-        // Regular setTimeout snaps
-        for (const t of [8, 10, 18, 20, 30, 45, 60]) {
-          setTimeout(() => snap('+' + t + 's'), t * 1000);
-        }
+        // Schedule inspections
+        scheduleInspections();
 
-        // rAF-based snaps at key times
-        setTimeout(() => rAFSnap('+5s'), 5000);
-        setTimeout(() => rAFSnap('+12s'), 12000);
-        setTimeout(() => rAFSnap('+25s'), 25000);
-
-        // Tap
+        // Tap canvas
         setTimeout(() => {
           const c = document.getElementById('live2d');
           if (c) { ['mousedown','touchstart'].forEach(evt => c.dispatchEvent(new Event(evt, { bubbles: true }))); }
