@@ -3,208 +3,109 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v14 — Moc3 Precache Fix</title>
+  <title>Live2D Test v15 — Clean Blob Precache, No Hooks</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
-    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .warn { color: #ff851b; } .section { color: #b10dc9; font-weight: bold; } .sdk { color: #2ECC40; }
+    .ok { color: green; } .err { color: red; } .info { color: #0074d9; } .section { color: #b10dc9; font-weight: bold; }
     #waifu { bottom: 0 !important; right: 0 !important; left: auto !important; }
     #snapshot { margin: 10px 0; }
     #snapshot img { border: 2px solid #333; max-width: 300px; background: #fff; }
   </style>
 </head>
 <body>
-  <h2>Live2D Test v14 — Moc3 Precache Fix</h2>
+  <h2>Live2D Test v15 — Clean Blob Precache (no hooks)</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
   <script>
     const _origLog = console.log.bind(console);
-    const _origError = console.error.bind(console);
-    const _origWarn = console.warn.bind(console);
-
     const logEl = document.getElementById('log');
-    let logLines = 0;
+    let startTime;
     function log(msg, cls) {
-      if (++logLines > 800) {
-        const lines = logEl.innerHTML.split('\n');
-        logEl.innerHTML = lines.slice(-300).join('\n');
-      }
       const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      logEl.innerHTML += `<span class="${cls || 'ok'}">[${((Date.now()-startTime)/1000).toFixed(3)}s] ${safe}</span>\n`;
+      logEl.innerHTML += `<span class="${cls || 'ok'}">[${((Date.now()-startTime)/1000).toFixed(1)}s] ${safe}</span>\n`;
       _origLog(msg);
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    const myPrefixes = ['SNAP','IMG_LOAD','IMG_ERR','FETCH','HIT_','STATUS','===','WINDOW','UNHANDLED',
-      'PRECACHE','TEX_','GLHOOK','FB_'];
+    // NO fetch interception — use a blob URL to replace the actual moc3 URL.
+    // The SDK's loadModel constructs URLs from the cdnPath. We override
+    // the fetch to redirect only the moc3 request to our blob URL.
+    let moc3BlobUrl = null;
 
-    console.log = function() {
-      const msg = Array.from(arguments).join(' ');
-      if (msg && !myPrefixes.some(p => msg.startsWith(p))) {
-        log('SDK: ' + msg, 'sdk');
-      }
-      return _origLog.apply(console, arguments);
-    };
-    console.error = function(){ log('SDK_ERR: ' + Array.from(arguments).join(' '), 'err'); _origError(...arguments); };
-    console.warn  = function(){ log('SDK_WARN: ' + Array.from(arguments).join(' '), 'warn'); _origWarn(...arguments); };
-
-    window.addEventListener('error', e => log('WINDOW_ERROR: ' + e.message + ' @ ' + (e.filename||'?').split('/').pop() + ':' + e.lineno, 'err'));
-    window.addEventListener('unhandledrejection', e => log('UNHANDLED_REJECTION: ' + (e.reason?.message||e.reason), 'err'));
-
-    // ===== Precache store =====
-    const precacheStore = new Map(); // url path → { buffer, contentType }
-
-    // Precaches a file. The buffer is stored and used by fetch interceptor.
-    async function precache(url) {
-      const fname = url.split('/').pop();
-      log('PRECACHE: starting ' + fname + '...');
-      const start = Date.now();
-      const resp = await _origFetch(url);
-      const ct = resp.headers.get('content-type') || 'application/octet-stream';
-      const buf = await resp.arrayBuffer();
-      const dur = Date.now() - start;
-      precacheStore.set(url, { buffer: buf, contentType: ct });
-      log('PRECACHE: ' + fname + ' ' + buf.byteLength + 'B (' + dur + 'ms) ✓', 'ok');
-      return buf;
-    }
-
-    // ===== Fetch interceptor with cache-hit logic =====
     const _origFetch = window.fetch;
-    const fetchLog = [];
     window.fetch = function(url, opts) {
-      let urlStr = (url instanceof Request) ? url.url : String(url);
-
-      // Check if this URL is in our precache
-      const hit = precacheStore.get(urlStr);
-      if (hit) {
-        const fname = urlStr.split('?')[0].split('/').pop();
-        log('HIT_CACHE: ' + fname + ' ' + hit.buffer.byteLength + 'B (instant)', 'ok');
-        fetchLog.push({ file: fname, cached: true, size: hit.buffer.byteLength, dur: 0 });
-        // Return synthetic response from cached buffer
-        return Promise.resolve(new Response(hit.buffer, {
-          status: 200,
-          headers: { 'Content-Type': hit.contentType, 'Content-Length': String(hit.buffer.byteLength) }
-        }));
+      const urlStr = (url instanceof Request) ? url.url : String(url);
+      // Only intercept the moc3 — everything else passes through unmodified
+      if (moc3BlobUrl && urlStr.includes('重音テト.moc3')) {
+        log('MOC3: redirecting to blob URL (instant)');
+        return _origFetch(moc3BlobUrl, opts);
       }
-
-      if (urlStr.includes('live2d') || urlStr.includes('.moc3') || urlStr.includes('model3') || urlStr.includes('physics3') || urlStr.includes('cdi3') || urlStr.includes('texture_') || urlStr.includes('waifu-tips')) {
-        let start = Date.now();
-        const fname = decodeURIComponent(urlStr.split('?')[0].split('/').pop());
-        return _origFetch.call(window, url, opts).then(resp => {
-          const cl = resp.headers.get('content-length') || '?';
-          const ce = resp.headers.get('content-encoding') || 'none';
-          const dur = Date.now()-start;
-          fetchLog.push({ file: fname, cached: false, size: cl, dur, ce });
-          log('FETCH [' + resp.status + ' ' + cl + 'B ce=' + ce + ' ' + dur + 'ms] ' + fname, resp.ok ? 'ok' : 'err');
-          return resp;
-        }).catch(err => { log('FETCH_ERR: ' + fname + ' ' + err.message, 'err'); throw err; });
-      }
+      // Pass through entirely — no logging, no wrapping
       return _origFetch.call(window, url, opts);
     };
 
-    // ===== Image hook =====
-    let textureLoadCount = 0;
-    let textureErrorCount = 0;
-    const loadedTextures = [];
-
-    const _origImage = window.Image;
-    window.Image = function() {
-      const img = new _origImage();
-      const _origSetSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
-      let fname = '';
-
-      const _addEL = img.addEventListener.bind(img);
-      img.addEventListener = function(evt, fn, opts) {
-        if (evt === 'load') {
-          const origFn = fn;
-          fn = function(e) { if (fname && fname.includes('texture_')) { textureLoadCount++; loadedTextures.push(fname); } return origFn.call(this, e); };
-        }
-        if (evt === 'error') {
-          const origFn = fn;
-          fn = function(e) { if (fname && fname.includes('texture_')) { textureErrorCount++; log('IMG_ERR: ' + fname, 'err'); } return origFn.call(this, e); };
-        }
-        return _addEL.call(this, evt, fn, opts);
-      };
-
-      Object.defineProperty(img, 'src', {
-        get: function() { return this.__srcVal || ''; },
-        set: function(val) { this.__srcVal = val; if (val) fname = decodeURIComponent(val.split('?')[0].split('/').pop()); _origSetSrc.set.call(this, val); },
-        configurable: true, enumerable: true
-      });
-      return img;
-    };
-
-    // ===== GL hooks =====
-    let glOps = { texImage2D: 0, drawElements: 0, clear: 0, createTexture: 0, bindFb: 0 };
-    let glRef = null;
-    let glHooked = false;
-
-    const origGetContext = HTMLCanvasElement.prototype.getContext;
-    HTMLCanvasElement.prototype.getContext = function(type, attrs) {
-      if (this.id === 'live2d' && (type === 'webgl2' || type === 'webgl')) {
-        attrs = attrs || {};
-        attrs.preserveDrawingBuffer = true;
-      }
-      const ctx = origGetContext.call(this, type, attrs);
-      if (this.id === 'live2d' && ctx && !glHooked) {
-        glHooked = true; glRef = ctx;
-        const gl = ctx;
-        ['texImage2D','drawElements','clear','useProgram','createTexture','bindFramebuffer'].forEach(name => {
-          const orig = gl[name].bind(gl);
-          gl[name] = function() { glOps[name] = (glOps[name]||0)+1; return orig.apply(gl, arguments); };
-        });
-      }
-      return ctx;
-    };
-
-    function snapshotCanvas(label) {
+    // Snapshot: read WebGL pixels directly from canvas
+    function snap(label) {
       const canvas = document.getElementById('live2d');
-      if (!canvas) return;
+      if (!canvas) { log('SNAP: no canvas', 'err'); return; }
       try {
-        if (glRef && !glRef.isContextLost()) {
-          const curFb = glRef.getParameter(glRef.FRAMEBUFFER_BINDING);
-          glRef.bindFramebuffer(glRef.FRAMEBUFFER, null);
-          const px = new Uint8Array(4);
-          let found = false;
-          for (let y = 0; y < canvas.height && !found; y += 7) {
-            for (let x = 0; x < canvas.width && !found; x += 7) {
-              glRef.readPixels(x, y, 1, 1, glRef.RGBA, glRef.UNSIGNED_BYTE, px);
-              if (px[0] || px[1] || px[2] || px[3]) {
-                log('SNAP_PIXEL at (' + x + ',' + y + ') RGBA(' + px.join(',') + ') ✓', 'ok');
-                found = true;
-              }
+        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
+        if (!gl || gl.isContextLost()) { log('SNAP: no GL context', 'err'); return; }
+
+        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+        const px = new Uint8Array(4);
+        let found = false;
+        for (let y = 0; y < canvas.height && !found; y += 5) {
+          for (let x = 0; x < canvas.width && !found; x += 5) {
+            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+            if (px[0] || px[1] || px[2] || px[3]) {
+              log('SNAP: pixel at (' + x + ',' + y + ') RGBA(' + px.join(',') + ') ✓', 'ok');
+              found = true;
             }
           }
-          if (!found) log('SNAP: all pixels zero', 'warn');
-          glRef.bindFramebuffer(glRef.FRAMEBUFFER, curFb);
         }
+        if (!found) log('SNAP: all pixels zero', 'warn');
+
         const dataUrl = canvas.toDataURL('image/png');
-        const snapshotEl = document.getElementById('snapshot');
-        snapshotEl.innerHTML = '<strong>' + label + ' (' + Math.round(dataUrl.length/1024) + 'KB): </strong><br><img src="' + dataUrl + '" style="max-width:300px">';
-        log('snapshot taken: ' + label, 'info');
-      } catch(e) { log('snapshot err: ' + e.message, 'err'); }
+        const snapEl = document.getElementById('snapshot');
+        snapEl.innerHTML = '<strong>' + label + ' (' + Math.round(dataUrl.length/1024) + 'KB): </strong><br><img src="' + dataUrl + '" style="max-width:300px">';
+        log('SNAP: ' + label + ' done', 'info');
+      } catch(e) { log('SNAP error: ' + e.message, 'err'); }
     }
 
-    function periodicStatus() {
-      log('STATUS: drawE=' + glOps.drawElements + ' createT=' + glOps.createTexture + ' texImg=' + glOps.texImage2D +
-        ' texLoad=' + textureLoadCount + ' texErr=' + textureErrorCount, 'info');
-      if (loadedTextures.length) log('Loaded textures: ' + JSON.stringify(loadedTextures));
+    // GC status check
+    function status() {
+      const canvas = document.getElementById('live2d');
+      const gl = canvas ? (canvas.getContext('webgl2') || canvas.getContext('webgl')) : null;
+      if (gl && !gl.isContextLost()) {
+        const bufCount = gl.getParameter(gl.RENDERBUFFER_BINDING) ? 'has_rb' : 'no_rb';
+        const prog = gl.getParameter(gl.CURRENT_PROGRAM) ? 'has_prog' : 'no_prog';
+        const fb = gl.getParameter(gl.FRAMEBUFFER_BINDING) ? 'fbo_bound' : 'default_fb';
+        log('STATUS: canvas=' + canvas.width + 'x' + canvas.height + ' ' + bufCount + ' ' + prog + ' ' + fb);
+      }
+      const waifu = document.getElementById('waifu');
+      log('STATUS: waifu el=' + (waifu ? 'present' : 'MISSING') + ' visible=' + (waifu && waifu.offsetParent !== null ? 'yes' : 'no'));
     }
-
-    let startTime;
 
     // ===== MAIN =====
     window.__LIVE2D_CDN_PATH__ = '/live2d-api/';
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
-    const MODEL_PATH = '/live2d-api/model/teto/';
+    const MOC3_PATH = '/live2d-api/model/teto/重音テト.moc3';
 
-    function loadExternalResource(url, type) {
+    function loadScript(url) {
       return new Promise((resolve, reject) => {
-        let tag;
-        if (type === 'css') { tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url; }
-        else { tag = document.createElement('script'); tag.src = url; }
-        tag.onload = () => resolve(url);
+        const tag = document.createElement('script'); tag.src = url;
+        tag.onload = () => resolve();
+        tag.onerror = () => reject(new Error('Failed: ' + url));
+        document.head.appendChild(tag);
+      });
+    }
+    function loadCss(url) {
+      return new Promise((resolve, reject) => {
+        const tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url;
+        tag.onload = () => resolve();
         tag.onerror = () => reject(new Error('Failed: ' + url));
         document.head.appendChild(tag);
       });
@@ -213,38 +114,36 @@
     async function main() {
       startTime = Date.now();
       try {
-        // ===== STEP 0: Precache the moc3 FIRST (while CSS loads) =====
-        log('=== Step 0: Precache moc3 (background) ===', 'section');
-        const moc3Promise = precache(MODEL_PATH + '重音テト.moc3').catch(e => log('PRECACHE moc3 failed: ' + e.message, 'err'));
+        // ===== STEP 0: Precache moc3 to Blob URL =====
+        log('=== Precache: downloading moc3 (16MB)... ===', 'section');
+        const resp = await _origFetch(MOC3_PATH);
+        const buf = await resp.arrayBuffer();
+        const blob = new Blob([buf], { type: 'application/octet-stream' });
+        moc3BlobUrl = URL.createObjectURL(blob);
+        log('MOC3: cached ' + buf.byteLength + 'B to blob:' + moc3BlobUrl.slice(0, 50) + '...');
 
-        log('=== Step 1: Loading CSS ===', 'section');
-        await loadExternalResource(BASE + 'waifu.css', 'css');
+        // ===== STEP 1: Sequential load =====
+        log('=== Loading waifu.css ===', 'section');
+        await loadCss(BASE + 'waifu.css');
 
-        // By now, moc3 might already be downloaded
-        log('=== Step 2: Loading Cubism Core ===', 'section');
-        await loadExternalResource(BASE + 'Core/live2dcubismcore.js', 'js');
+        log('=== Loading Cubism Core ===', 'section');
+        await loadScript(BASE + 'Core/live2dcubismcore.js');
         await new Promise(r => setTimeout(r, 200));
 
-        // Wait for moc3 precache to finish
-        log('=== Waiting for moc3 precache... ===', 'section');
-        await moc3Promise;
-        log('=== Moc3 precache complete ===', 'section');
+        log('=== Loading Live2D SDK ===', 'section');
+        await loadScript(BASE + 'live2d-sdk.js');
 
-        log('=== Step 3: Loading Live2D SDK ===', 'section');
-        await loadExternalResource(BASE + 'live2d-sdk.js', 'js');
-
-        let waited = 0;
-        while (!window.live2d && waited < 15000) {
-          await new Promise(r => setTimeout(r, 100)); waited += 100;
+        let w = 0;
+        while (!window.live2d && w < 15000) {
+          await new Promise(r => setTimeout(r, 100)); w += 100;
         }
         if (!window.live2d) { log('SDK TIMEOUT', 'err'); return; }
-        log('=== SDK ready ===', 'section');
 
-        log('=== Step 4: Loading waifu-tips.js ===', 'section');
-        await loadExternalResource(BASE + 'waifu-tips.js', 'js');
+        log('=== Loading waifu-tips.js ===', 'section');
+        await loadScript(BASE + 'waifu-tips.js');
 
-        // ===== Init widget =====
-        log('=== Calling initWidget ===', 'section');
+        // ===== STEP 2: Init widget =====
+        log('=== initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
         localStorage.setItem('modelTexturesId', '0');
 
@@ -255,31 +154,33 @@
           tools: ['hitokoto', 'express', 'photo', 'info', 'quit'],
           dragEnable: true, dragDirection: ['x', 'y'], switchType: 'order'
         });
-        log('initWidget() called — moc3 preloaded in cache');
+        log('initWidget done');
 
-        // ===== Monitoring =====
-        for (let i = 2; i <= 30; i += 2) {
-          setTimeout(() => {
-            periodicStatus();
-            if (i % 8 === 0) snapshotCanvas('+' + i + 's');
-          }, i * 1000);
-        }
+        // ===== STEP 3: Monitor =====
+        setTimeout(() => { status(); snap('+5s'); }, 5000);
+        setTimeout(() => { status(); snap('+10s'); }, 10000);
+        setTimeout(() => { status(); snap('+20s'); }, 20000);
+        setTimeout(() => { status(); snap('+35s'); }, 35000);
 
-        // Final summary
         setTimeout(() => {
-          periodicStatus();
-          snapshotCanvas('+35s');
-          log('=== Final Summary ===', 'section');
-          log('GL ops: ' + JSON.stringify(glOps), 'info');
-          log('Fetch log:');
-          fetchLog.forEach(e => {
-            if (e.cached) log('  [CACHE] ' + e.file + ' ' + e.size + 'B', 'ok');
-            else log('  [NET] ' + e.file + ' [' + e.status + ' ' + e.size + 'B ' + e.dur + 'ms ce=' + e.ce + ']');
-          });
-        }, 35000);
+          log('=== Final ===', 'section');
+          status();
+          snap('+60s');
+          // Check if canvas has any content by examining css
+          const waifu = document.getElementById('waifu');
+          if (waifu) {
+            const style = window.getComputedStyle(waifu);
+            log('Waifu CSS: display=' + style.display + ' visibility=' + style.visibility + ' opacity=' + style.opacity + ' zIndex=' + style.zIndex);
+            const c = document.getElementById('live2d');
+            if (c) {
+              const cs = window.getComputedStyle(c);
+              log('Canvas CSS: display=' + cs.display + ' w=' + cs.width + ' h=' + cs.height + ' opacity=' + cs.opacity);
+            }
+          }
+        }, 60000);
 
       } catch(e) {
-        log('FATAL: ' + e.message + '\n' + e.stack, 'err');
+        log('FATAL: ' + e.message, 'err');
       }
     }
     main();

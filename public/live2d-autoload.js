@@ -1,4 +1,4 @@
-// Live2D Cubism 5 (v3) async autoload with multi-CDN fallback + moc3 precache
+// Live2D Cubism 5 (v3) async autoload with multi-CDN fallback + moc3 blob precache
 const widgetBaseCandidates = [
   window.__LIVE2D_WIDGET_BASE__,
   'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/',
@@ -44,36 +44,29 @@ function loadExternalResource(url, type) {
   })
 }
 
-// ===== Moc3 precache system =====
-// Stores pre-fetched ArrayBuffers and intercepts fetch() to return them instantly.
-const _precacheStore = new Map()
+// ===== Moc3 blob precache =====
+// Pre-downloads the moc3 and creates a blob URL. The fetch interceptor
+// redirects the SDK's moc3 request to this blob URL (real Response, ~0ms).
+let _moc3BlobUrl = null
 const _origFetch = window.fetch
 
-async function precacheFile(url) {
+async function precacheMoc3(url) {
   try {
     const resp = await _origFetch(url)
-    const ct = resp.headers.get('content-type') || 'application/octet-stream'
     const buf = await resp.arrayBuffer()
-    _precacheStore.set(url, { buffer: buf, contentType: ct })
+    const blob = new Blob([buf], { type: 'application/octet-stream' })
+    _moc3BlobUrl = URL.createObjectURL(blob)
     return buf
   } catch (e) {
-    // Silently fail — the normal network fetch will handle it
     return null
   }
 }
 
-// Install fetch interceptor (must happen before SDK loads)
+// Minimal fetch interceptor: only redirects the moc3 request to blob URL
 window.fetch = function(url, opts) {
   const urlStr = (url instanceof Request) ? url.url : String(url)
-  const hit = _precacheStore.get(urlStr)
-  if (hit) {
-    return Promise.resolve(new Response(hit.buffer, {
-      status: 200,
-      headers: {
-        'Content-Type': hit.contentType,
-        'Content-Length': String(hit.buffer.byteLength)
-      }
-    }))
+  if (_moc3BlobUrl && urlStr.includes('重音テト.moc3')) {
+    return _origFetch.call(window, _moc3BlobUrl, opts)
   }
   return _origFetch.call(window, url, opts)
 }
@@ -81,9 +74,9 @@ window.fetch = function(url, opts) {
 async function loadWidgetBundleFromBase(base) {
   const normalizedBase = base.endsWith('/') ? base : `${base}/`
 
-  // Start precaching the moc3 immediately (runs in background)
+  // Start precaching the moc3 (runs in background while CSS/Core/SDK load)
   const moc3Url = localCdnPath + 'model/teto/重音テト.moc3'
-  const moc3Promise = precacheFile(moc3Url)
+  const moc3Promise = precacheMoc3(moc3Url)
 
   await loadExternalResource(`${normalizedBase}waifu.css`, 'css')
   await loadExternalResource(`${normalizedBase}Core/live2dcubismcore.js`, 'js')
