@@ -21,9 +21,6 @@ const {
 const currentLocale = Astro.currentLocale || 'zh'
 const langAttr = currentLocale === 'en' ? 'en' : 'zh'
 const baseUrl = import.meta.env.BASE_URL || '/'
-const live2dAutoloadVersion = '20260614a'
-const live2dAutoloadSrc = `${baseUrl}live2d-autoload.js?v=${live2dAutoloadVersion}`
-const live2dCdnPath = `${baseUrl}live2d-api/`
 ---
 
 <html lang={langAttr}>
@@ -97,48 +94,6 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
       <Footer />
     </div>
 
-    <script is:inline define:vars={{ live2dAutoloadSrc, live2dCdnPath }}>
-      (() => {
-        const LIVE2D_AUTOLOAD_SRC = live2dAutoloadSrc
-        const LIVE2D_FLAG_KEY = '__live2d_autoload_injected__'
-        const LIVE2D_SCHEDULED_KEY = '__live2d_autoload_scheduled__'
-
-        window.__LIVE2D_CDN_PATH__ = live2dCdnPath
-
-        function injectLive2D() {
-          if (window[LIVE2D_FLAG_KEY]) return
-          window[LIVE2D_FLAG_KEY] = true
-
-          const script = document.createElement('script')
-          script.src = LIVE2D_AUTOLOAD_SRC
-          script.async = true
-          script.defer = true
-          script.crossOrigin = 'anonymous'
-          document.body.appendChild(script)
-        }
-
-        function scheduleLive2DLoad() {
-          if (window[LIVE2D_SCHEDULED_KEY]) return
-          window[LIVE2D_SCHEDULED_KEY] = true
-
-          if ('requestIdleCallback' in window) {
-            window.requestIdleCallback(() => injectLive2D(), { timeout: 3000 })
-          } else {
-            setTimeout(injectLive2D, 1200)
-          }
-        }
-
-        if (document.readyState !== 'loading') {
-          scheduleLive2DLoad()
-        } else {
-          document.addEventListener('DOMContentLoaded', scheduleLive2DLoad, { once: true })
-          window.addEventListener('load', scheduleLive2DLoad, { once: true })
-        }
-
-        document.addEventListener('astro:page-load', scheduleLive2DLoad)
-      })()
-    </script>
-
     <script is:inline>
       (() => {
         const OBSERVER_KEY = '__deferred_image_observer__'
@@ -209,33 +164,6 @@ const live2dCdnPath = `${baseUrl}live2d-api/`
           --highlightColor,
           hsl(var(--primary) / var(--tw-text-opacity))
         ) !important;
-      }
-
-      /* Live2D widget position override: bottom-right */
-      :global(#waifu) {
-        position: fixed !important;
-        left: auto !important;
-        right: 0 !important;
-        bottom: 0 !important;
-        z-index: 9998 !important;
-        overflow: visible !important;
-        pointer-events: auto !important;
-      }
-
-      :global(#waifu-toggle) {
-        left: auto !important;
-        right: 0 !important;
-        z-index: 9999 !important;
-        margin-left: 0 !important;
-        margin-right: -100px !important;
-      }
-
-      :global(#waifu-toggle.waifu-toggle-active) {
-        margin-right: -50px !important;
-      }
-
-      :global(#waifu-toggle.waifu-toggle-active:hover) {
-        margin-right: -30px !important;
       }
 
       /* 点击粒子效果样式 */
