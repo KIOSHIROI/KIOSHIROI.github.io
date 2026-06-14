@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live2D Test v15 — Clean Blob Precache, No Hooks</title>
+  <title>Live2D Test v16 — Clean Blob + Render Confirm</title>
   <style>
     body { margin: 0; padding: 20px; font-family: sans-serif; background: #f5f5f5; min-height: 120vh; }
     #log { padding: 10px; margin: 10px 0; border-radius: 4px; background: #fff; border: 1px solid #ddd; font-family: monospace; font-size: 12px; white-space: pre-wrap; max-height: 50vh; overflow-y: auto; }
@@ -14,79 +14,67 @@
   </style>
 </head>
 <body>
-  <h2>Live2D Test v15 — Clean Blob Precache (no hooks)</h2>
+  <h2>Live2D Test v16 — Clean Blob + Render Stats + Force Visible</h2>
   <div id="log">Loading...</div>
   <div id="snapshot"><strong>Canvas Snapshot: </strong></div>
 
   <script>
-    const _origLog = console.log.bind(console);
     const logEl = document.getElementById('log');
     let startTime;
     function log(msg, cls) {
       const safe = String(msg).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
       logEl.innerHTML += `<span class="${cls || 'ok'}">[${((Date.now()-startTime)/1000).toFixed(1)}s] ${safe}</span>\n`;
-      _origLog(msg);
       logEl.scrollTop = logEl.scrollHeight;
     }
 
-    // NO fetch interception — use a blob URL to replace the actual moc3 URL.
-    // The SDK's loadModel constructs URLs from the cdnPath. We override
-    // the fetch to redirect only the moc3 request to our blob URL.
-    let moc3BlobUrl = null;
+    // ===== Minimal render tracker (only drawElements + drawArrays) =====
+    let drawElements = 0;
+    let drawArrays = 0;
+    let texturesCreated = 0;
 
-    const _origFetch = window.fetch;
-    window.fetch = function(url, opts) {
-      const urlStr = (url instanceof Request) ? url.url : String(url);
-      // Only intercept the moc3 — everything else passes through unmodified
-      if (moc3BlobUrl && urlStr.includes('重音テト.moc3')) {
-        log('MOC3: redirecting to blob URL (instant)');
-        return _origFetch(moc3BlobUrl, opts);
+    const _origGetCtx = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function(type, attrs) {
+      if (this.id === 'live2d' && type && type.includes('webgl')) {
+        if (attrs) attrs.preserveDrawingBuffer = true;
+        else { attrs = { preserveDrawingBuffer: true }; }
       }
-      // Pass through entirely — no logging, no wrapping
-      return _origFetch.call(window, url, opts);
+      const ctx = _origGetCtx.call(this, type, attrs);
+      if (this.id === 'live2d' && ctx) {
+        const gl = ctx;
+        const _de = gl.drawElements.bind(gl);
+        gl.drawElements = function() { drawElements++; return _de.apply(gl, arguments); };
+        const _da = gl.drawArrays.bind(gl);
+        gl.drawArrays = function() { drawArrays++; return _da.apply(gl, arguments); };
+        const _ct = gl.createTexture.bind(gl);
+        gl.createTexture = function() { texturesCreated++; return _ct(); };
+      }
+      return ctx;
     };
 
-    // Snapshot: read WebGL pixels directly from canvas
     function snap(label) {
-      const canvas = document.getElementById('live2d');
-      if (!canvas) { log('SNAP: no canvas', 'err'); return; }
-      try {
-        const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-        if (!gl || gl.isContextLost()) { log('SNAP: no GL context', 'err'); return; }
+      const c = document.getElementById('live2d');
+      if (!c) return;
+      const gl = c.getContext('webgl2') || c.getContext('webgl');
+      if (!gl || gl.isContextLost()) return;
 
-        gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-        const px = new Uint8Array(4);
-        let found = false;
-        for (let y = 0; y < canvas.height && !found; y += 5) {
-          for (let x = 0; x < canvas.width && !found; x += 5) {
-            gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
-            if (px[0] || px[1] || px[2] || px[3]) {
-              log('SNAP: pixel at (' + x + ',' + y + ') RGBA(' + px.join(',') + ') ✓', 'ok');
-              found = true;
-            }
+      const curFb = gl.getParameter(gl.FRAMEBUFFER_BINDING);
+      gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+      const px = new Uint8Array(4);
+      let found = false;
+      for (let y = 0; y < c.height && !found; y += 5) {
+        for (let x = 0; x < c.width && !found; x += 5) {
+          gl.readPixels(x, y, 1, 1, gl.RGBA, gl.UNSIGNED_BYTE, px);
+          if (px[0] || px[1] || px[2] || px[3]) {
+            log('SNAP: pixel(' + x + ',' + y + ')=' + px.join(','), 'ok');
+            found = true;
           }
         }
-        if (!found) log('SNAP: all pixels zero', 'warn');
-
-        const dataUrl = canvas.toDataURL('image/png');
-        const snapEl = document.getElementById('snapshot');
-        snapEl.innerHTML = '<strong>' + label + ' (' + Math.round(dataUrl.length/1024) + 'KB): </strong><br><img src="' + dataUrl + '" style="max-width:300px">';
-        log('SNAP: ' + label + ' done', 'info');
-      } catch(e) { log('SNAP error: ' + e.message, 'err'); }
-    }
-
-    // GC status check
-    function status() {
-      const canvas = document.getElementById('live2d');
-      const gl = canvas ? (canvas.getContext('webgl2') || canvas.getContext('webgl')) : null;
-      if (gl && !gl.isContextLost()) {
-        const bufCount = gl.getParameter(gl.RENDERBUFFER_BINDING) ? 'has_rb' : 'no_rb';
-        const prog = gl.getParameter(gl.CURRENT_PROGRAM) ? 'has_prog' : 'no_prog';
-        const fb = gl.getParameter(gl.FRAMEBUFFER_BINDING) ? 'fbo_bound' : 'default_fb';
-        log('STATUS: canvas=' + canvas.width + 'x' + canvas.height + ' ' + bufCount + ' ' + prog + ' ' + fb);
       }
-      const waifu = document.getElementById('waifu');
-      log('STATUS: waifu el=' + (waifu ? 'present' : 'MISSING') + ' visible=' + (waifu && waifu.offsetParent !== null ? 'yes' : 'no'));
+      if (!found) log('SNAP: zero (de=' + drawElements + ' da=' + drawArrays + ' ct=' + texturesCreated + ' fd=' + (curFb?'fbo':'def') + ')', 'warn');
+      gl.bindFramebuffer(gl.FRAMEBUFFER, curFb);
+
+      const du = c.toDataURL('image/png');
+      document.getElementById('snapshot').innerHTML = '<strong>'+label+' ('+Math.round(du.length/1024)+'KB de='+drawElements+'):</strong><br><img src="'+du+'" style="max-width:300px">';
     }
 
     // ===== MAIN =====
@@ -94,55 +82,67 @@
     const BASE = 'https://cdn.jsdelivr.net/gh/letere-gzj/live2d-widget-v3@main/';
     const MOC3_PATH = '/live2d-api/model/teto/重音テト.moc3';
 
-    function loadScript(url) {
-      return new Promise((resolve, reject) => {
-        const tag = document.createElement('script'); tag.src = url;
-        tag.onload = () => resolve();
-        tag.onerror = () => reject(new Error('Failed: ' + url));
-        document.head.appendChild(tag);
-      });
-    }
-    function loadCss(url) {
-      return new Promise((resolve, reject) => {
-        const tag = document.createElement('link'); tag.rel = 'stylesheet'; tag.href = url;
-        tag.onload = () => resolve();
-        tag.onerror = () => reject(new Error('Failed: ' + url));
-        document.head.appendChild(tag);
-      });
-    }
+    const _origFetch = window.fetch;
+    let moc3BlobUrl = null;
+
+    function loadScript(url) { return new Promise((r, rej) => { const t = document.createElement('script'); t.src = url; t.onload = r; t.onerror = () => rej(new Error(url)); document.head.appendChild(t); }); }
+    function loadCss(url) { return new Promise((r, rej) => { const t = document.createElement('link'); t.rel = 'stylesheet'; t.href = url; t.onload = r; t.onerror = () => rej(new Error(url)); document.head.appendChild(t); }); }
 
     async function main() {
       startTime = Date.now();
       try {
-        // ===== STEP 0: Precache moc3 to Blob URL =====
-        log('=== Precache: downloading moc3 (16MB)... ===', 'section');
+        // ===== Precache moc3 =====
+        log('=== Step 0: precache moc3 ===', 'section');
         const resp = await _origFetch(MOC3_PATH);
         const buf = await resp.arrayBuffer();
-        const blob = new Blob([buf], { type: 'application/octet-stream' });
-        moc3BlobUrl = URL.createObjectURL(blob);
-        log('MOC3: cached ' + buf.byteLength + 'B to blob:' + moc3BlobUrl.slice(0, 50) + '...');
+        moc3BlobUrl = URL.createObjectURL(new Blob([buf]));
+        log('MOC3 precached: ' + buf.byteLength + 'B');
 
-        // ===== STEP 1: Sequential load =====
-        log('=== Loading waifu.css ===', 'section');
+        // ===== Setup moc3 redirect =====
+        window.fetch = function(url, opts) {
+          const urlStr = (url instanceof Request) ? url.url : String(url);
+          if (moc3BlobUrl && urlStr.includes('重音テト.moc3')) return _origFetch(moc3BlobUrl, opts);
+          return _origFetch.call(window, url, opts);
+        };
+
+        // ===== Sequential load =====
+        log('=== Step 1: waifu.css ===', 'section');
         await loadCss(BASE + 'waifu.css');
 
-        log('=== Loading Cubism Core ===', 'section');
+        log('=== Step 2: Core ===', 'section');
         await loadScript(BASE + 'Core/live2dcubismcore.js');
         await new Promise(r => setTimeout(r, 200));
 
-        log('=== Loading Live2D SDK ===', 'section');
+        log('=== Step 3: SDK ===', 'section');
         await loadScript(BASE + 'live2d-sdk.js');
 
         let w = 0;
-        while (!window.live2d && w < 15000) {
-          await new Promise(r => setTimeout(r, 100)); w += 100;
-        }
-        if (!window.live2d) { log('SDK TIMEOUT', 'err'); return; }
+        while (!window.live2d && w < 15000) { await new Promise(r => setTimeout(r, 100)); w += 100; }
 
-        log('=== Loading waifu-tips.js ===', 'section');
+        log('=== Step 4: waifu-tips.js ===', 'section');
         await loadScript(BASE + 'waifu-tips.js');
 
-        // ===== STEP 2: Init widget =====
+        // ===== Force waifu visibility =====
+        // The waifu element is created by initWidget. We need to ensure it's visible.
+        setTimeout(() => {
+          const waifu = document.getElementById('waifu');
+          if (waifu) {
+            waifu.style.display = 'block';
+            waifu.style.visibility = 'visible';
+            waifu.style.opacity = '1';
+            waifu.style.zIndex = '99999';
+            log('WAIFU forced visible: display=' + waifu.style.display);
+          }
+
+          // Check for toggle button
+          const toggle = document.getElementById('waifu-toggle');
+          if (toggle) {
+            log('TOGGLE found, clicking...');
+            toggle.click();
+          }
+        }, 200);
+
+        // ===== Init widget =====
         log('=== initWidget ===', 'section');
         localStorage.setItem('modelId', '0');
         localStorage.setItem('modelTexturesId', '0');
@@ -156,28 +156,37 @@
         });
         log('initWidget done');
 
-        // ===== STEP 3: Monitor =====
-        setTimeout(() => { status(); snap('+5s'); }, 5000);
-        setTimeout(() => { status(); snap('+10s'); }, 10000);
-        setTimeout(() => { status(); snap('+20s'); }, 20000);
-        setTimeout(() => { status(); snap('+35s'); }, 35000);
-
-        setTimeout(() => {
-          log('=== Final ===', 'section');
-          status();
-          snap('+60s');
-          // Check if canvas has any content by examining css
-          const waifu = document.getElementById('waifu');
-          if (waifu) {
-            const style = window.getComputedStyle(waifu);
-            log('Waifu CSS: display=' + style.display + ' visibility=' + style.visibility + ' opacity=' + style.opacity + ' zIndex=' + style.zIndex);
-            const c = document.getElementById('live2d');
-            if (c) {
-              const cs = window.getComputedStyle(c);
-              log('Canvas CSS: display=' + cs.display + ' w=' + cs.width + ' h=' + cs.height + ' opacity=' + cs.opacity);
+        // ===== Monitor + force visibility periodically =====
+        for (const t of [3, 5, 8, 10, 15, 20, 30, 45, 60]) {
+          setTimeout(() => {
+            // Force visibility again
+            const waifu = document.getElementById('waifu');
+            if (waifu) {
+              const cs = window.getComputedStyle(waifu);
+              waifu.style.display = 'block';
+              waifu.style.visibility = 'visible';
+              waifu.style.opacity = '1';
+              if (!waifu.style.zIndex || waifu.style.zIndex < '99999') waifu.style.zIndex = '99999';
+              log('STATUS[' + t + 's]: de=' + drawElements + ' ct=' + texturesCreated + ' cs.disp=' + cs.display + ' cs.vis=' + cs.visibility);
             }
+            if (t % 10 === 0 || t === 8) snap('+' + t + 's');
+          }, t * 1000);
+        }
+
+        // Tap the canvas to activate model (some models need interaction)
+        setTimeout(() => {
+          const c = document.getElementById('live2d');
+          if (c) {
+            const rect = c.getBoundingClientRect();
+            ['mousedown','touchstart'].forEach(evt => {
+              const opts = evt === 'touchstart' ?
+                { touches: [{ clientX: rect.left + 300, clientY: rect.top + 300 }] } :
+                { clientX: rect.left + 300, clientY: rect.top + 300, button: 0 };
+              c.dispatchEvent(new Event(evt, { bubbles: true }));
+            });
+            log('TAP: simulated click on canvas');
           }
-        }, 60000);
+        }, 3000);
 
       } catch(e) {
         log('FATAL: ' + e.message, 'err');
